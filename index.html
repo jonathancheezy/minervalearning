@@ -104,7 +104,7 @@
       border: 1.5px solid var(--surface-2);
       border-radius: 14px;
       padding: 6px;
-      min-width: 160px;
+      min-width: 80px;
       box-shadow: 0 12px 40px rgba(0,0,0,0.12);
       display: none;
       z-index: 200;
@@ -113,8 +113,8 @@
     @keyframes dropIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
 
     .lang-option {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 12px;
+      display: flex; align-items: center;
+      padding: 9px 12px;
       border-radius: 9px;
       cursor: pointer;
       font-size: 0.9rem;
@@ -124,7 +124,7 @@
       border: none;
       background: none;
       width: 100%;
-      text-align: left;
+      text-align: center;
       font-family: 'DM Sans', sans-serif;
     }
     .lang-option:hover { background: var(--surface); color: var(--dark); }
@@ -163,22 +163,6 @@
       position: relative; z-index: 2;
     }
 
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 14px 8px 8px;
-      background: rgba(124,58,237,0.08);
-      border: 1px solid rgba(124,58,237,0.15);
-      border-radius: 999px;
-      font-size: 0.8125rem; font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 28px;
-    }
-    .eyebrow-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--primary);
-      animation: blink 2s ease-in-out infinite;
-    }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
     .hero h1 { margin-bottom: 20px; }
@@ -227,6 +211,8 @@
       background: transparent;
       color: var(--gray-500);
       transition: all 0.18s ease;
+      flex: 1;
+      text-align: center;
     }
     .form-tab.active {
       background: var(--white);
@@ -446,15 +432,9 @@
           <span id="langLabel">EN</span>
         </button>
         <div class="lang-dropdown" id="langDropdown">
-          <button class="lang-option active" data-lang="en" onclick="setLang('en')">
-            English <span class="lang-code">EN</span>
-          </button>
-          <button class="lang-option" data-lang="zhtw" onclick="setLang('zhtw')">
-            繁體中文 <span class="lang-code">繁</span>
-          </button>
-          <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')">
-            简体中文 <span class="lang-code">简</span>
-          </button>
+          <button class="lang-option active" data-lang="en" onclick="setLang('en')">EN</button>
+          <button class="lang-option" data-lang="zhtw" onclick="setLang('zhtw')">繁</button>
+          <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')">简</button>
         </div>
       </div>
     </div>
@@ -463,11 +443,6 @@
   <!-- HERO + FORM -->
   <section class="hero">
     <div class="hero-inner">
-
-      <div class="hero-eyebrow">
-        <span class="eyebrow-dot"></span>
-        Coming to Hong Kong — Q3 2026
-      </div>
 
       <h1>
         No fees.<br />
@@ -899,8 +874,7 @@
       document.querySelectorAll(".lang-option").forEach(o => o.classList.toggle("active", o.dataset.lang === currentLang));
 
       // Hero
-      const eyeb = document.querySelector(".hero-eyebrow");
-      if (eyeb) eyeb.innerHTML = '<span class="eyebrow-dot"></span> ' + t.eyebrow;
+      // hero-eyebrow removed
       const h1violet = document.querySelector(".hero h1 .violet");
       const h1sky = document.querySelector(".hero h1 .sky");
       if (h1violet) h1violet.textContent = t.h1violet;

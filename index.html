@@ -352,8 +352,15 @@
       text-align: left;
       box-shadow: 0 2px 12px rgba(0,0,0,0.04);
       user-select: text;
+      position: relative;
     }
-    .how-step-badge {
+    .how-step-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .how-step-left {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -375,6 +382,8 @@
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
       margin: 0;
+      font-size: 1.25rem;
+      line-height: 1;
     }
     .how-step-icon--violet { background: rgba(124,58,237,0.1); color: var(--primary); }
     .how-step-icon--sky { background: rgba(14,165,233,0.1); color: var(--teal); }
@@ -868,11 +877,9 @@
       <p class="how-subtitle">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
       <div class="how-steps">
         <div class="how-step">
-          <div class="how-step-badge">
+          <div class="how-step-left">
             <div class="how-step-num">1</div>
-          <div class="how-step-icon how-step-icon--violet">
-            <i data-lucide="user-plus" width="20" height="20"></i>
-          </div>
+            <div class="how-step-icon how-step-icon--violet">✦</div>
           </div>
           <div class="how-step-content">
             <h3>Sign up free</h3>
@@ -880,11 +887,9 @@
           </div>
         </div>
         <div class="how-step">
-          <div class="how-step-badge">
+          <div class="how-step-left">
             <div class="how-step-num">2</div>
-          <div class="how-step-icon how-step-icon--sky">
-            <i data-lucide="sparkles" width="20" height="20"></i>
-          </div>
+            <div class="how-step-icon how-step-icon--sky">✦</div>
           </div>
           <div class="how-step-content">
             <h3>We match you</h3>
@@ -892,18 +897,15 @@
           </div>
         </div>
         <div class="how-step">
-          <div class="how-step-badge">
+          <div class="how-step-left">
             <div class="how-step-num">3</div>
-          <div class="how-step-icon how-step-icon--mint">
-            <i data-lucide="trending-up" width="20" height="20"></i>
-          </div>
+            <div class="how-step-icon how-step-icon--mint">✦</div>
           </div>
           <div class="how-step-content">
             <h3>Start learning</h3>
-            <p>Connect with your teacher and begin — no admin, no hassle.</p>
+            <p>Meet your teacher and begin your first session — hassle free.</p>
           </div>
         </div>
-      </div>
     </div>
   </section>
 
@@ -1014,11 +1016,11 @@
 
   <script>
     lucide.createIcons();
+    // Kill pointer events on ALL Lucide SVG icons site-wide (backup CSS)
+    var style = document.createElement('style');
+    document.querySelectorAll('svg[data-lucide]').forEach(function(s){ s.style.pointerEvents='none'; });
 
-    // After Lucide renders, set pointer-events:none on step icons so text selection works
-    document.querySelectorAll('.how-step-icon svg').forEach(function(svg) { svg.style.pointerEvents = 'none'; });
-
-    function switchTab(tab) {
+function switchTab(tab) {
       document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.form-body').forEach(f => f.classList.remove('active'));
       document.getElementById('tab-' + tab).classList.add('active');
@@ -1238,6 +1240,9 @@
 
       overlay.classList.add('show');
       lucide.createIcons();
+    // Kill pointer events on ALL Lucide SVG icons site-wide (backup CSS)
+    var style = document.createElement('style');
+    document.querySelectorAll('svg[data-lucide]').forEach(function(s){ s.style.pointerEvents='none'; });
 
       // Focus first input
       setTimeout(() => document.querySelector('.otp-digit[data-index="0"]').focus(), 100);
@@ -1255,6 +1260,9 @@
         document.getElementById('otpForm').style.display = 'none';
         document.getElementById('otpSuccess').classList.add('show');
         lucide.createIcons();
+    // Kill pointer events on ALL Lucide SVG icons site-wide (backup CSS)
+    var style = document.createElement('style');
+    document.querySelectorAll('svg[data-lucide]').forEach(function(s){ s.style.pointerEvents='none'; });
 
         // Show form success after delay
         setTimeout(() => {
@@ -1262,6 +1270,9 @@
           document.getElementById(pendingForm + '-form').style.display = 'none';
           document.getElementById(pendingForm + '-success').classList.add('show');
           lucide.createIcons();
+    // Kill pointer events on ALL Lucide SVG icons site-wide (backup CSS)
+    var style = document.createElement('style');
+    document.querySelectorAll('svg[data-lucide]').forEach(function(s){ s.style.pointerEvents='none'; });
         }, 1500);
       } else {
         error.classList.add('show');
@@ -1605,6 +1616,9 @@
       applyLang();
       document.getElementById("langDropdown").classList.remove("show");
       lucide.createIcons();
+    // Kill pointer events on ALL Lucide SVG icons site-wide (backup CSS)
+    var style = document.createElement('style');
+    document.querySelectorAll('svg[data-lucide]').forEach(function(s){ s.style.pointerEvents='none'; });
     }
 
     function applyLang() {

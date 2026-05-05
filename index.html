@@ -718,21 +718,21 @@
         </div>
 
         <div class="road-card">
-          <span class="road-badge badge-later">Coming</span>
-          <div class="road-icon road-icon--sky">
-            <i data-lucide="calendar-check" width="20" height="20"></i>
-          </div>
-          <h3>Live booking</h3>
-          <p>Teachers publish their real-time availability. Parents and students book instantly.</p>
-        </div>
-
-        <div class="road-card">
           <span class="road-badge badge-now">Now</span>
           <div class="road-icon road-icon--mint">
             <i data-lucide="sparkles" width="20" height="20"></i>
           </div>
           <h3>AI matching</h3>
           <p>Our algorithm analyses learning goals, teaching style, and schedule to find your ideal match.</p>
+        </div>
+
+        <div class="road-card">
+          <span class="road-badge badge-later">Coming</span>
+          <div class="road-icon road-icon--sky">
+            <i data-lucide="calendar-check" width="20" height="20"></i>
+          </div>
+          <h3>Live booking</h3>
+          <p>Teachers publish their real-time availability. Parents and students book instantly.</p>
         </div>
 
         <div class="road-card">
@@ -747,10 +747,10 @@
         <div class="road-card">
           <span class="road-badge badge-later">Coming</span>
           <div class="road-icon road-icon--sky">
-            <i data-lucide="lock" width="20" height="20"></i>
+            <i data-lucide="layout-dashboard" width="20" height="20"></i>
           </div>
-          <h3>Escrow payments</h3>
-          <p>Payment held until after the lesson. Cancelled? No charge. Unsatisfied? Full refund.</p>
+          <h3>Interactive dashboard</h3>
+          <p>Track lessons, progress, and payments — all in one clean, simple dashboard.</p>
         </div>
 
         <div class="road-card">
@@ -867,8 +867,8 @@
         dMulti: "Interface in English, Traditional Chinese, and Simplified Chinese.",
         fMsg: "In-app messaging",
         dMsg: "Chat with your teacher, share files, and coordinate — all inside the platform, no contact exchange.",
-        fEscrow: "Escrow payments",
-        dEscrow: "Payment held until after the lesson. Cancelled? No charge. Unsatisfied? Full refund.",
+        fDashboard: "Interactive dashboard",
+        dDashboard: "Track lessons, progress, and payments — all in one clean, simple dashboard.",
         fAI: "AI progress tracking",
         dAI: "After every lesson, an AI summary tracks skill gaps and progress toward exam goals.",
         footer: "2026 Minerva Learning Ltd. Hong Kong.",
@@ -944,8 +944,8 @@
         dMulti: "支援英文、繁體中文及簡體中文介面。",
         fMsg: "應用程式內訊息",
         dMsg: "與導師聊天、分享檔案、協調——全部在平台內完成，無需交換聯絡方式。",
-        fEscrow: "託管付款",
-        dEscrow: "款項於課堂完成後方發放。如取消？免費。如不滿意？全額退款。",
+        fDashboard: "互動式控制台",
+        dDashboard: "追蹤課堂、進度和付款——全部在一個簡潔的控制台完成。",
         fAI: "人工智能進度追蹤",
         dAI: "每節課後，人工智能摘要追蹤技能差距及考試目標進度。",
         footer: "2026 Minerva Learning Ltd. 香港。",
@@ -1020,8 +1020,8 @@
         dMulti: "支持英文、繁体中文及简体中文界面。",
         fMsg: "应用程序内讯息",
         dMsg: "与导师聊天、分享档案，协调——全部在平台内完成，无需交换联络方式。",
-        fEscrow: "托管付款",
-        dEscrow: "款项于课堂完成后方发放。如取消？免费。如不满意？全额退款。",
+        fDashboard: "互动式控制台",
+        dDashboard: "追踪课堂、进度和付款——全部在一个简洁的控制台完成。",
         fAI: "人工智能进度追踪",
         dAI: "每节课后，人工智能摘要追踪技能差距及考试目标进度。",
         footer: "2026 Minerva Learning Ltd. 香港。",
@@ -1187,10 +1187,10 @@
       const cards = document.querySelectorAll(".road-card");
       const cardData = [
         { badge: t.badgeNow, title: t.fVerified, desc: t.dVerified },
-        { badge: t.badgeLater, title: t.fLive, desc: t.dLive },
         { badge: t.badgeNow, title: t.fAlgo, desc: t.dAlgo },
+        { badge: t.badgeLater, title: t.fLive, desc: t.dLive },
         { badge: t.badgeLater, title: t.fMsg, desc: t.dMsg },
-        { badge: t.badgeLater, title: t.fEscrow, desc: t.dEscrow },
+        { badge: t.badgeLater, title: t.fDashboard, desc: t.dDashboard },
         { badge: t.badgeLater, title: t.fAI, desc: t.dAI },
       ];
       cards.forEach((c, i) => {

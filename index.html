@@ -358,7 +358,6 @@
       align-items: center;
       gap: 10px;
       flex-shrink: 0;
-      pointer-events: none;
     }
     .how-step-num {
       display: flex; align-items: center; justify-content: center;
@@ -369,7 +368,6 @@
       color: var(--white);
       font-size: 0.8125rem; font-weight: 700;
       margin: 0;
-      pointer-events: none;
     }
     .how-step-icon {
       flex-shrink: 0;
@@ -377,7 +375,6 @@
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
       margin: 0;
-      pointer-events: none;
     }
     .how-step-icon--violet { background: rgba(124,58,237,0.1); color: var(--primary); }
     .how-step-icon--sky { background: rgba(14,165,233,0.1); color: var(--teal); }
@@ -874,7 +871,7 @@
           <div class="how-step-badge">
             <div class="how-step-num">1</div>
           <div class="how-step-icon how-step-icon--violet">
-            <svg data-lucide="user-plus" width="20" height="20" style="pointer-events:none"></svg>
+            <i data-lucide="user-plus" width="20" height="20"></i>
           </div>
           </div>
           <div class="how-step-content">
@@ -886,7 +883,7 @@
           <div class="how-step-badge">
             <div class="how-step-num">2</div>
           <div class="how-step-icon how-step-icon--sky">
-            <svg data-lucide="sparkles" width="20" height="20" style="pointer-events:none"></svg>
+            <i data-lucide="sparkles" width="20" height="20"></i>
           </div>
           </div>
           <div class="how-step-content">
@@ -1017,6 +1014,9 @@
 
   <script>
     lucide.createIcons();
+
+    // After Lucide renders, set pointer-events:none on step icons so text selection works
+    document.querySelectorAll('.how-step-icon svg').forEach(function(svg) { svg.style.pointerEvents = 'none'; });
 
     function switchTab(tab) {
       document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));

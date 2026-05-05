@@ -822,14 +822,13 @@
               </div>
               <div class="form-group">
                 <label>Student level</label>
-                <select name="level" required>
-                  <option value="" disabled selected>Select</option>
-                  <option>Primary</option>
-                  <option>Secondary</option>
-                  <option>HKDSE</option>
-                  <option>University / Adult</option>
-                  <option>All levels</option>
-                </select>
+                <div class="multi-select" id="teacher-level-select">
+                  <div class="multi-select-trigger" onclick="toggleMultiSelect('teacher-level')">
+                    <span class="multi-select-placeholder">Select level(s)</span>
+                  </div>
+                  <div class="multi-select-dropdown" id="teacher-level-dropdown"></div>
+                </div>
+                <input type="hidden" name="level" id="teacher-levels-hidden" />
               </div>
             </div>
             <button type="submit" class="btn btn-primary">
@@ -1037,6 +1036,17 @@
         }, 2000);
         return;
       }
+      const levels = document.getElementById('teacher-levels-hidden').value;
+      if (!levels) {
+        const trigger = document.querySelector('#teacher-level-select .multi-select-trigger');
+        trigger.style.borderColor = '#ef4444';
+        trigger.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.15)';
+        setTimeout(() => {
+          trigger.style.borderColor = '';
+          trigger.style.boxShadow = '';
+        }, 2000);
+        return;
+      }
       showOtpModal(email, 'teacher');
     }
   
@@ -1049,7 +1059,38 @@
       'Music', 'Visual Arts', 'Physical Education'
     ];
 
+    var LEVELS = ['Primary', 'Secondary', 'HKDSE', 'University / Adult', 'All levels'];
+
     function initMultiSelects() {
+      initSubjectSelects();
+      initLevelSelects();
+    }
+
+    function initSubjectSelects() {
+      ['parent', 'teacher'].forEach(function(form) {
+        var dropdown = document.getElementById(form + '-subject-dropdown');
+        var items = SUBJECTS.map(function(s) {
+          return '<div class="multi-select-option" data-form="' + form + '" data-value="' + s + '">' +
+            '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' + s + '</div>';
+        });
+        items.push('<div class="multi-select-divider"></div>');
+        items.push('<div class="multi-select-option" data-form="' + form + '" data-value="other">' +
+          '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Other</div>');
+        dropdown.innerHTML = items.join('');
+      });
+    }
+
+    function initLevelSelects() {
+      // Only teacher has level multi-select
+      var form = 'teacher';
+      var dropdown = document.getElementById(form + '-level-dropdown');
+      if (!dropdown) return;
+      var items = LEVELS.map(function(s) {
+        return '<div class="multi-select-option" data-form="' + form + '" data-value="' + s + '">' +
+          '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' + s + '</div>';
+      });
+      dropdown.innerHTML = items.join('');
+    }
       ['parent', 'teacher'].forEach(function(form) {
         var dropdown = document.getElementById(form + '-subject-dropdown');
         var items = SUBJECTS.map(function(s) {
@@ -1065,7 +1106,12 @@
 
     // Open/close dropdown
     function toggleMultiSelect(form) {
-      var dropdown = document.getElementById(form + '-subject-dropdown');
+      var dropdown;
+      if (form === 'teacher-level') {
+        dropdown = document.getElementById('teacher-level-dropdown');
+      } else {
+        dropdown = document.getElementById(form + '-subject-dropdown');
+      }
       var wasShown = dropdown.classList.contains('show');
       document.querySelectorAll('.multi-select-dropdown').forEach(function(d) { d.classList.remove('show'); });
       if (!wasShown) { dropdown.classList.add('show'); }
@@ -1091,7 +1137,18 @@
 
     // Core selection logic
     function doMultiSelect(form, value) {
-      var hidden = document.getElementById(form + '-subjects-hidden');
+      var hidden;
+      if (form === 'parent' || form === 'teacher') {
+        hidden = document.getElementById(form + '-subjects-hidden');
+        updateMultiSelectUI(form, value, hidden);
+      } else if (form === 'teacher-level') {
+        hidden = document.getElementById('teacher-levels-hidden');
+        updateMultiSelectUI(form, value, hidden);
+      }
+    }
+
+    // Update UI for subject or level multi-select
+    function updateMultiSelectUI(form, value, hidden) {
       var selected = hidden.value ? hidden.value.split('|') : [];
       var idx = selected.indexOf(value);
       if (idx > -1) {
@@ -1100,11 +1157,18 @@
         selected.push(value);
       }
       hidden.value = selected.join('|');
-      updateMultiSelectUI(form, selected);
-    }
 
-    // Update UI for a given selection array
-    function updateMultiSelectUI(form, selected) {
+      // For subject selects, also update the other group
+      if (form === 'parent' || form === 'teacher') {
+        var otherGroup = document.getElementById(form + '-subject-other-group');
+        if (otherGroup) {
+          otherGroup.style.display = selected.indexOf('other') > -1 ? 'block' : 'none';
+          if (selected.indexOf('other') === -1) {
+            var inp = otherGroup.querySelector('input');
+            if (inp) inp.value = '';
+          }
+        }
+      }
       // Update trigger tags
       var trigger = document.querySelector('#' + form + '-subject-select .multi-select-trigger');
       trigger.querySelectorAll('.multi-select-tag').forEach(function(t) { t.remove(); });
@@ -1135,6 +1199,36 @@
           if (inp) inp.value = '';
         }
       }
+
+      // Update trigger tags
+      var trigger;
+      if (form === 'teacher-level') {
+        trigger = document.querySelector('#teacher-level-select .multi-select-trigger');
+      } else {
+        trigger = document.querySelector('#' + form + '-subject-select .multi-select-trigger');
+      }
+      trigger.querySelectorAll('.multi-select-tag').forEach(function(t) { t.remove(); });
+      var placeholder = trigger.querySelector('.multi-select-placeholder');
+      placeholder.style.display = selected.length > 0 ? 'none' : '';
+      trigger.style.borderColor = selected.length > 0 ? 'var(--primary)' : '';
+
+      selected.forEach(function(s) {
+        var tag = document.createElement('span');
+        tag.className = 'multi-select-tag';
+        tag.innerHTML = s + '<button class="multi-select-tag-remove" onclick="event.stopPropagation();doMultiSelect(\'' + form + '\', \'' + s.replace(/'/g, "\\'") + '\')">&times;</button>';
+        trigger.insertBefore(tag, placeholder);
+      });
+
+      // Update checkmarks
+      var dropdown;
+      if (form === 'teacher-level') {
+        dropdown = document.getElementById('teacher-level-dropdown');
+      } else {
+        dropdown = document.getElementById(form + '-subject-dropdown');
+      }
+      dropdown.querySelectorAll('.multi-select-option').forEach(function(opt) {
+        opt.classList.toggle('selected', selected.indexOf(opt.getAttribute('data-value')) > -1);
+      });
     }
 
     function initSubjectOtherToggle() {}

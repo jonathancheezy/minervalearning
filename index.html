@@ -689,8 +689,12 @@
                 <option>Music</option>
                 <option>Visual Arts</option>
                 <option>Physical Education</option>
-                <option>Other</option>
+                <option value="other">Other</option>
               </select>
+            </div>
+            <div class="form-group" id="parent-subject-other-group" style="display:none">
+              <label>Please specify</label>
+              <input type="text" name="subjectsOther" placeholder="e.g. History, Literature" />
             </div>
             <button type="submit" class="btn btn-primary">
               <i data-lucide="user-plus" width="16" height="16"></i>
@@ -745,8 +749,12 @@
                 <option>Music</option>
                 <option>Visual Arts</option>
                 <option>Physical Education</option>
-                <option>Other</option>
+                <option value="other">Other</option>
               </select>
+            </div>
+            <div class="form-group" id="teacher-subject-other-group" style="display:none">
+              <label>Please specify</label>
+              <input type="text" name="subjectsOther" placeholder="e.g. History, Literature" />
             </div>
             <div class="form-row">
               <div class="form-group">
@@ -957,6 +965,22 @@
       showOtpModal(email, 'teacher');
     }
   
+    // ── Subjects "Other" toggle ──
+    function initSubjectOtherToggle() {
+      document.querySelectorAll('select[name="subjects"]').forEach(sel => {
+        sel.addEventListener('change', function() {
+          const group = document.getElementById(this.closest('form').id === 'parent-form' ? 'parent-subject-other-group' : 'teacher-subject-other-group');
+          if (group) {
+            group.style.display = this.value === 'other' ? 'block' : 'none';
+            if (this.value !== 'other') {
+              const otherInput = group.querySelector('input');
+              if (otherInput) otherInput.value = '';
+            }
+          }
+        });
+      });
+    }
+
     // ── OTP Logic ──
     let pendingEmail = '';
     let pendingForm = '';
@@ -1025,6 +1049,7 @@
 
     // OTP input navigation
     document.addEventListener('DOMContentLoaded', function() {
+      initSubjectOtherToggle();
       document.querySelectorAll('.otp-digit').forEach((input, idx, inputs) => {
         input.addEventListener('input', function() {
           if (this.value.length === 1 && idx < inputs.length - 1) {
@@ -1091,6 +1116,7 @@
         labelWhatsApp: "WhatsApp number",
         selectLevel: "Select level",
         selectSubject: "Select subject",
+        labelOtherSubject: "Please specify",
         selPri13: "Primary 1–3",
         selPri46: "Primary 4–6",
         selSec13: "Secondary 1–3",
@@ -1177,6 +1203,7 @@
         labelWhatsApp: "WhatsApp 號碼",
         selectLevel: "選擇年級",
         selectSubject: "選擇科目",
+        labelOtherSubject: "請說明",
         selPri13: "小學一至三年級",
         selPri46: "小學四至六年級",
         selSec13: "中學一至三年級",
@@ -1263,6 +1290,7 @@
         labelWhatsApp: "WhatsApp 号码",
         selectLevel: "选择年级",
         selectSubject: "选择科目",
+        labelOtherSubject: "请说明",
         selPri13: "小学一至三年级",
         selPri46: "小学四至六年级",
         selSec13: "中学一至三年级",

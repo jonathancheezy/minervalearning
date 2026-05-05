@@ -1177,7 +1177,7 @@
       trigger.style.borderColor = selected.length > 0 ? 'var(--primary)' : '';
 
       selected.forEach(function(s) {
-        if (s === 'other') return;
+
         var tag = document.createElement('span');
         tag.className = 'multi-select-tag';
         tag.innerHTML = s + '<button class="multi-select-tag-remove" onclick="event.stopPropagation();doMultiSelect(\'' + form + '\', \'' + s.replace(/'/g, "\\'") + '\')">&times;</button>';

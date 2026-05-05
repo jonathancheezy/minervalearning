@@ -78,13 +78,13 @@
       position: relative;
     }
     .lang-btn {
-      display: flex; align-items: center; gap: 6px;
-      padding: 0;
+      display: flex; align-items: center; gap: 5px;
+      padding: 6px 10px;
       border: 1.5px solid var(--surface-2);
       border-radius: 10px;
       background: var(--white);
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.875rem;
+      font-size: 0.8125rem;
       font-weight: 600;
       color: var(--gray-500);
       cursor: pointer;
@@ -157,7 +157,9 @@
     .hero-inner {
       max-width: 640px;
       margin: 0 auto;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       position: relative; z-index: 2;
     }
 
@@ -211,6 +213,8 @@
       border-radius: 12px;
       padding: 5px;
       margin: 0 auto 28px;
+      justify-content: center;
+      width: fit-content;
     }
     .form-tab {
       padding: 9px 22px;

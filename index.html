@@ -566,6 +566,81 @@
       margin-top: 10px; display: none;
     }
     .otp-error.show { display: block; }
+
+    /* ── MULTI-SELECT ── */
+    .multi-select {
+      position: relative;
+    }
+    .multi-select-trigger {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      align-items: center;
+      min-height: 46px;
+      padding: 8px 12px;
+      border: 1.5px solid var(--surface-2);
+      border-radius: 12px;
+      background: var(--white);
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .multi-select-trigger:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+    }
+    .multi-select-placeholder {
+      font-size: 0.9rem; color: var(--gray-400);
+      font-family: 'DM Sans', sans-serif;
+    }
+    .multi-select-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px;
+      background: rgba(124,58,237,0.1);
+      color: var(--primary);
+      border-radius: 6px;
+      font-size: 0.8125rem; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .multi-select-tag-remove {
+      background: none; border: none; cursor: pointer;
+      color: var(--primary); padding: 0; line-height: 1;
+      font-size: 1rem; display: flex; align-items: center;
+    }
+    .multi-select-dropdown {
+      position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+      background: var(--white);
+      border: 1.5px solid var(--surface-2);
+      border-radius: 14px;
+      padding: 6px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      z-index: 100; display: none;
+      max-height: 280px; overflow-y: auto;
+    }
+    .multi-select-dropdown.show { display: block; }
+    .multi-select-option {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      border-radius: 9px; cursor: pointer;
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--gray-500);
+      transition: background 0.12s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .multi-select-option:hover { background: var(--surface); color: var(--dark); }
+    .multi-select-option.selected { color: var(--primary); font-weight: 600; }
+    .multi-select-option-check {
+      width: 18px; height: 18px;
+      border: 1.5px solid var(--surface-2);
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.12s;
+    }
+    .multi-select-option.selected .multi-select-option-check {
+      background: var(--primary); border-color: var(--primary);
+    }
+    .multi-select-divider {
+      height: 1px; background: var(--surface-2);
+      margin: 4px 0;
+    }
     .otp-success-msg {
       display: none;
       text-align: center;
@@ -672,25 +747,13 @@
             </div>
             <div class="form-group">
               <label>Subject(s) needed</label>
-              <select name="subjects" required>
-                <option value="" disabled selected>Select subject</option>
-                <option>English</option>
-                <option>Maths</option>
-                <option>Chinese (Cantonese / Mandarin)</option>
-                <option>HKDSE Maths</option>
-                <option>HKDSE English</option>
-                <option>HKDSE Chinese</option>
-                <option>Biology</option>
-                <option>Chemistry</option>
-                <option>Physics</option>
-                <option>Economics</option>
-                <option>BAFS</option>
-                <option>ICT</option>
-                <option>Music</option>
-                <option>Visual Arts</option>
-                <option>Physical Education</option>
-                <option value="other">Other</option>
-              </select>
+              <div class="multi-select" id="parent-subject-select">
+                <div class="multi-select-trigger" onclick="toggleMultiSelect('parent')">
+                  <span class="multi-select-placeholder">Select subjects</span>
+                </div>
+                <div class="multi-select-dropdown" id="parent-subject-dropdown"></div>
+              </div>
+              <input type="hidden" name="subjects" id="parent-subjects-hidden" />
             </div>
             <div class="form-group" id="parent-subject-other-group" style="display:none">
               <label>Please specify</label>
@@ -732,25 +795,13 @@
             </div>
             <div class="form-group">
               <label>Subject(s) you teach</label>
-              <select name="subjects" required>
-                <option value="" disabled selected>Select subject</option>
-                <option>English</option>
-                <option>Maths</option>
-                <option>Chinese (Cantonese / Mandarin)</option>
-                <option>HKDSE Maths</option>
-                <option>HKDSE English</option>
-                <option>HKDSE Chinese</option>
-                <option>Biology</option>
-                <option>Chemistry</option>
-                <option>Physics</option>
-                <option>Economics</option>
-                <option>BAFS</option>
-                <option>ICT</option>
-                <option>Music</option>
-                <option>Visual Arts</option>
-                <option>Physical Education</option>
-                <option value="other">Other</option>
-              </select>
+              <div class="multi-select" id="teacher-subject-select">
+                <div class="multi-select-trigger" onclick="toggleMultiSelect('teacher')">
+                  <span class="multi-select-placeholder">Select subjects</span>
+                </div>
+                <div class="multi-select-dropdown" id="teacher-subject-dropdown"></div>
+              </div>
+              <input type="hidden" name="subjects" id="teacher-subjects-hidden" />
             </div>
             <div class="form-group" id="teacher-subject-other-group" style="display:none">
               <label>Please specify</label>
@@ -955,6 +1006,17 @@
       e.preventDefault();
       const form = document.getElementById('parent-form');
       const email = form.querySelector('[name="email"]').value;
+      const subjects = document.getElementById('parent-subjects-hidden').value;
+      if (!subjects) {
+        const trigger = document.querySelector('#parent-subject-select .multi-select-trigger');
+        trigger.style.borderColor = '#ef4444';
+        trigger.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.15)';
+        setTimeout(() => {
+          trigger.style.borderColor = '';
+          trigger.style.boxShadow = '';
+        }, 2000);
+        return;
+      }
       showOtpModal(email, 'parent');
     }
 
@@ -962,24 +1024,125 @@
       e.preventDefault();
       const form = document.getElementById('teacher-form');
       const email = form.querySelector('[name="email"]').value;
+      const subjects = document.getElementById('teacher-subjects-hidden').value;
+      if (!subjects) {
+        const trigger = document.querySelector('#teacher-subject-select .multi-select-trigger');
+        trigger.style.borderColor = '#ef4444';
+        trigger.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.15)';
+        setTimeout(() => {
+          trigger.style.borderColor = '';
+          trigger.style.boxShadow = '';
+        }, 2000);
+        return;
+      }
       showOtpModal(email, 'teacher');
     }
   
-    // ── Subjects "Other" toggle ──
-    function initSubjectOtherToggle() {
-      document.querySelectorAll('select[name="subjects"]').forEach(sel => {
-        sel.addEventListener('change', function() {
-          const group = document.getElementById(this.closest('form').id === 'parent-form' ? 'parent-subject-other-group' : 'teacher-subject-other-group');
-          if (group) {
-            group.style.display = this.value === 'other' ? 'block' : 'none';
-            if (this.value !== 'other') {
-              const otherInput = group.querySelector('input');
-              if (otherInput) otherInput.value = '';
-            }
-          }
-        });
+    // ── Multi-select data ──
+    const SUBJECTS = [
+      'English', 'Maths', 'Chinese (Cantonese / Mandarin)',
+      'HKDSE Maths', 'HKDSE English', 'HKDSE Chinese',
+      'Biology', 'Chemistry', 'Physics',
+      'Economics', 'BAFS', 'ICT',
+      'Music', 'Visual Arts', 'Physical Education'
+    ];
+
+    function initMultiSelects() {
+      ['parent', 'teacher'].forEach(form => {
+        const dropdown = document.getElementById(form + '-subject-dropdown');
+        dropdown.innerHTML = SUBJECTS.map(s =>
+          '<div class="multi-select-option" data-value="' + s + '" onclick="toggleMultiSelectOption('' + form + '', '' + s.replace(/'/g, "\'") + '')">' +
+          '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' + s +
+          '</div>'
+        ).join('') +
+        '<div class="multi-select-divider"></div>' +
+        '<div class="multi-select-option" data-value="other" onclick="toggleMultiSelectOption('' + form + '', 'other')">' +
+        '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Other' +
+        '</div>';
+      });
+
+      // Close dropdowns on outside click
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.multi-select')) {
+          document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
+        }
       });
     }
+
+    function toggleMultiSelect(form) {
+      const dropdown = document.getElementById(form + '-subject-dropdown');
+      document.querySelectorAll('.multi-select-dropdown').forEach(d => {
+        if (d !== dropdown) d.classList.remove('show');
+      });
+      dropdown.classList.toggle('show');
+    }
+
+    function toggleMultiSelectOption(form, value) {
+      const hidden = document.getElementById(form + '-subjects-hidden');
+      let selected = hidden.value ? hidden.value.split('|') : [];
+      const idx = selected.indexOf(value);
+      if (idx > -1) {
+        selected.splice(idx, 1);
+      } else {
+        selected.push(value);
+      }
+      hidden.value = selected.join('|');
+      renderMultiSelectTags(form, selected);
+
+      // Toggle "other" group
+      const otherGroup = document.getElementById(form + '-subject-other-group');
+      if (otherGroup) {
+        otherGroup.style.display = selected.includes('other') ? 'block' : 'none';
+        if (!selected.includes('other')) {
+          const otherInput = otherGroup.querySelector('input');
+          if (otherInput) otherInput.value = '';
+        }
+      }
+
+      // Update checkmark visual
+      const dropdown = document.getElementById(form + '-subject-dropdown');
+      dropdown.querySelectorAll('.multi-select-option').forEach(opt => {
+        opt.classList.toggle('selected', selected.includes(opt.dataset.value));
+      });
+
+      // Update required validation
+      const trigger = document.querySelector('#' + form + '-subject-select .multi-select-trigger');
+      const placeholder = trigger.querySelector('.multi-select-placeholder');
+      if (selected.length > 0) {
+        trigger.style.borderColor = 'var(--primary)';
+        placeholder.style.display = 'none';
+      } else {
+        trigger.style.borderColor = '';
+        placeholder.style.display = '';
+      }
+    }
+
+    function renderMultiSelectTags(form, selected) {
+      const trigger = document.querySelector('#' + form + '-subject-select .multi-select-trigger');
+      // Remove existing tags
+      trigger.querySelectorAll('.multi-select-tag').forEach(t => t.remove());
+      // Remove placeholder
+      const placeholder = trigger.querySelector('.multi-select-placeholder');
+      if (selected.length > 0) {
+        placeholder.style.display = 'none';
+      } else {
+        placeholder.style.display = '';
+      }
+      selected.forEach(s => {
+        if (s === 'other') return;
+        const tag = document.createElement('span');
+        tag.className = 'multi-select-tag';
+        tag.innerHTML = s + '<button class="multi-select-tag-remove" onclick="event.stopPropagation(); removeMultiSelectTag('' + form + '', '' + s.replace(/'/g, "\'") + '')">&times;</button>';
+        trigger.insertBefore(tag, placeholder);
+      });
+    }
+
+    function removeMultiSelectTag(form, value) {
+      toggleMultiSelectOption(form, value);
+    }
+
+    // ── Subjects "Other" toggle (legacy, kept for compatibility) ──
+    function initSubjectOtherToggle() {}
 
     // ── OTP Logic ──
     let pendingEmail = '';
@@ -1049,7 +1212,7 @@
 
     // OTP input navigation
     document.addEventListener('DOMContentLoaded', function() {
-      initSubjectOtherToggle();
+      initMultiSelects();
       document.querySelectorAll('.otp-digit').forEach((input, idx, inputs) => {
         input.addEventListener('input', function() {
           if (this.value.length === 1 && idx < inputs.length - 1) {

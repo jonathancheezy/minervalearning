@@ -389,12 +389,21 @@
     .coming-section {
       padding: 80px 24px;
       background: var(--white);
-      
+      position: relative; overflow: hidden;
+    }
+    .coming-section::before {
+      content: '';
+      position: absolute;
+      bottom: -20%; right: -10%;
+      width: 60%; height: 100%;
+      background: radial-gradient(ellipse, rgba(124,58,237,0.1) 0%, transparent 65%);
+      z-index: 0;
     }
     .coming-inner {
       max-width: 820px;
       margin: 0 auto;
       text-align: center;
+      position: relative; z-index: 1;
     }
 
     .coming-eyebrow {

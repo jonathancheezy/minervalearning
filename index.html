@@ -479,6 +479,102 @@
     .road-card p { font-size: 0.875rem; color: var(--gray-500); line-height: 1.6; }
 
     /* ── FOOTER ── */
+    /* ── OTP MODAL ── */
+    .otp-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(6px);
+      display: none; align-items: center; justify-content: center;
+      z-index: 1000; padding: 20px;
+    }
+    .otp-overlay.show { display: flex; }
+    .otp-modal {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 36px 40px;
+      max-width: 420px; width: 100%;
+      text-align: center;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.2);
+      animation: fadeUp 0.25s ease;
+    }
+    .otp-icon {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      background: rgba(124,58,237,0.1);
+      color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .otp-modal h3 {
+      font-size: 1.25rem; font-weight: 800;
+      color: var(--dark); margin: 0 0 8px;
+      letter-spacing: -0.01em;
+    }
+    .otp-modal p {
+      font-size: 0.9rem; color: var(--gray-400);
+      margin: 0 0 24px; line-height: 1.5;
+    }
+    .otp-inputs {
+      display: flex; gap: 10px;
+      justify-content: center; margin-bottom: 20px;
+    }
+    .otp-inputs input {
+      width: 48px; height: 56px;
+      text-align: center;
+      font-size: 1.25rem; font-weight: 700;
+      border: 1.5px solid var(--surface-2);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+    .otp-inputs input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+    }
+    .otp-resend {
+      font-size: 0.8125rem; color: var(--gray-400);
+      margin-bottom: 20px;
+    }
+    .otp-resend button {
+      background: none; border: none;
+      color: var(--primary); font-weight: 600;
+      cursor: pointer; font-size: 0.8125rem;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .otp-resend button:hover { text-decoration: underline; }
+    .otp-verify-btn {
+      width: 100%; padding: 14px;
+      background: var(--primary); color: white;
+      border: none; border-radius: 12px;
+      font-size: 1rem; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+    .otp-verify-btn:hover {
+      background: var(--primary-light);
+      box-shadow: 0 8px 28px rgba(124,58,237,0.35);
+    }
+    .otp-verify-btn:disabled {
+      opacity: 0.5; cursor: not-allowed;
+    }
+    .otp-error {
+      font-size: 0.8125rem; color: #ef4444;
+      margin-top: 10px; display: none;
+    }
+    .otp-error.show { display: block; }
+    .otp-success-msg {
+      display: none;
+      text-align: center;
+    }
+    .otp-success-msg.show { display: block; animation: fadeUp 0.3s ease; }
+    .otp-success-msg .otp-icon {
+      background: rgba(16,185,129,0.1); color: #10b981;
+    }
+
     footer {
       padding: 28px 24px;
       text-align: center;
@@ -766,6 +862,37 @@
     </div>
   </div>
 
+  <!-- OTP MODAL -->
+  <div class="otp-overlay" id="otpOverlay">
+    <div class="otp-modal">
+      <div class="otp-icon" id="otpIcon">
+        <i data-lucide="mail" width="26" height="26"></i>
+      </div>
+      <div id="otpForm">
+        <h3>Verify your email</h3>
+        <p>We've sent a code to <strong id="otpEmailDisplay"></strong></p>
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" class="otp-digit" data-index="0" autocomplete="off" />
+          <input type="text" maxlength="1" class="otp-digit" data-index="1" autocomplete="off" />
+          <input type="text" maxlength="1" class="otp-digit" data-index="2" autocomplete="off" />
+          <input type="text" maxlength="1" class="otp-digit" data-index="3" autocomplete="off" />
+        </div>
+        <div class="otp-resend">
+          Didn't get it? <button type="button" id="otpResend">Resend code</button>
+        </div>
+        <button class="otp-verify-btn" id="otpVerifyBtn" disabled>Verify</button>
+        <p class="otp-error" id="otpError">Incorrect code. Please try again.</p>
+      </div>
+      <div class="otp-success-msg" id="otpSuccess">
+        <div class="otp-icon">
+          <i data-lucide="check" width="26" height="26"></i>
+        </div>
+        <h3>You're verified!</h3>
+        <p>Check your inbox for confirmation.</p>
+      </div>
+    </div>
+  </div>
+
   <footer>
     2026 Minerva Learning Ltd. Hong Kong.
   </footer>
@@ -782,18 +909,130 @@
 
     function handleParent(e) {
       e.preventDefault();
-      document.getElementById('parent-form').style.display = 'none';
-      document.getElementById('parent-success').classList.add('show');
-      lucide.createIcons();
+      const form = document.getElementById('parent-form');
+      const email = form.querySelector('[name="email"]').value;
+      showOtpModal(email, 'parent');
     }
 
     function handleTeacher(e) {
       e.preventDefault();
-      document.getElementById('teacher-form').style.display = 'none';
-      document.getElementById('teacher-success').classList.add('show');
-      lucide.createIcons();
+      const form = document.getElementById('teacher-form');
+      const email = form.querySelector('[name="email"]').value;
+      showOtpModal(email, 'teacher');
     }
   
+    // ── OTP Logic ──
+    let pendingEmail = '';
+    let pendingForm = '';
+    let generatedOTP = '';
+
+    function showOtpModal(email, formType) {
+      pendingEmail = email;
+      pendingForm = formType;
+      generatedOTP = String(Math.floor(1000 + Math.random() * 9000));
+      console.log('[Minerva OTP] Code for ' + email + ': ' + generatedOTP);
+
+      const overlay = document.getElementById('otpOverlay');
+      const form = document.getElementById('otpForm');
+      const success = document.getElementById('otpSuccess');
+      const emailDisplay = document.getElementById('otpEmailDisplay');
+      const error = document.getElementById('otpError');
+
+      // Reset state
+      form.style.display = 'block';
+      success.classList.remove('show');
+      error.classList.remove('show');
+      emailDisplay.textContent = email;
+
+      // Clear inputs
+      document.querySelectorAll('.otp-digit').forEach(i => i.value = '');
+      document.getElementById('otpVerifyBtn').disabled = true;
+
+      overlay.classList.add('show');
+      lucide.createIcons();
+
+      // Focus first input
+      setTimeout(() => document.querySelector('.otp-digit[data-index="0"]').focus(), 100);
+    }
+
+    function getOtpValue() {
+      return Array.from(document.querySelectorAll('.otp-digit')).map(i => i.value).join('');
+    }
+
+    function verifyOtp() {
+      const error = document.getElementById('otpError');
+      const code = getOtpValue();
+      if (code === generatedOTP) {
+        // Success
+        document.getElementById('otpForm').style.display = 'none';
+        document.getElementById('otpSuccess').classList.add('show');
+        lucide.createIcons();
+
+        // Show form success after delay
+        setTimeout(() => {
+          document.getElementById('otpOverlay').classList.remove('show');
+          document.getElementById(pendingForm + '-form').style.display = 'none';
+          document.getElementById(pendingForm + '-success').classList.add('show');
+          lucide.createIcons();
+        }, 1500);
+      } else {
+        error.classList.add('show');
+        document.querySelectorAll('.otp-digit').forEach(i => {
+          i.style.borderColor = '#ef4444';
+          i.addEventListener('input', function handler() {
+            i.style.borderColor = '';
+            i.removeEventListener('input', handler);
+          });
+        });
+      }
+    }
+
+    // OTP input navigation
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.otp-digit').forEach((input, idx, inputs) => {
+        input.addEventListener('input', function() {
+          if (this.value.length === 1 && idx < inputs.length - 1) {
+            inputs[idx + 1].focus();
+          }
+          document.getElementById('otpVerifyBtn').disabled = getOtpValue().length < 4;
+        });
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !this.value && idx > 0) {
+            inputs[idx - 1].focus();
+          }
+          if (e.key === 'Enter' && getOtpValue().length === 4) {
+            verifyOtp();
+          }
+        });
+        input.addEventListener('paste', function(e) {
+          e.preventDefault();
+          const paste = (e.clipboardData || window.clipboardData).getData('text').slice(0, 4);
+          paste.split('').forEach((char, i) => {
+            if (inputs[i]) inputs[i].value = char;
+          });
+          document.getElementById('otpVerifyBtn').disabled = getOtpValue().length < 4;
+        });
+      });
+
+      document.getElementById('otpVerifyBtn').addEventListener('click', verifyOtp);
+
+      document.getElementById('otpResend').addEventListener('click', function() {
+        generatedOTP = String(Math.floor(1000 + Math.random() * 9000));
+        console.log('[Minerva OTP] New code: ' + generatedOTP);
+        document.querySelectorAll('.otp-digit').forEach(i => i.value = '');
+        document.getElementById('otpVerifyBtn').disabled = true;
+        document.getElementById('otpError').classList.remove('show');
+      });
+
+      // Close on overlay click
+      document.getElementById('otpOverlay').addEventListener('click', function(e) {
+        if (e.target === this) {
+          // Don't allow closing during verification flow for now
+          // this.classList.remove('show');
+        }
+      });
+    });
+
     // ── Language data
     const T = {
       en: {
@@ -843,6 +1082,14 @@
         successParentP: "We will reach out when Minerva launches in Hong Kong.",
         successTeacher: "You are on the list!",
         successTeacherP: "First match is on us. We will contact you when we launch.",
+        otpTitle: "Verify your email",
+        otpDesc: "We've sent a code to",
+        otpResend: "Didn't get it?",
+        otpResendBtn: "Resend code",
+        otpVerify: "Verify",
+        otpError: "Incorrect code. Please try again.",
+        otpSuccessTitle: "You're verified!",
+        otpSuccessDesc: "Check your inbox for confirmation.",
         howEyebrow: "How it works",
         howSubtitle: "Hassle free registration, no admin to manage. Just sign up and we handle the rest.",
         howStep1Title: "Sign up free",
@@ -920,6 +1167,14 @@
         successParentP: "Minerva登陸香港時，我們會聯絡您。",
         successTeacher: "已列入名單！",
         successTeacherP: "首個配對免費。我們會在啟動前聯絡您。",
+        otpTitle: "驗證您的電郵",
+        otpDesc: "我們已向以下電郵發送驗證碼：",
+        otpResend: "沒有收到？",
+        otpResendBtn: "重發驗證碼",
+        otpVerify: "驗證",
+        otpError: "驗證碼不正確，請再試一次。",
+        otpSuccessTitle: "驗證成功！",
+        otpSuccessDesc: "請查看收件匣確認。",
         howEyebrow: "運作方式",
         howSubtitle: "輕鬆註冊，無需行政手續。報名後我們會處理一切。",
         howStep1Title: "免費報名",
@@ -996,6 +1251,14 @@
         successParentP: "Minerva登陆香港时，我们会联络您。",
         successTeacher: "已列入名单！",
         successTeacherP: "首个配对免费。我们会在启动前联络您。",
+        otpTitle: "验证您的邮箱",
+        otpDesc: "我们已向以下邮箱发送验证码：",
+        otpResend: "没有收到？",
+        otpResendBtn: "重发验证码",
+        otpVerify: "验证",
+        otpError: "验证码不正确，请再试一次。",
+        otpSuccessTitle: "验证成功！",
+        otpSuccessDesc: "请查看收件箱确认。",
         howEyebrow: "运作方式",
         howSubtitle: "轻松注册，无需行政手续。报名后我们会处理一切。",
         howStep1Title: "免费报名",

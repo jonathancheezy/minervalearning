@@ -319,8 +319,6 @@
     .how-section {
       padding: 80px 24px;
       background: var(--white);
-      -webkit-user-select: text !important;
-      user-select: text !important;
     }
     .how-inner {
       max-width: 760px;
@@ -333,14 +331,10 @@
       font-size: 1.75rem; font-weight: 800;
       color: var(--dark); margin: 0 0 12px;
       letter-spacing: -0.02em;
-      -webkit-user-select: text !important;
-      user-select: text !important;
     }
     .how-subtitle {
       font-size: 1rem; color: var(--gray-400);
       margin: 0 0 48px;
-      -webkit-user-select: text !important;
-      user-select: text !important;
     }
     .how-steps {
       display: flex;
@@ -1038,6 +1032,15 @@
         el.style.pointerEvents = 'none';
       });
     });
+
+    // Force user-select on how-section text elements
+    (function() {
+      var els = document.querySelectorAll('.how-title, .how-subtitle, .how-step h3, .how-step p');
+      for (var i = 0; i < els.length; i++) {
+        els[i].style.userSelect = 'text';
+        els[i].style.webkitUserSelect = 'text';
+      }
+    })();
 
 function switchTab(tab) {
       document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));

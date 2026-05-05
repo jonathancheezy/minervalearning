@@ -1155,46 +1155,20 @@
           }
         }
       }
-      // Update trigger tags
-      var trigger = document.querySelector('#' + form + '-subject-select .multi-select-trigger');
-      trigger.querySelectorAll('.multi-select-tag').forEach(function(t) { t.remove(); });
-      var placeholder = trigger.querySelector('.multi-select-placeholder');
-      placeholder.style.display = selected.length > 0 ? 'none' : '';
-      trigger.style.borderColor = selected.length > 0 ? 'var(--primary)' : '';
 
-      selected.forEach(function(s) {
-
-        var tag = document.createElement('span');
-        tag.className = 'multi-select-tag';
-        tag.innerHTML = s + '<button class="multi-select-tag-remove" onclick="event.stopPropagation();doMultiSelect(\'' + form + '\', \'' + s.replace(/'/g, "\\'") + '\')">&times;</button>';
-        trigger.insertBefore(tag, placeholder);
-      });
-
-      // Update checkmarks
-      var dropdown = document.getElementById(form + '-subject-dropdown');
-      dropdown.querySelectorAll('.multi-select-option').forEach(function(opt) {
-        opt.classList.toggle('selected', selected.indexOf(opt.getAttribute('data-value')) > -1);
-      });
-
-      // Toggle "other" group
-      var otherGroup = document.getElementById(form + '-subject-other-group');
-      if (otherGroup) {
-        otherGroup.style.display = selected.indexOf('other') > -1 ? 'block' : 'none';
-        if (selected.indexOf('other') === -1) {
-          var inp = otherGroup.querySelector('input');
-          if (inp) inp.value = '';
-        }
-      }
-
-      // Update trigger tags
-      var trigger;
+      // Determine which trigger and dropdown to use
+      var trigger, dropdown, placeholder;
       if (form === 'teacher-level') {
         trigger = document.querySelector('#teacher-level-select .multi-select-trigger');
+        dropdown = document.getElementById('teacher-level-dropdown');
       } else {
         trigger = document.querySelector('#' + form + '-subject-select .multi-select-trigger');
+        dropdown = document.getElementById(form + '-subject-dropdown');
       }
+
+      // Clear and re-render tags
       trigger.querySelectorAll('.multi-select-tag').forEach(function(t) { t.remove(); });
-      var placeholder = trigger.querySelector('.multi-select-placeholder');
+      placeholder = trigger.querySelector('.multi-select-placeholder');
       placeholder.style.display = selected.length > 0 ? 'none' : '';
       trigger.style.borderColor = selected.length > 0 ? 'var(--primary)' : '';
 
@@ -1206,12 +1180,6 @@
       });
 
       // Update checkmarks
-      var dropdown;
-      if (form === 'teacher-level') {
-        dropdown = document.getElementById('teacher-level-dropdown');
-      } else {
-        dropdown = document.getElementById(form + '-subject-dropdown');
-      }
       dropdown.querySelectorAll('.multi-select-option').forEach(function(opt) {
         opt.classList.toggle('selected', selected.indexOf(opt.getAttribute('data-value')) > -1);
       });

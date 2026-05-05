@@ -335,48 +335,51 @@
       margin: 0 0 48px;
     }
     .how-steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 480px;
+      margin: 0 auto;
     }
     .how-step {
-      position: relative;
-      padding: 32px 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px 24px;
       background: var(--white);
       border: 1px solid var(--surface-2);
-      border-radius: 20px;
-      margin: 0 10px;
+      border-radius: 16px;
       text-align: left;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     }
-    .how-step:first-child { margin-left: 0; }
-    .how-step:last-child { margin-right: 0; }
     .how-step-num {
-      display: inline-flex; align-items: center; justify-content: center;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
       width: 28px; height: 28px;
       border-radius: 8px;
       background: var(--primary);
       color: var(--white);
       font-size: 0.8125rem; font-weight: 700;
-      margin-bottom: 16px;
+      margin: 0;
     }
     .how-step-icon {
+      flex-shrink: 0;
       width: 44px; height: 44px;
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 14px;
+      margin: 0;
     }
     .how-step-icon--violet { background: rgba(124,58,237,0.1); color: var(--primary); }
     .how-step-icon--sky { background: rgba(14,165,233,0.1); color: var(--teal); }
     .how-step-icon--mint { background: rgba(16,185,129,0.1); color: var(--mint); }
+    .how-step-content { flex: 1; }
     .how-step h3 {
       font-size: 0.9375rem; font-weight: 700;
-      color: var(--dark); margin: 0 0 8px;
+      color: var(--dark); margin: 0 0 4px;
     }
     .how-step p {
       font-size: 0.8125rem; color: var(--gray-400);
-      line-height: 1.6; margin: 0;
+      line-height: 1.5; margin: 0;
     }
     .how-connector {
       display: none;
@@ -653,26 +656,32 @@
         <div class="how-step">
           <div class="how-step-num">1</div>
           <div class="how-step-icon how-step-icon--violet">
-            <i data-lucide="user-plus" width="22" height="22"></i>
+            <i data-lucide="user-plus" width="20" height="20"></i>
           </div>
-          <h3>Sign up free</h3>
-          <p>Join as a parent or teacher — no payment, no commitment needed.</p>
+          <div class="how-step-content">
+            <h3>Sign up free</h3>
+            <p>Join as a parent or teacher — no payment, no commitment needed.</p>
+          </div>
         </div>
         <div class="how-step">
           <div class="how-step-num">2</div>
           <div class="how-step-icon how-step-icon--sky">
-            <i data-lucide="sparkles" width="22" height="22"></i>
+            <i data-lucide="sparkles" width="20" height="20"></i>
           </div>
-          <h3>We match you</h3>
-          <p>Our AI finds the right teacher based on goals, style, and schedule.</p>
+          <div class="how-step-content">
+            <h3>We match you</h3>
+            <p>Our AI finds the right teacher based on goals, style, and schedule.</p>
+          </div>
         </div>
         <div class="how-step">
           <div class="how-step-num">3</div>
           <div class="how-step-icon how-step-icon--mint">
-            <i data-lucide="trending-up" width="22" height="22"></i>
+            <i data-lucide="trending-up" width="20" height="20"></i>
           </div>
-          <h3>Start learning</h3>
-          <p>Connect with your teacher and begin — no admin, no hassle.</p>
+          <div class="how-step-content">
+            <h3>Start learning</h3>
+            <p>Connect with your teacher and begin — no admin, no hassle.</p>
+          </div>
         </div>
       </div>
     </div>

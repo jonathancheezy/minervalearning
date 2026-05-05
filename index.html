@@ -427,7 +427,7 @@
         </svg>
         Minerva
       </a>
-      <span class="nav-badge">Early Access</span>
+      <span class="nav-badge" id="navBadge">Early Access</span>
       <div class="lang-wrap">
         <button class="lang-btn" id="langBtn" onclick="toggleLang()">
           <i data-lucide="globe" width="15" height="15"></i>
@@ -679,6 +679,7 @@
     const T = {
       en: {
         eyebrow: "Coming to Hong Kong — Q3 2026",
+        labelNavBadge: "Early Access",
         h1fees: "No fees.",
         h1violet: "Real teachers.",
         h1sky: "Better learning.",
@@ -745,6 +746,7 @@
       },
       zhtw: {
         eyebrow: "2026年第三季登陸香港",
+        labelNavBadge: "早期使用",
         h1fees: "不收費用。",
         h1violet: "真實導師",
         h1sky: "更優學習體驗",
@@ -811,6 +813,7 @@
       },
       zhcn: {
         eyebrow: "2026年第三季度登陆香港",
+        labelNavBadge: "早期使用",
         h1fees: "不收费用。",
         h1violet: "真实导师",
         h1sky: "更优学习体验",
@@ -901,6 +904,10 @@
       const t = T[currentLang];
       document.getElementById("langLabel").textContent = currentLang === "zhtw" ? "繁" : currentLang === "zhcn" ? "简" : "EN";
       document.querySelectorAll(".lang-option").forEach(o => o.classList.toggle("active", o.dataset.lang === currentLang));
+
+      // Nav badge
+      const navBadge = document.getElementById("navBadge");
+      if (navBadge) navBadge.textContent = t.labelNavBadge;
 
       // Hero
       const h1fees = document.querySelector(".hero h1 .fees");

@@ -319,22 +319,28 @@
     .how-section {
       padding: 80px 24px;
       background: var(--white);
+      -webkit-user-select: text !important;
+      user-select: text !important;
     }
     .how-inner {
       max-width: 760px;
       margin: 0 auto;
       text-align: center;
+      -webkit-user-select: text !important;
+      user-select: text !important;
     }
     .how-title {
       font-size: 1.75rem; font-weight: 800;
       color: var(--dark); margin: 0 0 12px;
       letter-spacing: -0.02em;
-      user-select: text;
+      -webkit-user-select: text !important;
+      user-select: text !important;
     }
     .how-subtitle {
       font-size: 1rem; color: var(--gray-400);
       margin: 0 0 48px;
-      user-select: text;
+      -webkit-user-select: text !important;
+      user-select: text !important;
     }
     .how-steps {
       display: flex;
@@ -1025,9 +1031,13 @@
 
   <script>
     lucide.createIcons();
-    // Kill pointer events on ALL Lucide SVG icons site-wide (backup CSS)
-    var style = document.createElement('style');
-    document.querySelectorAll('svg[data-lucide]').forEach(function(s){ s.style.pointerEvents='none'; });
+    // After Lucide renders SVGs, set pointer-events:none on paths inside how-step icons
+    document.querySelectorAll('.how-step-icon svg').forEach(function(svg) {
+      svg.style.pointerEvents = 'none';
+      svg.querySelectorAll('path,line,circle,polyline,polygon').forEach(function(el) {
+        el.style.pointerEvents = 'none';
+      });
+    });
 
 function switchTab(tab) {
       document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));

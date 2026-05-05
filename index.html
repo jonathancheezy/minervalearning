@@ -73,7 +73,63 @@
       letter-spacing: 0.04em; text-transform: uppercase;
     }
 
-    /* ── HERO ── */
+    /* ── LANGUAGE DROPDOWN ── */
+    .lang-wrap {
+      position: relative;
+    }
+    .lang-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 12px;
+      border: 1.5px solid var(--surface-2);
+      border-radius: 10px;
+      background: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .lang-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .lang-btn svg { flex-shrink: 0; }
+
+    .lang-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--white);
+      border: 1.5px solid var(--surface-2);
+      border-radius: 14px;
+      padding: 6px;
+      min-width: 160px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      display: none;
+      z-index: 200;
+    }
+    .lang-dropdown.show { display: block; animation: dropIn 0.18s ease; }
+    @keyframes dropIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .lang-option {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gray-500);
+      transition: all 0.12s ease;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .lang-option:hover { background: var(--surface); color: var(--dark); }
+    .lang-option.active { background: rgba(124,58,237,0.07); color: var(--primary); font-weight: 600; }
+    .lang-option .lang-code { font-size: 0.75rem; opacity: 0.6; }
     .hero {
       min-height: 100dvh;
       display: flex; align-items: center;
@@ -369,6 +425,23 @@
         Minerva
       </a>
       <span class="nav-badge">Early Access</span>
+      <div class="lang-wrap">
+        <button class="lang-btn" id="langBtn" onclick="toggleLang()">
+          <i data-lucide="globe" width="15" height="15"></i>
+          <span id="langLabel">EN</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-option active" data-lang="en" onclick="setLang('en')">
+            English <span class="lang-code">EN</span>
+          </button>
+          <button class="lang-option" data-lang="zhtw" onclick="setLang('zhtw')">
+            繁體中文 <span class="lang-code">繁</span>
+          </button>
+          <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')">
+            简体中文 <span class="lang-code">简</span>
+          </button>
+        </div>
+      </div>
     </div>
   </nav>
 
@@ -593,6 +666,345 @@
       document.getElementById('teacher-success').classList.add('show');
       lucide.createIcons();
     }
+  
+    // ── Language data
+    const T = {
+      en: {
+        eyebrow: "Coming to Hong Kong — Q3 2026",
+        h1violet: "Real teachers.",
+        h1sky: "Better learning.",
+        sub: "An AI-powered learning marketplace connecting parents with verified teachers — zero platform fees during early access.",
+        tabParent: "Parent / Student",
+        tabTeacher: "Teacher / Tutor",
+        labelName: "Name",
+        labelEmail: "Email",
+        labelLevel: "Student level",
+        labelSubjects: "Subject(s) needed",
+        labelYourName: "Your name",
+        labelTeach: "Subject(s) you teach",
+        labelExp: "Experience",
+        labelStudLevel: "Student level",
+        selectLevel: "Select level",
+        selPri13: "Primary 1–3",
+        selPri46: "Primary 4–6",
+        selSec13: "Secondary 1–3",
+        selSec46: "Secondary 4–6 (HKDSE)",
+        selUni: "University / Adult",
+        selPrim: "Primary",
+        selSec: "Secondary",
+        selHKDSE: "HKDSE",
+        selAll: "All levels",
+        sel01: "0–1 years",
+        sel23: "2–3 years",
+        sel46: "4–6 years",
+        sel7p: "7+ years",
+        placeholderName: "e.g. Sarah",
+        placeholderEmail: "you@example.com",
+        placeholderTeacherName: "e.g. Marcus Chan",
+        placeholderSubjects: "e.g. HKDSE Maths, English",
+        placeholderTeachSubjects: "e.g. HKDSE Maths, Physics",
+        btnParent: "Join Early Access — Free",
+        btnTeacher: "Get Your First Free Match",
+        noteParent: "No payment now. No fees during early access.",
+        noteTeacher: "First student is free. Subscription plans coming soon.",
+        successParent: "You are on the list!",
+        successParentP: "We will reach out when Minerva launches in Hong Kong.",
+        successTeacher: "You are on the list!",
+        successTeacherP: "First match is on us. We will contact you when we launch.",
+        comingEyebrow: "What is coming",
+        comingTitle: "More ways Minerva",
+        comingTitle2: "helps you succeed",
+        comingP: "Beyond matching, here is what is built into the platform.",
+        badgeNow: "Now",
+        badgeLater: "Coming",
+        fVerified: "Verified teachers",
+        dVerified: "Every teacher goes through ID verification and background checks before accepting students.",
+        fLive: "Live booking",
+        dLive: "Teachers publish their real-time availability. Parents and students book instantly — no WhatsApp needed.",
+        fMulti: "Multilingual",
+        dMulti: "Interface in English, Traditional Chinese, and Simplified Chinese.",
+        fMsg: "In-app messaging",
+        dMsg: "Chat with your teacher, share files, and coordinate — all inside the platform, no contact exchange.",
+        fEscrow: "Escrow payments",
+        dEscrow: "Payment held until after the lesson. Cancelled? No charge. Unsatisfied? Full refund.",
+        fAI: "AI progress tracking",
+        dAI: "After every lesson, an AI summary tracks skill gaps and progress toward exam goals.",
+        footer: "2026 Minerva Learning Ltd. Hong Kong.",
+      },
+      zhtw: {
+        eyebrow: "2026年第三季登陸香港",
+        h1violet: "真實導師",
+        h1sky: "高效學習",
+        sub: "人工智能學習市集，助家長與已認證導師配對——早期使用期間平台費用全免",
+        tabParent: "家長 / 學生",
+        tabTeacher: "導師",
+        labelName: "姓名",
+        labelEmail: "電郵",
+        labelLevel: "學生年級",
+        labelSubjects: "所需科目",
+        labelYourName: "您的姓名",
+        labelTeach: "任教科目",
+        labelExp: "經驗",
+        labelStudLevel: "學生年級",
+        selectLevel: "選擇年級",
+        selPri13: "小學一至三年級",
+        selPri46: "小學四至六年級",
+        selSec13: "中學一至三年級",
+        selSec46: "中學四至六年級 (HKDSE)",
+        selUni: "大學 / 成人",
+        selPrim: "小學",
+        selSec: "中學",
+        selHKDSE: "HKDSE",
+        selAll: "各級",
+        sel01: "0–1年",
+        sel23: "2–3年",
+        sel46: "4–6年",
+        sel7p: "7年以上",
+        placeholderName: "例如：Sarah",
+        placeholderEmail: "you@example.com",
+        placeholderTeacherName: "例如：陳Marcus",
+        placeholderSubjects: "例如：HKDSE數學、英文",
+        placeholderTeachSubjects: "例如：HKDSE數學、物理",
+        btnParent: "免費加入早期使用",
+        btnTeacher: "獲得首個免費配對",
+        noteParent: "現在無需付款。早期使用期間免平台費。",
+        noteTeacher: "首個學生免費。訂閱計劃即將推出。",
+        successParent: "已列入名單！",
+        successParentP: "Minerva登陸香港時，我們會聯絡您。",
+        successTeacher: "已列入名單！",
+        successTeacherP: "首個配對免費。我們會在啟動前聯絡您。",
+        comingEyebrow: "更多功能",
+        comingTitle: "Minerva",
+        comingTitle2: "助您更成功",
+        comingP: "除配對外，平台還有這些功能。",
+        badgeNow: "現已推出",
+        badgeLater: "即將推出",
+        fVerified: "已認證導師",
+        dVerified: "每位導師須通過身份認證及背景審查，方可接收學生。",
+        fLive: "即時預訂",
+        dLive: "導師發布即時空餘時間，家長和學生即時預訂——無需WhatsApp。",
+        fMulti: "多語言",
+        dMulti: "支援英文、繁體中文及簡體中文介面。",
+        fMsg: "應用程式內訊息",
+        dMsg: "與導師聊天、分享檔案、協調——全部在平台內完成，無需交換聯絡方式。",
+        fEscrow: "託管付款",
+        dEscrow: "款項於課堂完成後方發放。如取消？免費。如不滿意？全額退款。",
+        fAI: "人工智能進度追蹤",
+        dAI: "每節課後，人工智能摘要追蹤技能差距及考試目標進度。",
+        footer: "2026 Minerva Learning Ltd. 香港。",
+      },
+      zhcn: {
+        eyebrow: "2026年第三季度登陆香港",
+        h1violet: "真实导师",
+        h1sky: "高效学习",
+        sub: "人工智能学习市集，助家长与已认证导师配对——早期使用期间平台费用全免",
+        tabParent: "家长 / 学生",
+        tabTeacher: "导师",
+        labelName: "姓名",
+        labelEmail: "电邮",
+        labelLevel: "学生年级",
+        labelSubjects: "所需科目",
+        labelYourName: "您的姓名",
+        labelTeach: "任教科目",
+        labelExp: "经验",
+        labelStudLevel: "学生年级",
+        selectLevel: "选择年级",
+        selPri13: "小学一至三年级",
+        selPri46: "小学四至六年级",
+        selSec13: "中学一至三年级",
+        selSec46: "中学四至六年级 (HKDSE)",
+        selUni: "大学 / 成人",
+        selPrim: "小学",
+        selSec: "中学",
+        selHKDSE: "HKDSE",
+        selAll: "各级",
+        sel01: "0–1年",
+        sel23: "2–3年",
+        sel46: "4–6年",
+        sel7p: "7年以上",
+        placeholderName: "例如：Sarah",
+        placeholderEmail: "you@example.com",
+        placeholderTeacherName: "例如：陈Marcus",
+        placeholderSubjects: "例如：HKDSE数学、英文",
+        placeholderTeachSubjects: "例如：HKDSE数学、物理",
+        btnParent: "免费加入早期使用",
+        btnTeacher: "获得首个免费配对",
+        noteParent: "现在无需付款。早期使用期间免平台费。",
+        noteTeacher: "首个学生免费。订阅计划即将推出。",
+        successParent: "已列入名单！",
+        successParentP: "Minerva登陆香港时，我们会联络您。",
+        successTeacher: "已列入名单！",
+        successTeacherP: "首个配对免费。我们会在启动前联络您。",
+        comingEyebrow: "更多功能",
+        comingTitle: "Minerva",
+        comingTitle2: "助您更成功",
+        comingP: "除配对外，平台还有这些功能。",
+        badgeNow: "现已推出",
+        badgeLater: "即将推出",
+        fVerified: "已认证导师",
+        dVerified: "每位导师须通过身份认证及背景审查，方可接收学生。",
+        fLive: "即时预订",
+        dLive: "导师发布即时空余时间，家长和学生即时预订——无需WhatsApp。",
+        fMulti: "多语言",
+        dMulti: "支持英文、繁体中文及简体中文界面。",
+        fMsg: "应用程序内讯息",
+        dMsg: "与导师聊天、分享档案，协调——全部在平台内完成，无需交换联络方式。",
+        fEscrow: "托管付款",
+        dEscrow: "款项于课堂完成后方发放。如取消？免费。如不满意？全额退款。",
+        fAI: "人工智能进度追踪",
+        dAI: "每节课后，人工智能摘要追踪技能差距及考试目标进度。",
+        footer: "2026 Minerva Learning Ltd. 香港。",
+      },
+    };
+
+    let currentLang = localStorage.getItem("minerva_lang") || "en";
+
+    function toggleLang() {
+      document.getElementById("langDropdown").classList.toggle("show");
+    }
+
+    document.addEventListener("click", function(e) {
+      if (!e.target.closest(".lang-wrap")) {
+        const d = document.getElementById("langDropdown");
+        if (d) d.classList.remove("show");
+      }
+    });
+
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem("minerva_lang", lang);
+      applyLang();
+      document.getElementById("langDropdown").classList.remove("show");
+      lucide.createIcons();
+    }
+
+    function applyLang() {
+      const t = T[currentLang];
+      document.getElementById("langLabel").textContent = currentLang === "zhtw" ? "繁" : currentLang === "zhcn" ? "简" : "EN";
+      document.querySelectorAll(".lang-option").forEach(o => o.classList.toggle("active", o.dataset.lang === currentLang));
+
+      // Hero
+      const eyeb = document.querySelector(".hero-eyebrow");
+      if (eyeb) eyeb.innerHTML = '<span class="eyebrow-dot"></span> ' + t.eyebrow;
+      const h1violet = document.querySelector(".hero h1 .violet");
+      const h1sky = document.querySelector(".hero h1 .sky");
+      if (h1violet) h1violet.textContent = t.h1violet;
+      if (h1sky) h1sky.textContent = t.h1sky;
+      const sub = document.querySelector(".hero-sub");
+      if (sub) sub.textContent = t.sub;
+
+      // Tabs
+      document.getElementById("tab-parent").textContent = t.tabParent;
+      document.getElementById("tab-teacher").textContent = t.tabTeacher;
+
+      // Parent form
+      const pf = document.getElementById("parent-form");
+      if (pf) {
+        pf.querySelector('[name="name"]').placeholder = t.placeholderName;
+        pf.querySelector('[name="email"]').placeholder = t.placeholderEmail;
+        pf.querySelector('[name="subjects"]').placeholder = t.placeholderSubjects;
+        const pSubBtn = pf.querySelector('button[type="submit"]');
+        if (pSubBtn) {
+          pSubBtn.innerHTML = '<i data-lucide="user-plus" width="16" height="16"></i> ' + t.btnParent;
+        }
+        const pNote = pf.querySelector(".form-note");
+        if (pNote) pNote.textContent = t.noteParent;
+        const pLabels = pf.querySelectorAll(".form-group label");
+        if (pLabels[0]) pLabels[0].textContent = t.labelName;
+        if (pLabels[1]) pLabels[1].textContent = t.labelEmail;
+        if (pLabels[2]) pLabels[2].textContent = t.labelLevel;
+        const pSel = pf.querySelector('[name="level"]');
+        if (pSel && pSel.options.length >= 6) {
+          pSel.options[0].textContent = t.selectLevel;
+          pSel.options[1].textContent = t.selPri13;
+          pSel.options[2].textContent = t.selPri46;
+          pSel.options[3].textContent = t.selSec13;
+          pSel.options[4].textContent = t.selSec46;
+          pSel.options[5].textContent = t.selUni;
+        }
+      }
+
+      // Teacher form
+      const tf = document.getElementById("teacher-form");
+      if (tf) {
+        tf.querySelector('[name="name"]').placeholder = t.placeholderTeacherName;
+        tf.querySelector('[name="email"]').placeholder = t.placeholderEmail;
+        tf.querySelector('[name="subjects"]').placeholder = t.placeholderTeachSubjects;
+        const tSubBtn = tf.querySelector('button[type="submit"]');
+        if (tSubBtn) {
+          tSubBtn.innerHTML = '<i data-lucide="briefcase" width="16" height="16"></i> ' + t.btnTeacher;
+        }
+        const tNote = tf.querySelector(".form-note");
+        if (tNote) tNote.textContent = t.noteTeacher;
+        const tLabels = tf.querySelectorAll(".form-group label");
+        if (tLabels[0]) tLabels[0].textContent = t.labelYourName;
+        if (tLabels[1]) tLabels[1].textContent = t.labelEmail;
+        if (tLabels[2]) tLabels[2].textContent = t.labelTeach;
+        if (tLabels[3]) tLabels[3].textContent = t.labelExp;
+        if (tLabels[4]) tLabels[4].textContent = t.labelStudLevel;
+        const eSel = tf.querySelector('[name="experience"]');
+        if (eSel && eSel.options.length >= 5) {
+          eSel.options[0].textContent = t.selectLevel;
+          eSel.options[1].textContent = t.sel01;
+          eSel.options[2].textContent = t.sel23;
+          eSel.options[3].textContent = t.sel46;
+          eSel.options[4].textContent = t.sel7p;
+        }
+        const lSel = tf.querySelector('[name="level"]');
+        if (lSel && lSel.options.length >= 6) {
+          lSel.options[0].textContent = t.selectLevel;
+          lSel.options[1].textContent = t.selPrim;
+          lSel.options[2].textContent = t.selSec;
+          lSel.options[3].textContent = t.selHKDSE;
+          lSel.options[4].textContent = t.selUni;
+          lSel.options[5].textContent = t.selAll;
+        }
+      }
+
+      // Success msgs
+      const psH3 = document.querySelector("#parent-success h3");
+      const psP = document.querySelector("#parent-success p");
+      if (psH3) psH3.textContent = t.successParent;
+      if (psP) psP.textContent = t.successParentP;
+      const tsH3 = document.querySelector("#teacher-success h3");
+      const tsP = document.querySelector("#teacher-success p");
+      if (tsH3) tsH3.textContent = t.successTeacher;
+      if (tsP) tsP.textContent = t.successTeacherP;
+
+      // Coming section
+      const comingEyebrow = document.querySelector(".coming-eyebrow");
+      if (comingEyebrow) comingEyebrow.innerHTML = '<i data-lucide="rocket" width="13" height="13"></i> ' + t.comingEyebrow;
+      const comingH2 = document.querySelector(".coming-inner h2");
+      if (comingH2) comingH2.innerHTML = t.comingTitle + '<br>' + t.comingTitle2;
+      const comingP = document.querySelector(".coming-inner > p");
+      if (comingP) comingP.textContent = t.comingP;
+
+      // Road cards
+      const cards = document.querySelectorAll(".road-card");
+      const cardData = [
+        { badge: t.badgeNow, title: t.fVerified, desc: t.dVerified },
+        { badge: t.badgeNow, title: t.fLive, desc: t.dLive },
+        { badge: t.badgeNow, title: t.fMulti, desc: t.dMulti },
+        { badge: t.badgeLater, title: t.fMsg, desc: t.dMsg },
+        { badge: t.badgeLater, title: t.fEscrow, desc: t.dEscrow },
+        { badge: t.badgeLater, title: t.fAI, desc: t.dAI },
+      ];
+      cards.forEach((c, i) => {
+        if (c && cardData[i]) {
+          const badge = c.querySelector(".road-badge");
+          const title = c.querySelector("h3");
+          const desc = c.querySelector("p");
+          if (badge) badge.textContent = cardData[i].badge;
+          if (title) title.textContent = cardData[i].title;
+          if (desc) desc.textContent = cardData[i].desc;
+        }
+      });
+
+      // Footer
+      const footer = document.querySelector("footer");
+      if (footer) footer.textContent = t.footer;
+    }
+
+    applyLang();
+
   </script>
-</body>
-</html>

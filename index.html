@@ -517,13 +517,17 @@
           <form id="teacher-form" onsubmit="handleTeacher(event)">
             <div class="form-row">
               <div class="form-group">
-                <label>Your name</label>
-                <input type="text" name="name" placeholder="e.g. Marcus Chan" required />
+                <label>First name</label>
+                <input type="text" name="firstName" placeholder="e.g. Marcus" required />
               </div>
               <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="email" placeholder="you@example.com" required />
+                <label>Last name</label>
+                <input type="text" name="lastName" placeholder="e.g. Chan" />
               </div>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" placeholder="you@example.com" required />
             </div>
             <div class="form-group">
               <label>WhatsApp number</label>
@@ -686,7 +690,6 @@
         labelEmail: "Email",
         labelLevel: "Student level",
         labelSubjects: "Subject(s) needed",
-        labelYourName: "Your name",
         labelTeach: "Subject(s) you teach",
         labelExp: "Experience",
         labelStudLevel: "Student level",
@@ -748,14 +751,15 @@
         sub: "人工智能學習市集，助家長與已認證導師配對——早期使用期間平台費用全免",
         tabParent: "家長 / 學生",
         tabTeacher: "導師",
-        labelName: "姓名",
+        labelFirstName: "名",
+        labelLastName: "姓",
         labelEmail: "電郵",
         labelLevel: "學生年級",
         labelSubjects: "所需科目",
-        labelYourName: "您的姓名",
         labelTeach: "任教科目",
         labelExp: "經驗",
         labelStudLevel: "學生年級",
+        labelWhatsApp: "WhatsApp 號碼",
         selectLevel: "選擇年級",
         selPri13: "小學一至三年級",
         selPri46: "小學四至六年級",
@@ -770,11 +774,13 @@
         sel23: "2–3年",
         sel46: "4–6年",
         sel7p: "7年以上",
-        placeholderName: "例如：Sarah",
+        placeholderFirstName: "例如：Sarah",
+        placeholderLastName: "例如：陳",
         placeholderEmail: "you@example.com",
         placeholderTeacherName: "例如：陳Marcus",
         placeholderSubjects: "例如：HKDSE數學、英文",
         placeholderTeachSubjects: "例如：HKDSE數學、物理",
+        placeholderWhatsApp: "+852 9123 4567",
         btnParent: "免費加入早期使用",
         btnTeacher: "獲得首個免費配對",
         noteParent: "現在無需付款。早期使用期間免平台費。",
@@ -811,14 +817,15 @@
         sub: "人工智能学习市集，助家长与已认证导师配对——早期使用期间平台费用全免",
         tabParent: "家长 / 学生",
         tabTeacher: "导师",
-        labelName: "姓名",
         labelEmail: "电邮",
         labelLevel: "学生年级",
         labelSubjects: "所需科目",
-        labelYourName: "您的姓名",
+        labelFirstName: "名",
+        labelLastName: "姓",
         labelTeach: "任教科目",
         labelExp: "经验",
         labelStudLevel: "学生年级",
+        labelWhatsApp: "WhatsApp 号码",
         selectLevel: "选择年级",
         selPri13: "小学一至三年级",
         selPri46: "小学四至六年级",
@@ -833,11 +840,13 @@
         sel23: "2–3年",
         sel46: "4–6年",
         sel7p: "7年以上",
-        placeholderName: "例如：Sarah",
+        placeholderFirstName: "例如：Sarah",
+        placeholderLastName: "例如：陈",
         placeholderEmail: "you@example.com",
         placeholderTeacherName: "例如：陈Marcus",
         placeholderSubjects: "例如：HKDSE数学、英文",
         placeholderTeachSubjects: "例如：HKDSE数学、物理",
+        placeholderWhatsApp: "+852 9123 4567",
         btnParent: "免费加入早期使用",
         btnTeacher: "获得首个免费配对",
         noteParent: "现在无需付款。早期使用期间免平台费。",
@@ -926,8 +935,9 @@
         if (pLabels[0]) pLabels[0].textContent = t.labelFirstName;
         if (pLabels[1]) pLabels[1].textContent = t.labelLastName;
         if (pLabels[2]) pLabels[2].textContent = t.labelEmail;
-        if (pLabels[3]) pLabels[3].textContent = t.labelWhatsApp;
-        if (pLabels[4]) pLabels[4].textContent = t.labelLevel;
+        if (pLabels[3]) pLabels[3].textContent = t.labelLevel;
+        if (pLabels[4]) pLabels[4].textContent = t.labelWhatsApp;
+        if (pLabels[5]) pLabels[5].textContent = t.labelSubjects;
         const pSel = pf.querySelector('[name="level"]');
         if (pSel && pSel.options.length >= 6) {
           pSel.options[0].textContent = t.selectLevel;
@@ -942,8 +952,10 @@
       // Teacher form
       const tf = document.getElementById("teacher-form");
       if (tf) {
-        tf.querySelector('[name="name"]').placeholder = t.placeholderTeacherName;
+        tf.querySelector('[name="firstName"]').placeholder = t.placeholderFirstName;
+        tf.querySelector('[name="lastName"]').placeholder = t.placeholderLastName;
         tf.querySelector('[name="email"]').placeholder = t.placeholderEmail;
+        tf.querySelector('[name="whatsapp"]').placeholder = t.placeholderWhatsApp;
         tf.querySelector('[name="subjects"]').placeholder = t.placeholderTeachSubjects;
         const tSubBtn = tf.querySelector('button[type="submit"]');
         if (tSubBtn) {
@@ -952,12 +964,13 @@
         const tNote = tf.querySelector(".form-note");
         if (tNote) tNote.textContent = t.noteTeacher;
         const tLabels = tf.querySelectorAll(".form-group label");
-        if (tLabels[0]) tLabels[0].textContent = t.labelYourName;
-        if (tLabels[1]) tLabels[1].textContent = t.labelEmail;
-        if (tLabels[2]) tLabels[2].textContent = t.labelWhatsApp;
-        if (tLabels[3]) tLabels[3].textContent = t.labelTeach;
-        if (tLabels[4]) tLabels[4].textContent = t.labelExp;
-        if (tLabels[5]) tLabels[5].textContent = t.labelStudLevel;
+        if (tLabels[0]) tLabels[0].textContent = t.labelFirstName;
+        if (tLabels[1]) tLabels[1].textContent = t.labelLastName;
+        if (tLabels[2]) tLabels[2].textContent = t.labelEmail;
+        if (tLabels[3]) tLabels[3].textContent = t.labelWhatsApp;
+        if (tLabels[4]) tLabels[4].textContent = t.labelTeach;
+        if (tLabels[5]) tLabels[5].textContent = t.labelExp;
+        if (tLabels[6]) tLabels[6].textContent = t.labelStudLevel;
         const eSel = tf.querySelector('[name="experience"]');
         if (eSel && eSel.options.length >= 5) {
           eSel.options[0].textContent = t.selectLevel;

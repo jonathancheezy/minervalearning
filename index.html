@@ -343,14 +343,20 @@
     }
     .how-step {
       display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      padding: 24px 24px;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 24px;
       background: var(--white);
       border: 1px solid var(--surface-2);
       border-radius: 16px;
-      text-align: left;
+      text-align: center;
       box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .how-step-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     .how-step-num {
       display: flex; align-items: center; justify-content: center;
@@ -372,7 +378,7 @@
     .how-step-icon--violet { background: rgba(124,58,237,0.1); color: var(--primary); }
     .how-step-icon--sky { background: rgba(14,165,233,0.1); color: var(--teal); }
     .how-step-icon--mint { background: rgba(16,185,129,0.1); color: var(--mint); }
-    .how-step-content { flex: 1; }
+    .how-step-content { }
     .how-step h3 {
       font-size: 0.9375rem; font-weight: 700;
       color: var(--dark); margin: 0 0 4px;
@@ -855,9 +861,11 @@
       <p class="how-subtitle">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
       <div class="how-steps">
         <div class="how-step">
-          <div class="how-step-num">1</div>
+          <div class="how-step-badge">
+            <div class="how-step-num">1</div>
           <div class="how-step-icon how-step-icon--violet">
             <i data-lucide="user-plus" width="20" height="20"></i>
+          </div>
           </div>
           <div class="how-step-content">
             <h3>Sign up free</h3>
@@ -865,9 +873,11 @@
           </div>
         </div>
         <div class="how-step">
-          <div class="how-step-num">2</div>
+          <div class="how-step-badge">
+            <div class="how-step-num">2</div>
           <div class="how-step-icon how-step-icon--sky">
             <i data-lucide="sparkles" width="20" height="20"></i>
+          </div>
           </div>
           <div class="how-step-content">
             <h3>We match you</h3>
@@ -875,9 +885,11 @@
           </div>
         </div>
         <div class="how-step">
-          <div class="how-step-num">3</div>
+          <div class="how-step-badge">
+            <div class="how-step-num">3</div>
           <div class="how-step-icon how-step-icon--mint">
             <i data-lucide="trending-up" width="20" height="20"></i>
+          </div>
           </div>
           <div class="how-step-content">
             <h3>Start learning</h3>

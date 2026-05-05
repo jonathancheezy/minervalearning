@@ -651,7 +651,7 @@
   <section class="how-section">
     <div class="how-inner">
       <h2 class="how-title">Three steps to better learning</h2>
-      <p class="how-subtitle">No forms to fill, no admin to manage. Just sign up and we handle the rest.</p>
+      <p class="how-subtitle">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
       <div class="how-steps">
         <div class="how-step">
           <div class="how-step-num">1</div>
@@ -835,12 +835,13 @@
         successTeacher: "You are on the list!",
         successTeacherP: "First match is on us. We will contact you when we launch.",
         howEyebrow: "How it works",
+        howSubtitle: "Hassle free registration, no admin to manage. Just sign up and we handle the rest.",
         howStep1Title: "Sign up free",
         howStep1Desc: "Join as a parent or teacher — no payment, no commitment.",
         howStep2Title: "We match you",
         howStep2Desc: "Our AI finds the right fit based on goals, style, and schedule.",
         howStep3Title: "Start learning",
-        howStep3Desc: "Connect with your teacher and begin — no admin hassle.",
+        howStep3Desc: "Connect with your teacher and begin — no admin, no hassle.",
         comingEyebrow: "What is coming",
         comingTitle: "More ways Minerva",
         comingTitle2: "helps you succeed",
@@ -911,6 +912,7 @@
         successTeacher: "已列入名單！",
         successTeacherP: "首個配對免費。我們會在啟動前聯絡您。",
         howEyebrow: "運作方式",
+        howSubtitle: "輕鬆註冊，無需行政手續。報名後我們會處理一切。",
         howStep1Title: "免費報名",
         howStep1Desc: "以家長或導師身份加入——無需付款，無需承諾。",
         howStep2Title: "為您配對",
@@ -918,13 +920,6 @@
         howStep3Title: "開始學習",
         howStep3Desc: "與導師聯繫並開始——無需繁瑣行政程序。",
         howEyebrow: "运作方式",
-        howStep1Title: "免费报名",
-        howStep1Desc: "以家长或导师身份加入——无需付款，无需承诺。",
-        howStep2Title: "为您配对",
-        howStep2Desc: "我们的AI会根据目标、风格和时间表为您找到理想配对。",
-        howStep3Title: "开始学习",
-        howStep3Desc: "与导师联系并开始——无需繁琐行政程序。",
-        comingEyebrow: "更多功能",
         comingTitle: "Minerva",
         comingTitle2: "助您更成功",
         comingP: "除配對外，平台還有這些功能。",
@@ -992,14 +987,8 @@
         successParentP: "Minerva登陆香港时，我们会联络您。",
         successTeacher: "已列入名单！",
         successTeacherP: "首个配对免费。我们会在启动前联络您。",
-        howEyebrow: "運作方式",
-        howStep1Title: "免費報名",
-        howStep1Desc: "以家長或導師身份加入——無需付款，無需承諾。",
-        howStep2Title: "為您配對",
-        howStep2Desc: "我們的AI會根據目標、風格和時間表為您找到理想配對。",
-        howStep3Title: "開始學習",
-        howStep3Desc: "與導師聯繫並開始——無需繁瑣行政程序。",
         howEyebrow: "运作方式",
+        howSubtitle: "轻松注册，无需行政手续。报名后我们会处理一切。",
         howStep1Title: "免费报名",
         howStep1Desc: "以家长或导师身份加入——无需付款，无需承诺。",
         howStep2Title: "为您配对",
@@ -1161,6 +1150,8 @@
       // How it works
       const howEyebrow = document.querySelector(".how-eyebrow");
       if (howEyebrow) howEyebrow.innerHTML = '<i data-lucide="zap" width="13" height="13"></i> ' + t.howEyebrow;
+      const howSubtitle = document.querySelector(".how-subtitle");
+      if (howSubtitle) howSubtitle.textContent = t.howSubtitle;
       const steps = document.querySelectorAll(".how-step");
       const stepData = [
         { title: t.howStep1Title, desc: t.howStep1Desc },

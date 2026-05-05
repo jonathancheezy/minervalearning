@@ -1090,10 +1090,25 @@
 
 
     function toggleMultiSelect(form) {
-      const dropdown = document.getElementById(form + '-subject-dropdown');
-      document.querySelectorAll('.multi-select-dropdown').forEach(d => {
+      var dropdown = document.getElementById(form + '-subject-dropdown');
+      var trigger = document.getElementById(form + '-subject-select').querySelector('.multi-select-trigger');
+      document.querySelectorAll('.multi-select-dropdown').forEach(function(d) {
         if (d !== dropdown) d.classList.remove('show');
       });
+      // Position dropdown using fixed positioning
+      var rect = trigger.getBoundingClientRect();
+      dropdown.style.left = rect.left + 'px';
+      var spaceBelow = window.innerHeight - rect.bottom;
+      if (spaceBelow < 300) {
+        dropdown.style.top = (rect.top - 10) + 'px';
+      } else {
+        dropdown.style.top = (rect.bottom + 10) + 'px';
+      }
+      // Keep within right edge of viewport
+      var rightEdge = rect.left + 320;
+      if (rightEdge > window.innerWidth) {
+        dropdown.style.left = Math.max(10, window.innerWidth - 320) + 'px';
+      }
       dropdown.classList.toggle('show');
     }
 

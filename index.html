@@ -283,8 +283,9 @@
     .btn-primary {
       background: var(--primary); color: var(--white);
       box-shadow: 0 4px 20px rgba(124,58,237,0.4);
-      width: 100%;
-      font-size: 1rem; padding: 15px 28px;
+      font-size: 1rem; padding: 15px 36px;
+      min-width: 260px;
+      margin: 0 auto;
     }
     .btn-primary:hover { background: var(--primary-light); box-shadow: 0 8px 28px rgba(124,58,237,0.5); }
 
@@ -468,7 +469,7 @@
 
         <div class="form-tabs">
           <button class="form-tab active" id="tab-parent" onclick="switchTab('parent')">Parent / Student</button>
-          <button class="form-tab" id="tab-teacher" onclick="switchTab('teacher')">Teacher / Tutor</button>
+          <button class="form-tab" id="tab-teacher" onclick="switchTab('teacher')">Teacher</button>
         </div>
 
         <!-- PARENT FORM -->
@@ -675,7 +676,7 @@
         h1sky: "Better learning.",
         sub: "An AI-powered learning marketplace connecting parents with verified teachers — zero platform fees during early access.",
         tabParent: "Parent / Student",
-        tabTeacher: "Teacher / Tutor",
+        tabTeacher: "Teacher",
         labelName: "Name",
         labelEmail: "Email",
         labelLevel: "Student level",

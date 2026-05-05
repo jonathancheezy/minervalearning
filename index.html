@@ -135,7 +135,7 @@
       min-height: 100dvh;
       display: flex; align-items: center;
       padding: 120px 24px 80px;
-      position: relative; overflow: hidden;
+      position: relative;
     }
 
     .hero::before {
@@ -605,19 +605,17 @@
       font-size: 1rem; display: flex; align-items: center;
     }
     .multi-select-dropdown {
-      position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+      position: fixed;
       background: var(--white);
       border: 1.5px solid var(--surface-2);
       border-radius: 14px;
       padding: 6px;
       box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-      z-index: 100; display: none;
+      z-index: 9999; display: none;
       max-height: 280px; overflow-y: auto;
+      min-width: 240px;
     }
     .multi-select-dropdown.show { display: block; }
-    .multi-select-dropdown.open-up {
-      top: auto; bottom: calc(100% + 6px);
-    }
     .multi-select-option {
       display: flex; align-items: center; gap: 10px;
       padding: 10px 12px;
@@ -1072,6 +1070,11 @@
           document.querySelectorAll('.multi-select-dropdown').forEach(function(d) { d.classList.remove('show'); });
         }
       });
+
+      // Close dropdowns on scroll
+      window.addEventListener('scroll', function() {
+        document.querySelectorAll('.multi-select-dropdown.show').forEach(function(d) { d.classList.remove('show'); });
+      }, true);
 
       // Event delegation for multi-select options
       document.addEventListener('click', function(e) {

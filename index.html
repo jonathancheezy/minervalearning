@@ -32,7 +32,6 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-
     body {
       font-family: 'DM Sans', system-ui, sans-serif;
       color: var(--dark-2);
@@ -319,6 +318,12 @@
     .how-section {
       padding: 80px 24px;
       background: var(--white);
+    }
+    body .how-section h2,
+    body .how-section p,
+    body .how-section h3 {
+      -webkit-user-select: text !important;
+      user-select: text !important;
     }
     .how-inner {
       max-width: 760px;

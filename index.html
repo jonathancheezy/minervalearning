@@ -1083,7 +1083,7 @@
     function initLevelSelects() {
       // Only teacher has level multi-select
       var form = 'teacher-level';
-      var dropdown = document.getElementById(form + '-level-dropdown');
+      var dropdown = document.getElementById('teacher-level-dropdown');
       if (!dropdown) return;
       var items = LEVELS.map(function(s) {
         return '<div class="multi-select-option" data-form="' + form + '" data-value="' + s + '">' +

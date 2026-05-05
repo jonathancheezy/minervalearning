@@ -113,7 +113,7 @@
     @keyframes dropIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
 
     .lang-option {
-      display: flex; align-items: center;
+      display: flex; align-items: center; justify-content: center;
       padding: 9px 12px;
       border-radius: 9px;
       cursor: pointer;
@@ -198,7 +198,8 @@
       padding: 5px;
       margin: 0 auto 28px;
       justify-content: center;
-      width: fit-content;
+      width: 100%;
+      max-width: 340px;
     }
     .form-tab {
       padding: 9px 22px;
@@ -445,7 +446,7 @@
     <div class="hero-inner">
 
       <h1>
-        No fees.<br />
+        <span class="fees">No fees.</span><br />
         <span class="violet">Real teachers.</span><br />
         <span class="sky">Better learning.</span>
       </h1>
@@ -661,6 +662,7 @@
     const T = {
       en: {
         eyebrow: "Coming to Hong Kong — Q3 2026",
+        h1fees: "No fees.",
         h1violet: "Real teachers.",
         h1sky: "Better learning.",
         sub: "An AI-powered learning marketplace connecting parents with verified teachers — zero platform fees during early access.",
@@ -723,8 +725,9 @@
       },
       zhtw: {
         eyebrow: "2026年第三季登陸香港",
+        h1fees: "不收費用。",
         h1violet: "真實導師",
-        h1sky: "高效學習",
+        h1sky: "更優學習體驗",
         sub: "人工智能學習市集，助家長與已認證導師配對——早期使用期間平台費用全免",
         tabParent: "家長 / 學生",
         tabTeacher: "導師",
@@ -785,8 +788,9 @@
       },
       zhcn: {
         eyebrow: "2026年第三季度登陆香港",
+        h1fees: "不收费用。",
         h1violet: "真实导师",
-        h1sky: "高效学习",
+        h1sky: "更优学习体验",
         sub: "人工智能学习市集，助家长与已认证导师配对——早期使用期间平台费用全免",
         tabParent: "家长 / 学生",
         tabTeacher: "导师",
@@ -874,9 +878,10 @@
       document.querySelectorAll(".lang-option").forEach(o => o.classList.toggle("active", o.dataset.lang === currentLang));
 
       // Hero
-      // hero-eyebrow removed
+      const h1fees = document.querySelector(".hero h1 .fees");
       const h1violet = document.querySelector(".hero h1 .violet");
       const h1sky = document.querySelector(".hero h1 .sky");
+      if (h1fees) h1fees.textContent = t.h1fees;
       if (h1violet) h1violet.textContent = t.h1violet;
       if (h1sky) h1sky.textContent = t.h1sky;
       const sub = document.querySelector(".hero-sub");

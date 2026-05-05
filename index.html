@@ -668,11 +668,29 @@
             </div>
             <div class="form-group">
               <label>WhatsApp number</label>
-              <input type="tel" name="whatsapp" placeholder="+852 9123 4567" />
+              <input type="tel" name="whatsapp" inputmode="numeric" pattern="[0-9+ ]*" placeholder="+852 9123 4567" />
             </div>
             <div class="form-group">
               <label>Subject(s) needed</label>
-              <input type="text" name="subjects" placeholder="e.g. HKDSE Maths, English" />
+              <select name="subjects" required>
+                <option value="" disabled selected>Select subject</option>
+                <option>English</option>
+                <option>Maths</option>
+                <option>Chinese (Cantonese / Mandarin)</option>
+                <option>HKDSE Maths</option>
+                <option>HKDSE English</option>
+                <option>HKDSE Chinese</option>
+                <option>Biology</option>
+                <option>Chemistry</option>
+                <option>Physics</option>
+                <option>Economics</option>
+                <option>BAFS</option>
+                <option>ICT</option>
+                <option>Music</option>
+                <option>Visual Arts</option>
+                <option>Physical Education</option>
+                <option>Other</option>
+              </select>
             </div>
             <button type="submit" class="btn btn-primary">
               <i data-lucide="user-plus" width="16" height="16"></i>
@@ -706,11 +724,29 @@
             </div>
             <div class="form-group">
               <label>WhatsApp number</label>
-              <input type="tel" name="whatsapp" placeholder="+852 9123 4567" required />
+              <input type="tel" name="whatsapp" inputmode="numeric" pattern="[0-9+ ]*" placeholder="+852 9123 4567" required />
             </div>
             <div class="form-group">
               <label>Subject(s) you teach</label>
-              <input type="text" name="subjects" placeholder="e.g. HKDSE Maths, Physics" required />
+              <select name="subjects" required>
+                <option value="" disabled selected>Select subject</option>
+                <option>English</option>
+                <option>Maths</option>
+                <option>Chinese (Cantonese / Mandarin)</option>
+                <option>HKDSE Maths</option>
+                <option>HKDSE English</option>
+                <option>HKDSE Chinese</option>
+                <option>Biology</option>
+                <option>Chemistry</option>
+                <option>Physics</option>
+                <option>Economics</option>
+                <option>BAFS</option>
+                <option>ICT</option>
+                <option>Music</option>
+                <option>Visual Arts</option>
+                <option>Physical Education</option>
+                <option>Other</option>
+              </select>
             </div>
             <div class="form-row">
               <div class="form-group">
@@ -1054,6 +1090,7 @@
         labelStudLevel: "Student level",
         labelWhatsApp: "WhatsApp number",
         selectLevel: "Select level",
+        selectSubject: "Select subject",
         selPri13: "Primary 1–3",
         selPri46: "Primary 4–6",
         selSec13: "Secondary 1–3",
@@ -1139,6 +1176,7 @@
         labelStudLevel: "學生年級",
         labelWhatsApp: "WhatsApp 號碼",
         selectLevel: "選擇年級",
+        selectSubject: "選擇科目",
         selPri13: "小學一至三年級",
         selPri46: "小學四至六年級",
         selSec13: "中學一至三年級",
@@ -1224,6 +1262,7 @@
         labelStudLevel: "学生年级",
         labelWhatsApp: "WhatsApp 号码",
         selectLevel: "选择年级",
+        selectSubject: "选择科目",
         selPri13: "小学一至三年级",
         selPri46: "小学四至六年级",
         selSec13: "中学一至三年级",
@@ -1342,7 +1381,7 @@
         pf.querySelector('[name="lastName"]').placeholder = t.placeholderLastName;
         pf.querySelector('[name="email"]').placeholder = t.placeholderEmail;
         pf.querySelector('[name="whatsapp"]').placeholder = t.placeholderWhatsApp;
-        pf.querySelector('[name="subjects"]').placeholder = t.placeholderSubjects;
+        // subjects is now a select, no placeholder needed
         const pSubBtn = pf.querySelector('button[type="submit"]');
         if (pSubBtn) {
           pSubBtn.innerHTML = '<i data-lucide="user-plus" width="16" height="16"></i> ' + t.btnParent;
@@ -1359,6 +1398,10 @@
         const pSel = pf.querySelector('[name="level"]');
         if (pSel && pSel.options.length >= 6) {
           pSel.options[0].textContent = t.selectLevel;
+        const pSubSel = pf.querySelector('[name="subjects"]');
+        if (pSubSel && pSubSel.options.length > 0) {
+          pSubSel.options[0].textContent = t.selectSubject;
+        }
           pSel.options[1].textContent = t.selPri13;
           pSel.options[2].textContent = t.selPri46;
           pSel.options[3].textContent = t.selSec13;
@@ -1374,7 +1417,7 @@
         tf.querySelector('[name="lastName"]').placeholder = t.placeholderLastName;
         tf.querySelector('[name="email"]').placeholder = t.placeholderEmail;
         tf.querySelector('[name="whatsapp"]').placeholder = t.placeholderWhatsApp;
-        tf.querySelector('[name="subjects"]').placeholder = t.placeholderTeachSubjects;
+        // subjects is now a select, no placeholder needed
         const tSubBtn = tf.querySelector('button[type="submit"]');
         if (tSubBtn) {
           tSubBtn.innerHTML = '<i data-lucide="briefcase" width="16" height="16"></i> ' + t.btnTeacher;
@@ -1392,6 +1435,10 @@
         const eSel = tf.querySelector('[name="experience"]');
         if (eSel && eSel.options.length >= 5) {
           eSel.options[0].textContent = t.selectLevel;
+        const tSubSel = tf.querySelector('[name="subjects"]');
+        if (tSubSel && tSubSel.options.length > 0) {
+          tSubSel.options[0].textContent = t.selectSubject;
+        }
           eSel.options[1].textContent = t.sel01;
           eSel.options[2].textContent = t.sel23;
           eSel.options[3].textContent = t.sel46;

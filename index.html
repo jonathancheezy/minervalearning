@@ -1041,7 +1041,7 @@
     }
   
     // ── Multi-select data ──
-    const SUBJECTS = [
+    var SUBJECTS = [
       'English', 'Maths', 'Cantonese', 'Mandarin',
       'HKDSE Maths', 'HKDSE English', 'HKDSE Chinese',
       'Biology', 'Chemistry', 'Physics',
@@ -1050,56 +1050,47 @@
     ];
 
     function initMultiSelects() {
-      // Build dropdown HTML using data attributes + event delegation
       ['parent', 'teacher'].forEach(function(form) {
         var dropdown = document.getElementById(form + '-subject-dropdown');
-        var html = SUBJECTS.map(function(s) {
+        var items = SUBJECTS.map(function(s) {
           return '<div class="multi-select-option" data-form="' + form + '" data-value="' + s + '">' +
-            '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' + s +
-            '</div>';
-        }).join('') +
-        '<div class="multi-select-divider"></div>' +
-        '<div class="multi-select-option" data-form="' + form + '" data-value="other">' +
-        '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Other' +
-        '</div>';
-        dropdown.innerHTML = html;
-      });
-
-      // Close dropdowns on outside click
-      document.addEventListener('click', function(e) {
-        if (!e.target.closest('.multi-select')) {
-          document.querySelectorAll('.multi-select-dropdown').forEach(function(d) { d.classList.remove('show'); });
-        }
-      });
-
-      // Close dropdowns on window scroll (not document)
-      window.addEventListener('scroll', function() {
-        document.querySelectorAll('.multi-select-dropdown.show').forEach(function(d) { d.classList.remove('show'); });
-      });
-
-      // Event delegation for multi-select options
-      document.addEventListener('click', function(e) {
-        var option = e.target.closest('.multi-select-option');
-        if (option) {
-          e.stopPropagation();
-          var form = option.dataset.form;
-          var value = option.dataset.value;
-          toggleMultiSelectOption(form, value);
-        }
+            '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' + s + '</div>';
+        });
+        items.push('<div class="multi-select-divider"></div>');
+        items.push('<div class="multi-select-option" data-form="' + form + '" data-value="other">' +
+          '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Other</div>');
+        dropdown.innerHTML = items.join('');
       });
     }
 
-
+    // Open/close dropdown
     function toggleMultiSelect(form) {
       var dropdown = document.getElementById(form + '-subject-dropdown');
-      var trigger = document.getElementById(form + '-subject-select').querySelector('.multi-select-trigger');
-      document.querySelectorAll('.multi-select-dropdown').forEach(function(d) {
-        if (d !== dropdown) d.classList.remove('show');
-      });
-      dropdown.classList.toggle('show');
+      var wasShown = dropdown.classList.contains('show');
+      document.querySelectorAll('.multi-select-dropdown').forEach(function(d) { d.classList.remove('show'); });
+      if (!wasShown) { dropdown.classList.add('show'); }
     }
 
-    function toggleMultiSelectOption(form, value) {
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.multi-select')) {
+        document.querySelectorAll('.multi-select-dropdown').forEach(function(d) { d.classList.remove('show'); });
+      }
+    });
+
+    // Handle clicks inside dropdown (event delegation)
+    document.addEventListener('click', function(e) {
+      var option = e.target.closest('.multi-select-option');
+      if (!option) return;
+      e.stopPropagation();
+      var form = option.getAttribute('data-form');
+      var value = option.getAttribute('data-value');
+      if (!form || !value) return;
+      doMultiSelect(form, value);
+    });
+
+    // Core selection logic
+    function doMultiSelect(form, value) {
       var hidden = document.getElementById(form + '-subjects-hidden');
       var selected = hidden.value ? hidden.value.split('|') : [];
       var idx = selected.indexOf(value);
@@ -1109,61 +1100,43 @@
         selected.push(value);
       }
       hidden.value = selected.join('|');
-      renderMultiSelectTags(form, selected);
+      updateMultiSelectUI(form, selected);
+    }
+
+    // Update UI for a given selection array
+    function updateMultiSelectUI(form, selected) {
+      // Update trigger tags
+      var trigger = document.querySelector('#' + form + '-subject-select .multi-select-trigger');
+      trigger.querySelectorAll('.multi-select-tag').forEach(function(t) { t.remove(); });
+      var placeholder = trigger.querySelector('.multi-select-placeholder');
+      placeholder.style.display = selected.length > 0 ? 'none' : '';
+      trigger.style.borderColor = selected.length > 0 ? 'var(--primary)' : '';
+
+      selected.forEach(function(s) {
+        if (s === 'other') return;
+        var tag = document.createElement('span');
+        tag.className = 'multi-select-tag';
+        tag.innerHTML = s + '<button class="multi-select-tag-remove" onclick="event.stopPropagation();doMultiSelect(\'' + form + '\', \'' + s.replace(/'/g, "\\'") + '\')">&times;</button>';
+        trigger.insertBefore(tag, placeholder);
+      });
+
+      // Update checkmarks
+      var dropdown = document.getElementById(form + '-subject-dropdown');
+      dropdown.querySelectorAll('.multi-select-option').forEach(function(opt) {
+        opt.classList.toggle('selected', selected.indexOf(opt.getAttribute('data-value')) > -1);
+      });
 
       // Toggle "other" group
       var otherGroup = document.getElementById(form + '-subject-other-group');
       if (otherGroup) {
         otherGroup.style.display = selected.indexOf('other') > -1 ? 'block' : 'none';
         if (selected.indexOf('other') === -1) {
-          var otherInput = otherGroup.querySelector('input');
-          if (otherInput) otherInput.value = '';
+          var inp = otherGroup.querySelector('input');
+          if (inp) inp.value = '';
         }
       }
-
-      // Update checkmark visual
-      var dropdown = document.getElementById(form + '-subject-dropdown');
-      dropdown.querySelectorAll('.multi-select-option').forEach(function(opt) {
-        opt.classList.toggle('selected', selected.indexOf(opt.dataset.value) > -1);
-      });
-
-      // Update trigger styling
-      var trigger = document.querySelector('#' + form + '-subject-select .multi-select-trigger');
-      var placeholder = trigger.querySelector('.multi-select-placeholder');
-      if (selected.length > 0) {
-        trigger.style.borderColor = 'var(--primary)';
-        placeholder.style.display = 'none';
-      } else {
-        trigger.style.borderColor = '';
-        placeholder.style.display = '';
-      }
     }
 
-    function renderMultiSelectTags(form, selected) {
-      const trigger = document.querySelector('#' + form + '-subject-select .multi-select-trigger');
-      // Remove existing tags
-      trigger.querySelectorAll('.multi-select-tag').forEach(t => t.remove());
-      // Remove placeholder
-      const placeholder = trigger.querySelector('.multi-select-placeholder');
-      if (selected.length > 0) {
-        placeholder.style.display = 'none';
-      } else {
-        placeholder.style.display = '';
-      }
-      selected.forEach(s => {
-        if (s === 'other') return;
-        const tag = document.createElement('span');
-        tag.className = 'multi-select-tag';
-        tag.innerHTML = s + '<button class="multi-select-tag-remove" onclick="event.stopPropagation();removeMultiSelectTag(\'' + form + '\',\'' + s.replace(/'/g, "\\'") + '\')">&times;</button>';
-        trigger.insertBefore(tag, placeholder);
-      });
-    }
-
-    function removeMultiSelectTag(form, value) {
-      toggleMultiSelectOption(form, value);
-    }
-
-    // ── Subjects "Other" toggle (legacy, kept for compatibility) ──
     function initSubjectOtherToggle() {}
 
     // ── OTP Logic ──

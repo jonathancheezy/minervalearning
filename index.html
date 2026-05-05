@@ -468,13 +468,17 @@
           <form id="parent-form" onsubmit="handleParent(event)">
             <div class="form-row">
               <div class="form-group">
-                <label>Name</label>
-                <input type="text" name="name" placeholder="e.g. Sarah" required />
+                <label>First name</label>
+                <input type="text" name="firstName" placeholder="e.g. Sarah" required />
               </div>
               <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="email" placeholder="you@example.com" required />
+                <label>Last name</label>
+                <input type="text" name="lastName" placeholder="e.g. Chan" />
               </div>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" placeholder="you@example.com" required />
             </div>
             <div class="form-group">
               <label>Student level</label>
@@ -486,6 +490,10 @@
                 <option>Secondary 4–6 (HKDSE)</option>
                 <option>University / Adult</option>
               </select>
+            </div>
+            <div class="form-group">
+              <label>WhatsApp number</label>
+              <input type="tel" name="whatsapp" placeholder="+852 9123 4567" />
             </div>
             <div class="form-group">
               <label>Subject(s) needed</label>
@@ -516,6 +524,10 @@
                 <label>Email</label>
                 <input type="email" name="email" placeholder="you@example.com" required />
               </div>
+            </div>
+            <div class="form-group">
+              <label>WhatsApp number</label>
+              <input type="tel" name="whatsapp" placeholder="+852 9123 4567" required />
             </div>
             <div class="form-group">
               <label>Subject(s) you teach</label>
@@ -669,7 +681,8 @@
         sub: "An AI-powered learning marketplace connecting parents with verified teachers — zero platform fees during early access.",
         tabParent: "Parent / Student",
         tabTeacher: "Teacher",
-        labelName: "Name",
+        labelFirstName: "First name",
+        labelLastName: "Last name",
         labelEmail: "Email",
         labelLevel: "Student level",
         labelSubjects: "Subject(s) needed",
@@ -677,6 +690,7 @@
         labelTeach: "Subject(s) you teach",
         labelExp: "Experience",
         labelStudLevel: "Student level",
+        labelWhatsApp: "WhatsApp number",
         selectLevel: "Select level",
         selPri13: "Primary 1–3",
         selPri46: "Primary 4–6",
@@ -691,11 +705,13 @@
         sel23: "2–3 years",
         sel46: "4–6 years",
         sel7p: "7+ years",
-        placeholderName: "e.g. Sarah",
+        placeholderFirstName: "e.g. Sarah",
+        placeholderLastName: "e.g. Chan",
         placeholderEmail: "you@example.com",
         placeholderTeacherName: "e.g. Marcus Chan",
         placeholderSubjects: "e.g. HKDSE Maths, English",
         placeholderTeachSubjects: "e.g. HKDSE Maths, Physics",
+        placeholderWhatsApp: "+852 9123 4567",
         btnParent: "Join Early Access — Free",
         btnTeacher: "Get Your First Free Match",
         noteParent: "No payment now. No fees during early access.",
@@ -895,8 +911,10 @@
       // Parent form
       const pf = document.getElementById("parent-form");
       if (pf) {
-        pf.querySelector('[name="name"]').placeholder = t.placeholderName;
+        pf.querySelector('[name="firstName"]').placeholder = t.placeholderFirstName;
+        pf.querySelector('[name="lastName"]').placeholder = t.placeholderLastName;
         pf.querySelector('[name="email"]').placeholder = t.placeholderEmail;
+        pf.querySelector('[name="whatsapp"]').placeholder = t.placeholderWhatsApp;
         pf.querySelector('[name="subjects"]').placeholder = t.placeholderSubjects;
         const pSubBtn = pf.querySelector('button[type="submit"]');
         if (pSubBtn) {
@@ -905,9 +923,11 @@
         const pNote = pf.querySelector(".form-note");
         if (pNote) pNote.textContent = t.noteParent;
         const pLabels = pf.querySelectorAll(".form-group label");
-        if (pLabels[0]) pLabels[0].textContent = t.labelName;
-        if (pLabels[1]) pLabels[1].textContent = t.labelEmail;
-        if (pLabels[2]) pLabels[2].textContent = t.labelLevel;
+        if (pLabels[0]) pLabels[0].textContent = t.labelFirstName;
+        if (pLabels[1]) pLabels[1].textContent = t.labelLastName;
+        if (pLabels[2]) pLabels[2].textContent = t.labelEmail;
+        if (pLabels[3]) pLabels[3].textContent = t.labelWhatsApp;
+        if (pLabels[4]) pLabels[4].textContent = t.labelLevel;
         const pSel = pf.querySelector('[name="level"]');
         if (pSel && pSel.options.length >= 6) {
           pSel.options[0].textContent = t.selectLevel;
@@ -934,9 +954,10 @@
         const tLabels = tf.querySelectorAll(".form-group label");
         if (tLabels[0]) tLabels[0].textContent = t.labelYourName;
         if (tLabels[1]) tLabels[1].textContent = t.labelEmail;
-        if (tLabels[2]) tLabels[2].textContent = t.labelTeach;
-        if (tLabels[3]) tLabels[3].textContent = t.labelExp;
-        if (tLabels[4]) tLabels[4].textContent = t.labelStudLevel;
+        if (tLabels[2]) tLabels[2].textContent = t.labelWhatsApp;
+        if (tLabels[3]) tLabels[3].textContent = t.labelTeach;
+        if (tLabels[4]) tLabels[4].textContent = t.labelExp;
+        if (tLabels[5]) tLabels[5].textContent = t.labelStudLevel;
         const eSel = tf.querySelector('[name="experience"]');
         if (eSel && eSel.options.length >= 5) {
           eSel.options[0].textContent = t.selectLevel;

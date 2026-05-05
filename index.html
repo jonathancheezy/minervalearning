@@ -343,20 +343,20 @@
     }
     .how-step {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 12px;
-      padding: 24px;
+      gap: 16px;
+      padding: 20px 24px;
       background: var(--white);
       border: 1px solid var(--surface-2);
       border-radius: 16px;
-      text-align: center;
+      text-align: left;
       box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     }
     .how-step-badge {
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-shrink: 0;
     }
     .how-step-num {
       display: flex; align-items: center; justify-content: center;
@@ -378,7 +378,7 @@
     .how-step-icon--violet { background: rgba(124,58,237,0.1); color: var(--primary); }
     .how-step-icon--sky { background: rgba(14,165,233,0.1); color: var(--teal); }
     .how-step-icon--mint { background: rgba(16,185,129,0.1); color: var(--mint); }
-    .how-step-content { }
+    .how-step-content { flex: 1; }
     .how-step h3 {
       font-size: 0.9375rem; font-weight: 700;
       color: var(--dark); margin: 0 0 4px;

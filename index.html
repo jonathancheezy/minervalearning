@@ -315,6 +315,56 @@
     .success-msg h3 { margin-bottom: 8px; color: var(--dark); }
     .success-msg p { font-size: 0.9375rem; color: var(--gray-500); }
 
+    /* ── HOW IT WORKS ── */
+    .how-section {
+      padding: 72px 24px;
+      background: var(--white);
+    }
+    .how-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .how-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 14px;
+      background: rgba(124,58,237,0.08);
+      border: 1px solid rgba(124,58,237,0.15);
+      border-radius: 999px;
+      font-size: 0.8125rem; font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+    .how-steps {
+      display: flex; gap: 24px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+    .how-step {
+      flex: 1; max-width: 180px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .how-step-icon {
+      width: 52px; height: 52px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(124,58,237,0.1);
+      color: var(--primary);
+      font-size: 1.25rem; font-weight: 800;
+    }
+    .how-step h3 {
+      font-size: 0.9375rem; font-weight: 700;
+      color: var(--dark); margin: 0;
+    }
+    .how-step p {
+      font-size: 0.8125rem; color: var(--gray-400);
+      line-height: 1.5; margin: 0;
+    }
+    .how-connector {
+      display: flex; align-items: center; padding-top: 20px;
+      color: var(--gray-300);
+    }
+
     /* ── COMING SOON ── */
     .coming-section {
       padding: 80px 24px;
@@ -577,6 +627,35 @@
     </div>
   </section>
 
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <div class="how-inner">
+      <div class="how-eyebrow">
+        <i data-lucide="zap" width="13" height="13"></i>
+        How it works
+      </div>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-step-icon">1</div>
+          <h3>Sign up free</h3>
+          <p>Join as a parent or teacher — no payment, no commitment.</p>
+        </div>
+        <div class="how-connector"><i data-lucide="arrow-right" width="18" height="18"></i></div>
+        <div class="how-step">
+          <div class="how-step-icon">2</div>
+          <h3>We match you</h3>
+          <p>Our AI finds the right fit based on goals, style, and schedule.</p>
+        </div>
+        <div class="how-connector"><i data-lucide="arrow-right" width="18" height="18"></i></div>
+        <div class="how-step">
+          <div class="how-step-icon">3</div>
+          <h3>Start learning</h3>
+          <p>Connect with your teacher and begin — no admin hassle.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- COMING SOON -->
   <div class="coming-section">
     <div class="coming-inner">
@@ -599,21 +678,21 @@
         </div>
 
         <div class="road-card">
-          <span class="road-badge badge-now">Now</span>
+          <span class="road-badge badge-later">Coming</span>
           <div class="road-icon road-icon--sky">
             <i data-lucide="calendar-check" width="20" height="20"></i>
           </div>
           <h3>Live booking</h3>
-          <p>Teachers publish their real-time availability. Parents and students book instantly — no WhatsApp needed.</p>
+          <p>Teachers publish their real-time availability. Parents and students book instantly.</p>
         </div>
 
         <div class="road-card">
           <span class="road-badge badge-now">Now</span>
           <div class="road-icon road-icon--mint">
-            <i data-lucide="globe" width="20" height="20"></i>
+            <i data-lucide="sparkles" width="20" height="20"></i>
           </div>
-          <h3>Multilingual</h3>
-          <p>Interface in English, Traditional Chinese, and Simplified Chinese.</p>
+          <h3>AI matching</h3>
+          <p>Our algorithm analyses learning goals, teaching style, and schedule to find your ideal match.</p>
         </div>
 
         <div class="road-card">
@@ -724,6 +803,13 @@
         successParentP: "We will reach out when Minerva launches in Hong Kong.",
         successTeacher: "You are on the list!",
         successTeacherP: "First match is on us. We will contact you when we launch.",
+        howEyebrow: "How it works",
+        howStep1Title: "Sign up free",
+        howStep1Desc: "Join as a parent or teacher — no payment, no commitment.",
+        howStep2Title: "We match you",
+        howStep2Desc: "Our AI finds the right fit based on goals, style, and schedule.",
+        howStep3Title: "Start learning",
+        howStep3Desc: "Connect with your teacher and begin — no admin hassle.",
         comingEyebrow: "What is coming",
         comingTitle: "More ways Minerva",
         comingTitle2: "helps you succeed",
@@ -732,8 +818,10 @@
         badgeLater: "Coming",
         fVerified: "Verified teachers",
         dVerified: "Every teacher goes through ID verification and background checks before accepting students.",
+        fAlgo: "AI matching",
+        dAlgo: "Our algorithm analyses learning goals, teaching style, and schedule to find your ideal match.",
         fLive: "Live booking",
-        dLive: "Teachers publish their real-time availability. Parents and students book instantly — no WhatsApp needed.",
+        dLive: "Teachers publish their real-time availability. Parents and students book instantly.",
         fMulti: "Multilingual",
         dMulti: "Interface in English, Traditional Chinese, and Simplified Chinese.",
         fMsg: "In-app messaging",
@@ -791,6 +879,20 @@
         successParentP: "Minerva登陸香港時，我們會聯絡您。",
         successTeacher: "已列入名單！",
         successTeacherP: "首個配對免費。我們會在啟動前聯絡您。",
+        howEyebrow: "運作方式",
+        howStep1Title: "免費報名",
+        howStep1Desc: "以家長或導師身份加入——無需付款，無需承諾。",
+        howStep2Title: "為您配對",
+        howStep2Desc: "我們的AI會根據目標、風格和時間表為您找到理想配對。",
+        howStep3Title: "開始學習",
+        howStep3Desc: "與導師聯繫並開始——無需繁瑣行政程序。",
+        howEyebrow: "运作方式",
+        howStep1Title: "免费报名",
+        howStep1Desc: "以家长或导师身份加入——无需付款，无需承诺。",
+        howStep2Title: "为您配对",
+        howStep2Desc: "我们的AI会根据目标、风格和时间表为您找到理想配对。",
+        howStep3Title: "开始学习",
+        howStep3Desc: "与导师联系并开始——无需繁琐行政程序。",
         comingEyebrow: "更多功能",
         comingTitle: "Minerva",
         comingTitle2: "助您更成功",
@@ -799,8 +901,10 @@
         badgeLater: "即將推出",
         fVerified: "已認證導師",
         dVerified: "每位導師須通過身份認證及背景審查，方可接收學生。",
+        fAlgo: "智能配對",
+        dAlgo: "我們的演算法會分析學習目標、教學風格和時間表，為您找到理想配對。",
         fLive: "即時預訂",
-        dLive: "導師發布即時空餘時間，家長和學生即時預訂——無需WhatsApp。",
+        dLive: "導師發布即時空餘時間，家長和學生即時預訂。",
         fMulti: "多語言",
         dMulti: "支援英文、繁體中文及簡體中文介面。",
         fMsg: "應用程式內訊息",
@@ -857,6 +961,20 @@
         successParentP: "Minerva登陆香港时，我们会联络您。",
         successTeacher: "已列入名单！",
         successTeacherP: "首个配对免费。我们会在启动前联络您。",
+        howEyebrow: "運作方式",
+        howStep1Title: "免費報名",
+        howStep1Desc: "以家長或導師身份加入——無需付款，無需承諾。",
+        howStep2Title: "為您配對",
+        howStep2Desc: "我們的AI會根據目標、風格和時間表為您找到理想配對。",
+        howStep3Title: "開始學習",
+        howStep3Desc: "與導師聯繫並開始——無需繁瑣行政程序。",
+        howEyebrow: "运作方式",
+        howStep1Title: "免费报名",
+        howStep1Desc: "以家长或导师身份加入——无需付款，无需承诺。",
+        howStep2Title: "为您配对",
+        howStep2Desc: "我们的AI会根据目标、风格和时间表为您找到理想配对。",
+        howStep3Title: "开始学习",
+        howStep3Desc: "与导师联系并开始——无需繁琐行政程序。",
         comingEyebrow: "更多功能",
         comingTitle: "Minerva",
         comingTitle2: "助您更成功",
@@ -865,8 +983,10 @@
         badgeLater: "即将推出",
         fVerified: "已认证导师",
         dVerified: "每位导师须通过身份认证及背景审查，方可接收学生。",
+        fAlgo: "智能配对",
+        dAlgo: "我们的演算法会分析学习目标、教学风格和时间表，为您找到理想配对。",
         fLive: "即时预订",
-        dLive: "导师发布即时空余时间，家长和学生即时预订——无需WhatsApp。",
+        dLive: "导师发布即时空余时间，家长和学生即时预订。",
         fMulti: "多语言",
         dMulti: "支持英文、繁体中文及简体中文界面。",
         fMsg: "应用程序内讯息",
@@ -1007,6 +1127,24 @@
       if (tsP) tsP.textContent = t.successTeacherP;
 
       // Coming section
+      // How it works
+      const howEyebrow = document.querySelector(".how-eyebrow");
+      if (howEyebrow) howEyebrow.innerHTML = '<i data-lucide="zap" width="13" height="13"></i> ' + t.howEyebrow;
+      const steps = document.querySelectorAll(".how-step");
+      const stepData = [
+        { title: t.howStep1Title, desc: t.howStep1Desc },
+        { title: t.howStep2Title, desc: t.howStep2Desc },
+        { title: t.howStep3Title, desc: t.howStep3Desc },
+      ];
+      steps.forEach((s, i) => {
+        if (s && stepData[i]) {
+          const h = s.querySelector("h3");
+          const p = s.querySelector("p");
+          if (h) h.textContent = stepData[i].title;
+          if (p) p.textContent = stepData[i].desc;
+        }
+      });
+
       const comingEyebrow = document.querySelector(".coming-eyebrow");
       if (comingEyebrow) comingEyebrow.innerHTML = '<i data-lucide="rocket" width="13" height="13"></i> ' + t.comingEyebrow;
       const comingH2 = document.querySelector(".coming-inner h2");
@@ -1018,8 +1156,8 @@
       const cards = document.querySelectorAll(".road-card");
       const cardData = [
         { badge: t.badgeNow, title: t.fVerified, desc: t.dVerified },
-        { badge: t.badgeNow, title: t.fLive, desc: t.dLive },
-        { badge: t.badgeNow, title: t.fMulti, desc: t.dMulti },
+        { badge: t.badgeLater, title: t.fLive, desc: t.dLive },
+        { badge: t.badgeNow, title: t.fAlgo, desc: t.dAlgo },
         { badge: t.badgeLater, title: t.fMsg, desc: t.dMsg },
         { badge: t.badgeLater, title: t.fEscrow, desc: t.dEscrow },
         { badge: t.badgeLater, title: t.fAI, desc: t.dAI },

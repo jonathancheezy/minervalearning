@@ -1048,26 +1048,40 @@
     ];
 
     function initMultiSelects() {
-      ['parent', 'teacher'].forEach(form => {
-        const dropdown = document.getElementById(form + '-subject-dropdown');
-        dropdown.innerHTML = SUBJECTS.map(s =>
-          '<div class="multi-select-option" data-value="' + s + '" onclick="toggleMultiSelectOption('' + form + '', '' + s.replace(/'/g, "\'") + '')">' +
-          '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' + s +
-          '</div>'
-        ).join('') +
+      // Build dropdown HTML using data attributes + event delegation
+      ['parent', 'teacher'].forEach(function(form) {
+        var dropdown = document.getElementById(form + '-subject-dropdown');
+        var html = SUBJECTS.map(function(s) {
+          return '<div class="multi-select-option" data-form="' + form + '" data-value="' + s + '">' +
+            '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' + s +
+            '</div>';
+        }).join('') +
         '<div class="multi-select-divider"></div>' +
-        '<div class="multi-select-option" data-value="other" onclick="toggleMultiSelectOption('' + form + '', 'other')">' +
+        '<div class="multi-select-option" data-form="' + form + '" data-value="other">' +
         '<div class="multi-select-option-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Other' +
         '</div>';
+        dropdown.innerHTML = html;
       });
 
       // Close dropdowns on outside click
       document.addEventListener('click', function(e) {
         if (!e.target.closest('.multi-select')) {
-          document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
+          document.querySelectorAll('.multi-select-dropdown').forEach(function(d) { d.classList.remove('show'); });
+        }
+      });
+
+      // Event delegation for multi-select options
+      document.addEventListener('click', function(e) {
+        var option = e.target.closest('.multi-select-option');
+        if (option) {
+          e.stopPropagation();
+          var form = option.dataset.form;
+          var value = option.dataset.value;
+          toggleMultiSelectOption(form, value);
         }
       });
     }
+
 
     function toggleMultiSelect(form) {
       const dropdown = document.getElementById(form + '-subject-dropdown');
@@ -1078,9 +1092,9 @@
     }
 
     function toggleMultiSelectOption(form, value) {
-      const hidden = document.getElementById(form + '-subjects-hidden');
-      let selected = hidden.value ? hidden.value.split('|') : [];
-      const idx = selected.indexOf(value);
+      var hidden = document.getElementById(form + '-subjects-hidden');
+      var selected = hidden.value ? hidden.value.split('|') : [];
+      var idx = selected.indexOf(value);
       if (idx > -1) {
         selected.splice(idx, 1);
       } else {
@@ -1090,24 +1104,24 @@
       renderMultiSelectTags(form, selected);
 
       // Toggle "other" group
-      const otherGroup = document.getElementById(form + '-subject-other-group');
+      var otherGroup = document.getElementById(form + '-subject-other-group');
       if (otherGroup) {
-        otherGroup.style.display = selected.includes('other') ? 'block' : 'none';
-        if (!selected.includes('other')) {
-          const otherInput = otherGroup.querySelector('input');
+        otherGroup.style.display = selected.indexOf('other') > -1 ? 'block' : 'none';
+        if (selected.indexOf('other') === -1) {
+          var otherInput = otherGroup.querySelector('input');
           if (otherInput) otherInput.value = '';
         }
       }
 
       // Update checkmark visual
-      const dropdown = document.getElementById(form + '-subject-dropdown');
-      dropdown.querySelectorAll('.multi-select-option').forEach(opt => {
-        opt.classList.toggle('selected', selected.includes(opt.dataset.value));
+      var dropdown = document.getElementById(form + '-subject-dropdown');
+      dropdown.querySelectorAll('.multi-select-option').forEach(function(opt) {
+        opt.classList.toggle('selected', selected.indexOf(opt.dataset.value) > -1);
       });
 
-      // Update required validation
-      const trigger = document.querySelector('#' + form + '-subject-select .multi-select-trigger');
-      const placeholder = trigger.querySelector('.multi-select-placeholder');
+      // Update trigger styling
+      var trigger = document.querySelector('#' + form + '-subject-select .multi-select-trigger');
+      var placeholder = trigger.querySelector('.multi-select-placeholder');
       if (selected.length > 0) {
         trigger.style.borderColor = 'var(--primary)';
         placeholder.style.display = 'none';
@@ -1132,7 +1146,7 @@
         if (s === 'other') return;
         const tag = document.createElement('span');
         tag.className = 'multi-select-tag';
-        tag.innerHTML = s + '<button class="multi-select-tag-remove" onclick="event.stopPropagation(); removeMultiSelectTag('' + form + '', '' + s.replace(/'/g, "\'") + '')">&times;</button>';
+        tag.innerHTML = s + '<button class="multi-select-tag-remove" onclick="event.stopPropagation();removeMultiSelectTag(\'' + form + '\',\'' + s.replace(/'/g, "\\'") + '\')">&times;</button>';
         trigger.insertBefore(tag, placeholder);
       });
     }

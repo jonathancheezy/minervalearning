@@ -315,114 +315,7 @@
     .success-msg p { font-size: 0.9375rem; color: var(--gray-500); }
 
     /* ── HOW IT WORKS ── */
-    .how-section {
-      padding: 80px 24px;
-      background: var(--white);
-      -webkit-user-select: text !important;
-      user-select: text !important;
-    }
-    .how-inner {
-      max-width: 760px;
-      margin: 0 auto;
-      text-align: center;
-      -webkit-user-select: text !important;
-      user-select: text !important;
-    }
 
-    html .how-section,
-    html .how-section * {
-      -webkit-user-select: text !important;
-      user-select: text !important;
-    }
-
-    .how-section,
-    .how-section *,
-    .how-section h2,
-    .how-section p,
-    .how-section h3 {
-      -webkit-user-select: text !important;
-      -webkit-touch-callout: default !important;
-      touch-action: manipulation;
-      user-select: text !important;
-    }
-
-    .how-title {
-      font-size: 1.75rem; font-weight: 800;
-      color: var(--dark); margin: 0 0 12px;
-      letter-spacing: -0.02em;
-    }
-    .how-subtitle {
-      font-size: 1rem; color: var(--gray-400);
-      margin: 0 0 48px;
-    }
-    .how-steps {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-    .how-step {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 20px 24px;
-      background: var(--white);
-      border: 1px solid var(--surface-2);
-      border-radius: 16px;
-      text-align: left;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-      position: relative;
-    }
-    .how-step-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-    }
-    .how-step-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-    }
-    .how-step-num {
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      width: 28px; height: 28px;
-      border-radius: 8px;
-      background: var(--primary);
-      color: var(--white);
-      font-size: 0.8125rem; font-weight: 700;
-      margin: 0;
-    }
-    .how-step-icon {
-      flex-shrink: 0;
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0;
-      font-size: 1.25rem;
-      line-height: 1;
-    }
-    .how-step-icon--violet { background: rgba(124,58,237,0.1); color: var(--primary); }
-    .how-step-icon--sky { background: rgba(14,165,233,0.1); color: var(--teal); }
-    .how-step-icon--mint { background: rgba(16,185,129,0.1); color: var(--mint); }
-    .how-step-content {
-      flex: 1;
-      pointer-events: auto;
-    }
-    .how-step h3 {
-      font-size: 0.9375rem; font-weight: 700;
-      color: var(--dark); margin: 0 0 4px;
-    }
-    .how-step p {
-      font-size: 0.8125rem; color: var(--gray-400);
-      line-height: 1.5; margin: 0;
-    }
-    .how-connector {
-      display: none;
-    }
 
     /* ── COMING SOON ── */
     .coming-section {
@@ -888,49 +781,28 @@
   </section>
 
   <!-- HOW IT WORKS -->
-  <section class="how-section" style="-webkit-user-select: text !important; user-select: text !important;">
-    <div class="how-inner">
-      <h2 class="how-title" style="-webkit-user-select: text !important; user-select: text !important;">Three steps to better learning</h2>
-      <p class="how-subtitle" style="-webkit-user-select: text !important; user-select: text !important;">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
-      <div class="how-steps">
-        <div class="how-step">
-          <div class="how-step-left">
-            <div class="how-step-num">1</div>
-            <div class="how-step-icon how-step-icon--violet">
-              <i data-lucide="user-plus" width="20" height="20"></i>
-            </div>
-          </div>
-          <div class="how-step-content">
-            <h3 style="-webkit-user-select: text !important; user-select: text !important;">Sign up free</h3>
-            <p>Join as a parent or teacher — no payment, no commitment needed.</p>
-          </div>
-        </div>
-        <div class="how-step">
-          <div class="how-step-left">
-            <div class="how-step-num">2</div>
-            <div class="how-step-icon how-step-icon--sky">
-              <i data-lucide="sparkles" width="20" height="20"></i>
-            </div>
-          </div>
-          <div class="how-step-content">
-            <h3 style="-webkit-user-select: text !important; user-select: text !important;">We match you</h3>
-            <p>Our AI finds the right teacher based on goals, style, and schedule.</p>
-          </div>
-        </div>
-        <div class="how-step">
-          <div class="how-step-left">
-            <div class="how-step-num">3</div>
-            <div class="how-step-icon how-step-icon--mint">
-              <i data-lucide="graduation-cap" width="20" height="20"></i>
-            </div>
-          </div>
-          <div class="how-step-content">
-            <h3 style="-webkit-user-select: text !important; user-select: text !important;">Start learning</h3>
-            <p>Meet your teacher and begin your first session — hassle free.</p>
-          </div>
-        </div>
+  <!-- HOW IT WORKS -->
+  <div style="padding: 80px 24px; background: #fff; text-align: center;">
+    <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 800; color: #0F172A; margin: 0 0 8px; letter-spacing: -0.02em;">Three steps to better learning</h2>
+    <p style="font-size: 1rem; color: #64748B; margin: 0 0 40px;">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
+    <div style="max-width: 560px; margin: 0 auto; text-align: left;">
+      <div style="padding: 20px 0; border-bottom: 1px solid #F1F5F9;">
+        <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #7C3AED; color: #fff; font-size: 0.8125rem; font-weight: 700; margin-right: 12px; vertical-align: middle;">1</span>
+        <strong style="font-size: 0.9375rem; color: #0F172A;">Sign up free</strong>
+        <p style="margin: 4px 0 0 40px; font-size: 0.8125rem; color: #64748B; line-height: 1.5;">Join as a parent or teacher — no payment, no commitment needed.</p>
+      </div>
+      <div style="padding: 20px 0; border-bottom: 1px solid #F1F5F9;">
+        <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #0EA5E9; color: #fff; font-size: 0.8125rem; font-weight: 700; margin-right: 12px; vertical-align: middle;">2</span>
+        <strong style="font-size: 0.9375rem; color: #0F172A;">We match you</strong>
+        <p style="margin: 4px 0 0 40px; font-size: 0.8125rem; color: #64748B; line-height: 1.5;">Our AI finds the right teacher based on goals, style, and schedule.</p>
+      </div>
+      <div style="padding: 20px 0;">
+        <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #10B981; color: #fff; font-size: 0.8125rem; font-weight: 700; margin-right: 12px; vertical-align: middle;">3</span>
+        <strong style="font-size: 0.9375rem; color: #0F172A;">Start learning</strong>
+        <p style="margin: 4px 0 0 40px; font-size: 0.8125rem; color: #64748B; line-height: 1.5;">Meet your teacher and begin your first session — hassle free.</p>
+      </div>
     </div>
-  </section>
+  </div>
 
   <!-- COMING SOON -->
   <div class="coming-section">

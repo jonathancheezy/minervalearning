@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minerva — No Fees. Real Teachers. Better Learning.</title>
+  <meta name="description" content="Minerva is coming to Hong Kong — an AI-powered learning marketplace connecting parents with verified teachers. Zero platform fees during early access." />
+  <meta name="theme-color" content="#FAFAF8" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #FAFAF8;
+      --ink: #111111;
+      --ink-muted: #6B6B6B;
+      --ink-faint: #A8A8A8;
+      --accent: #E85D04;
+      --accent-warm: #FFF0E6;
+      --border: #E8E8E4;
+      --surface: #F2F2EF;
+      --white: #FFFFFF;
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3 { font-family: 'Outfit', sans-serif; line-height: 1.1; letter-spacing: -0.02em; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 0;
+      background: rgba(250,250,248,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 32px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800; font-size: 1.125rem;
+      color: var(--ink); letter-spacing: -0.03em;
+    }
+    .nav-logo svg { flex-shrink: 0; }
+
+    .lang-wrap { position: relative; }
+    .lang-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 7px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8125rem; font-weight: 500;
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .lang-btn:hover { border-color: var(--ink); color: var(--ink); }
+    .lang-dropdown {
+      position: absolute; top: calc(100% + 8px); right: 0;
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 4px; min-width: 56px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      display: none; z-index: 200;
+    }
+    .lang-dropdown.show { display: block; }
+    .lang-option {
+      display: flex; align-items: center; justify-content: center;
+      padding: 8px 10px; border-radius: 8px; cursor: pointer;
+      font-size: 0.8125rem; font-weight: 500;
+      color: var(--ink-muted);
+      transition: background 0.12s, color 0.12s;
+      border: none; background: none; width: 100%;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .lang-option:hover { background: var(--surface); color: var(--ink); }
+    .lang-option.active { color: var(--accent); font-weight: 600; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100dvh;
+      padding: 120px 32px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: center;
+    }
+    .hero-text { max-width: 520px; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-warm);
+      padding: 5px 10px; border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 900;
+      color: var(--ink);
+      margin-bottom: 20px;
+      line-height: 1.0;
+    }
+    .hero h1 span { display: block; }
+    .hero h1 .accent { color: var(--accent); }
+    .hero-sub {
+      font-size: 1.0625rem;
+      color: var(--ink-muted);
+      line-height: 1.7;
+      margin-bottom: 40px;
+      max-width: 420px;
+    }
+
+    /* ── FORM ── */
+    .form-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+    }
+    .form-tabs {
+      display: flex; gap: 4px;
+      background: var(--surface);
+      border-radius: 10px; padding: 4px;
+      margin-bottom: 24px;
+    }
+    .form-tab {
+      flex: 1; padding: 9px 16px;
+      border-radius: 8px; border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; background: transparent;
+      color: var(--ink-muted);
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    }
+    .form-tab.active {
+      background: var(--white);
+      color: var(--ink);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .form-body { display: none; }
+    .form-body.active { display: block; }
+
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block; font-size: 0.8125rem; font-weight: 600;
+      color: var(--ink); margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%; padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9375rem; color: var(--ink);
+      background: var(--bg); outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+    }
+    .form-group input::placeholder { color: var(--ink-faint); }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(232,93,4,0.1);
+    }
+    .form-group select { cursor: pointer; }
+
+    .multi-select { position: relative; }
+    .multi-select-trigger {
+      display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+      min-height: 46px; padding: 8px 12px;
+      border: 1.5px solid var(--border); border-radius: var(--radius);
+      background: var(--bg); cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .multi-select-trigger:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(232,93,4,0.1);
+    }
+    .multi-select-placeholder { font-size: 0.9rem; color: var(--ink-faint); font-family: 'DM Sans', sans-serif; }
+    .multi-select-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; background: rgba(232,93,4,0.1);
+      color: var(--accent); border-radius: 6px;
+      font-size: 0.8125rem; font-weight: 600; font-family: 'DM Sans', sans-serif;
+    }
+    .multi-select-tag-remove { background: none; border: none; cursor: pointer; color: var(--accent); padding: 0; line-height: 1; font-size: 1rem; }
+    .multi-select-dropdown {
+      position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 6px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+      z-index: 100; display: none; max-height: 240px; overflow-y: auto;
+    }
+    .multi-select-dropdown.show { display: block; }
+    .multi-select-option {
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 12px; border-radius: 8px; cursor: pointer;
+      font-size: 0.875rem; color: var(--ink);
+      transition: background 0.12s;
+    }
+    .multi-select-option:hover { background: var(--surface); }
+    .multi-select-option.selected { background: var(--accent-warm); color: var(--accent); font-weight: 600; }
+
+    .btn-primary {
+      width: 100%; padding: 14px 24px;
+      background: var(--ink); color: var(--bg);
+      border: none; border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9375rem; font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+      margin-top: 4px;
+    }
+    .btn-primary:hover { background: #333; }
+    .btn-primary:active { transform: translateY(1px); }
+
+    .form-note {
+      text-align: center; margin-top: 12px;
+      font-size: 0.75rem; color: var(--ink-faint);
+    }
+
+    .success-msg { display: none; text-align: center; padding: 16px 0; }
+    .success-msg.show { display: block; }
+    .success-icon {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: #E8F5E9; color: #2E7D32;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .success-msg h3 { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+    .success-msg p { font-size: 0.875rem; color: var(--ink-muted); }
+
+    /* ── HOW IT WORKS ── */
+    .how-section {
+      padding: 100px 32px;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+    }
+    .how-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-faint);
+      margin-bottom: 12px;
+    }
+    .how-section h2 {
+      font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 800;
+      color: var(--ink); margin-bottom: 64px;
+    }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .step-card {
+      background: var(--white);
+      padding: 36px 32px;
+      position: relative;
+    }
+    .step-card:first-child {
+      background: var(--ink);
+      color: var(--bg);
+    }
+    .step-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 4rem; font-weight: 900;
+      line-height: 1; color: var(--border);
+      margin-bottom: 24px;
+    }
+    .step-card:first-child .step-num { color: rgba(255,255,255,0.12); }
+    .step-card h3 {
+      font-size: 1.125rem; font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .step-card:first-child h3 { color: var(--bg); }
+    .step-card p {
+      font-size: 0.875rem; color: var(--ink-muted);
+      line-height: 1.6;
+    }
+    .step-card:first-child p { color: rgba(250,250,248,0.6); }
+
+    /* ── FEATURES ── */
+    .features-section {
+      padding: 100px 32px;
+      background: var(--bg);
+    }
+    .features-inner { max-width: 1200px; margin: 0 auto; }
+    .features-section h2 {
+      font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 800;
+      color: var(--ink); margin-bottom: 16px;
+    }
+    .features-sub {
+      font-size: 1rem; color: var(--ink-muted); margin-bottom: 56px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .feat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 28px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .feat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .feat-card:hover::before { transform: scaleX(1); }
+    .feat-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+
+    /* Bento layout: varied sizes */
+    .feat-card:nth-child(1) { grid-column: span 7; }
+    .feat-card:nth-child(2) { grid-column: span 5; }
+    .feat-card:nth-child(3) { grid-column: span 5; }
+    .feat-card:nth-child(4) { grid-column: span 7; }
+    .feat-card:nth-child(5) { grid-column: span 4; }
+    .feat-card:nth-child(6) { grid-column: span 8; }
+
+    .feat-badge {
+      display: inline-block;
+      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px; border-radius: 100px;
+      margin-bottom: 14px;
+    }
+    .badge-now { background: #E8F5E9; color: #2E7D32; }
+    .badge-later { background: var(--surface); color: var(--ink-muted); }
+    .feat-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.0625rem; font-weight: 700;
+      color: var(--ink); margin-bottom: 8px;
+    }
+    .feat-card p {
+      font-size: 0.875rem; color: var(--ink-muted);
+      line-height: 1.6;
+    }
+
+    /* ── OTP MODAL ── */
+    .otp-overlay {
+      display: none; align-items: center; justify-content: center;
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(17,17,17,0.5);
+      backdrop-filter: blur(8px);
+    }
+    .otp-overlay.show { display: flex; }
+    .otp-modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      max-width: 400px; width: 90%;
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+    }
+    .otp-icon {
+      width: 52px; height: 52px; border-radius: 16px;
+      background: var(--accent-warm); color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .otp-modal h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 8px; }
+    .otp-modal p { font-size: 0.875rem; color: var(--ink-muted); margin-bottom: 24px; }
+    .otp-inputs { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+    .otp-inputs input {
+      width: 44px; height: 52px; text-align: center;
+      font-size: 1.25rem; font-weight: 700;
+      border: 1.5px solid var(--border); border-radius: var(--radius);
+      background: var(--bg); color: var(--ink);
+      font-family: 'DM Sans', sans-serif; outline: none;
+      transition: border-color 0.15s;
+    }
+    .otp-inputs input:focus { border-color: var(--accent); }
+    .otp-resend { font-size: 0.8125rem; color: var(--ink-faint); margin-bottom: 20px; }
+    .otp-resend button { background: none; border: none; color: var(--accent); font-weight: 600; cursor: pointer; font-size: 0.8125rem; font-family: 'DM Sans', sans-serif; }
+    .otp-verify-btn {
+      width: 100%; padding: 13px;
+      background: var(--ink); color: var(--bg);
+      border: none; border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9375rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .otp-verify-btn:hover { background: #333; }
+    .otp-error { font-size: 0.8125rem; color: #D32F2F; margin-top: 10px; display: none; }
+    .otp-error.show { display: block; }
+    .otp-success-msg { display: none; }
+    .otp-success-msg.show { display: block; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px 32px;
+      border-top: 1px solid var(--border);
+      background: var(--white);
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.8125rem; color: var(--ink-faint);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        padding-top: 100px;
+      }
+      .hero-text { max-width: 100%; }
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      .feat-card:nth-child(n) { grid-column: span 1 !important; }
+      .footer-inner { flex-direction: column; gap: 8px; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 88px 20px 60px; }
+      .hero h1 { font-size: 2.5rem; }
+      .form-card { padding: 24px 20px; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="#111111"/>
+          <path d="M16 8L22 13V19L16 10L10 19V13L16 8Z" fill="#FAFAF8"/>
+          <path d="M16 14L20 17V21L16 16L12 21V17L16 14Z" fill="#E85D04"/>
+        </svg>
+        Minerva
+      </a>
+      <div class="lang-wrap">
+        <button class="lang-btn" onclick="toggleLang()">
+          <span id="lang-label">EN</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-option active" onclick="setLang('en')">English</button>
+          <button class="lang-option" onclick="setLang('zhtw')">繁體</button>
+          <button class="lang-option" onclick="setLang('zhcn')">简体</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Early Access — Hong Kong</div>
+      <h1>
+        <span>No fees.</span>
+        <span class="accent">Real teachers.</span>
+        <span>Better learning.</span>
+      </h1>
+      <p class="hero-sub">An AI-powered marketplace connecting parents and students with verified teachers in Hong Kong. Zero platform fees during launch.</p>
+    </div>
+
+    <div class="form-card" id="signup">
+      <div class="form-tabs">
+        <button class="form-tab active" id="tab-parent" onclick="switchTab('parent')">Parent / Student</button>
+        <button class="form-tab" id="tab-teacher" onclick="switchTab('teacher')">Teacher</button>
+      </div>
+
+      <!-- PARENT FORM -->
+      <div class="form-body active" id="form-parent">
+        <form id="parent-form" onsubmit="handleParent(event)">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>First name</label>
+              <input type="text" name="firstName" placeholder="e.g. Sarah" required />
+            </div>
+            <div class="form-group">
+              <label>Last name</label>
+              <input type="text" name="lastName" placeholder="e.g. Chan" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label>WhatsApp</label>
+            <input type="tel" name="whatsapp" placeholder="+852 5xxx xxxx" />
+          </div>
+          <div class="form-group">
+            <label>Student level</label>
+            <select name="level" required>
+              <option value="" disabled selected>Select level</option>
+              <option>Primary 1–3</option>
+              <option>Primary 4–6</option>
+              <option>Secondary 1–3</option>
+              <option>Secondary 4–6 (HKDSE)</option>
+              <option>University / Adult</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Subjects needed</label>
+            <div class="multi-select" id="parent-subject-select">
+              <div class="multi-select-trigger" onclick="toggleMultiSelect('parent')">
+                <span class="multi-select-placeholder">Select subjects</span>
+              </div>
+              <input type="hidden" id="parent-subjects-hidden" name="subjects" />
+              <div class="multi-select-dropdown" id="parent-subject-dropdown"></div>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">Join waitlist</button>
+          <p class="form-note">No payment required. We'll match you with a teacher.</p>
+        </form>
+        <div class="success-msg" id="parent-success">
+          <div class="success-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3>You're on the list!</h3>
+          <p>Check your email for a verification link.</p>
+        </div>
+      </div>
+
+      <!-- TEACHER FORM -->
+      <div class="form-body" id="form-teacher">
+        <form id="teacher-form" onsubmit="handleTeacher(event)">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>First name</label>
+              <input type="text" name="firstName" placeholder="e.g. Marcus" required />
+            </div>
+            <div class="form-group">
+              <label>Last name</label>
+              <input type="text" name="lastName" placeholder="e.g. Wong" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label>WhatsApp</label>
+            <input type="tel" name="whatsapp" placeholder="+852 5xxx xxxx" />
+          </div>
+          <div class="form-group">
+            <label>Teaching level</label>
+            <div class="multi-select" id="teacher-level-select">
+              <div class="multi-select-trigger" onclick="toggleMultiSelect('teacher-level')">
+                <span class="multi-select-placeholder">Select levels</span>
+              </div>
+              <input type="hidden" id="teacher-levels-hidden" name="levels" />
+              <div class="multi-select-dropdown" id="teacher-level-dropdown"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Subjects you teach</label>
+            <div class="multi-select" id="teacher-subject-select">
+              <div class="multi-select-trigger" onclick="toggleMultiSelect('teacher')">
+                <span class="multi-select-placeholder">Select subjects</span>
+              </div>
+              <input type="hidden" id="teacher-subjects-hidden" name="subjects" />
+              <div class="multi-select-dropdown" id="teacher-subject-dropdown"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Years of experience</label>
+            <select name="experience" required>
+              <option value="" disabled selected>Select</option>
+              <option>0–1 years</option>
+              <option>2–5 years</option>
+              <option>6–10 years</option>
+              <option>10+ years</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary">Apply as teacher</button>
+          <p class="form-note">ID verification required before listing.</p>
+        </form>
+        <div class="success-msg" id="teacher-success">
+          <div class="success-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3>Application received!</h3>
+          <p>We'll be in touch within 48 hours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <div class="how-inner">
+      <div class="section-label">How it works</div>
+      <h2>Three steps to better learning</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <h3>Sign up free</h3>
+          <p>Join as a parent or teacher — no payment, no commitment needed.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <h3>We match you</h3>
+          <p>Our AI finds the right teacher based on goals, style, and schedule.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <h3>Start learning</h3>
+          <p>Meet your teacher and begin your first session — hassle free.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section">
+    <div class="features-inner">
+      <h2>More ways Minerva helps you succeed</h2>
+      <p class="features-sub">Beyond matching, here is what is built into the platform.</p>
+      <div class="features-grid">
+        <div class="feat-card">
+          <span class="feat-badge badge-now">Available</span>
+          <h3>Verified teachers</h3>
+          <p>Every teacher goes through ID verification and background checks before accepting students.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-badge badge-now">Available</span>
+          <h3>AI matching</h3>
+          <p>Our algorithm analyses learning goals, teaching style, and schedule to find your ideal match.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-badge badge-later">Coming</span>
+          <h3>Live scheduling</h3>
+          <p>Teachers publish their real-time availability. Parents and students book instantly.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-badge badge-later">Coming</span>
+          <h3>In-app messaging</h3>
+          <p>Chat with your teacher, share files, and coordinate — all inside the platform, no contact exchange needed.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-badge badge-later">Coming</span>
+          <h3>Progress tracking</h3>
+          <p>AI summaries after every lesson track skill gaps and exam goals.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-badge badge-later">Coming</span>
+          <h3>Dashboard</h3>
+          <p>Track lessons, progress, and payments — all in one clean dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OTP MODAL -->
+  <div class="otp-overlay" id="otpOverlay">
+    <div class="otp-modal">
+      <div class="otp-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7L13.5 12.5L22 17V7Z"/></svg>
+      </div>
+      <div id="otpForm">
+        <h3>Verify your email</h3>
+        <p>We've sent a code to <strong id="otp-email"></strong></p>
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" id="otp-1" oninput="otpMove(this, 'otp-2')" onkeydown="otpBack(event, 'otp-1')" />
+          <input type="text" maxlength="1" id="otp-2" oninput="otpMove(this, 'otp-3')" onkeydown="otpBack(event, 'otp-1')" />
+          <input type="text" maxlength="1" id="otp-3" oninput="otpMove(this, 'otp-4')" onkeydown="otpBack(event, 'otp-2')" />
+          <input type="text" maxlength="1" id="otp-4" onkeydown="otpBack(event, 'otp-3')" />
+        </div>
+        <p class="otp-resend">Didn't receive it? <button onclick="resendOtp()">Send again</button></p>
+        <button class="otp-verify-btn" onclick="verifyOtp()">Verify</button>
+        <p class="otp-error" id="otp-error">Invalid code. Please try again.</p>
+      </div>
+      <div class="otp-success-msg" id="otp-success">
+        <h3>All set!</h3>
+        <p>Your account is verified. We'll be in touch soon.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <span>2026 Minerva Learning Ltd. Hong Kong.</span>
+      <span>No platform fees during early access.</span>
+    </div>
+  </footer>
+
+  <script>
+    // ── Language switching ──
+    function toggleLang() {
+      document.getElementById('langDropdown').classList.toggle('show');
+    }
+    function setLang(lang) {
+      document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('lang-label').textContent = lang.toUpperCase().replace('ZH', '');
+      document.getElementById('langDropdown').classList.remove('show');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.lang-wrap')) {
+        document.getElementById('langDropdown').classList.remove('show');
+      }
+    });
+
+    // ── Form tabs ──
+    function switchTab(tab) {
+      document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.form-body').forEach(f => f.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      document.getElementById('form-' + tab).classList.add('active');
+    }
+
+    // ── Multi-select ──
+    var SUBJECTS = ['English','Maths','Cantonese','Mandarin','HKDSE Maths','HKDSE English','HKDSE Chinese','Biology','Chemistry','Physics','Economics','BAFS','ICT','Music','Visual Arts','Physical Education'];
+    var LEVELS = ['Primary','Secondary','HKDSE','University / Adult','All levels'];
+    var multiSelectState = {};
+
+    function initMultiSelects() {
+      ['parent','teacher'].forEach(function(type) {
+        var dd = document.getElementById(type + '-subject-dropdown');
+        if (!dd) return;
+        dd.innerHTML = '';
+        SUBJECTS.forEach(function(s) {
+          var opt = document.createElement('div');
+          opt.className = 'multi-select-option';
+          opt.textContent = s;
+          opt.onclick = function() { selectMultiOption(type, s, opt); };
+          dd.appendChild(opt);
+        });
+      });
+      ['teacher-level'].forEach(function(type) {
+        var dd = document.getElementById(type + '-dropdown');
+        if (!dd) return;
+        dd.innerHTML = '';
+        LEVELS.forEach(function(s) {
+          var opt = document.createElement('div');
+          opt.className = 'multi-select-option';
+          opt.textContent = s;
+          opt.onclick = function() { selectMultiOption(type, s, opt); };
+          dd.appendChild(opt);
+        });
+      });
+    }
+
+    function toggleMultiSelect(id) {
+      var parts = id.split('-');
+      var type = parts[0];
+      var key = parts.length > 1 ? parts[0] + '-' + parts[1] : parts[0];
+      var dd = document.getElementById(key + '-dropdown');
+      if (!dd) return;
+      document.querySelectorAll('.multi-select-dropdown').forEach(function(d) {
+        if (d !== dd) d.classList.remove('show');
+      });
+      dd.classList.toggle('show');
+    }
+
+    function selectMultiOption(type, value, optEl) {
+      if (!multiSelectState[type]) multiSelectState[type] = [];
+      var idx = multiSelectState[type].indexOf(value);
+      if (idx >= 0) {
+        multiSelectState[type].splice(idx, 1);
+        optEl.classList.remove('selected');
+      } else {
+        multiSelectState[type].push(value);
+        optEl.classList.add('selected');
+      }
+      updateMultiSelectTrigger(type);
+      document.getElementById(type + '-subjects-hidden' if type !== 'teacher-level' else 'teacher-levels-hidden').value = multiSelectState[type].join(',');
+    }
+
+    function updateMultiSelectTrigger(type) {
+      var dd = document.getElementById(type + '-subject-dropdown');
+      var trigger = dd.previousElementSibling;
+      var placeholder = trigger.querySelector('.multi-select-placeholder');
+      var tags = trigger.querySelectorAll('.multi-select-tag');
+      tags.forEach(function(t) { t.remove(); });
+      if (multiSelectState[type] && multiSelectState[type].length > 0) {
+        placeholder.style.display = 'none';
+        multiSelectState[type].forEach(function(v) {
+          var tag = document.createElement('span');
+          tag.className = 'multi-select-tag';
+          tag.innerHTML = v + '<button class="multi-select-tag-remove" onclick="event.stopPropagation(); removeMultiOption(\'' + type + '\',\'' + v + '\')">×</button>';
+          trigger.insertBefore(tag, placeholder);
+        });
+      } else {
+        placeholder.style.display = '';
+      }
+    }
+
+    function removeMultiOption(type, value) {
+      if (!multiSelectState[type]) return;
+      var idx = multiSelectState[type].indexOf(value);
+      if (idx >= 0) multiSelectState[type].splice(idx, 1);
+      var opts = document.querySelectorAll('#' + type + '-subject-dropdown .multi-select-option');
+      opts.forEach(function(o) { if (o.textContent === value) o.classList.remove('selected'); });
+      updateMultiSelectTrigger(type);
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.multi-select')) {
+        document.querySelectorAll('.multi-select-dropdown').forEach(function(d) { d.classList.remove('show'); });
+      }
+    });
+
+    // ── OTP ──
+    var pendingEmail = '';
+
+    function showOtpModal(email) {
+      pendingEmail = email;
+      document.getElementById('otp-email').textContent = email;
+      document.getElementById('otpOverlay').classList.add('show');
+      document.getElementById('otp-error').classList.remove('show');
+      document.getElementById('otpForm').style.display = 'block';
+      document.getElementById('otp-success').classList.remove('show');
+      document.getElementById('otp-1').value = '';
+      document.getElementById('otp-2').value = '';
+      document.getElementById('otp-3').value = '';
+      document.getElementById('otp-4').value = '';
+      setTimeout(function() { document.getElementById('otp-1').focus(); }, 100);
+    }
+
+    function otpMove(current, nextId) {
+      if (current.value.length === 1) {
+        var next = document.getElementById(nextId);
+        if (next) next.focus();
+      }
+    }
+    function otpBack(e, prevId) {
+      if (e.key === 'Backspace' && !e.target.value) {
+        var prev = document.getElementById(prevId);
+        if (prev) prev.focus();
+      }
+    }
+
+    function verifyOtp() {
+      var code = '';
+      for (var i = 1; i <= 4; i++) {
+        var v = document.getElementById('otp-' + i).value;
+        if (!v) { code = ''; break; }
+        code += v;
+      }
+      if (code === '1234' || code.length === 4) {
+        document.getElementById('otpForm').style.display = 'none';
+        document.getElementById('otp-success').classList.add('show');
+        setTimeout(function() {
+          document.getElementById('otpOverlay').classList.remove('show');
+        }, 2500);
+      } else {
+        document.getElementById('otp-error').classList.add('show');
+      }
+    }
+
+    function resendOtp() {}
+
+    // ── Form handlers ──
+    function handleParent(e) {
+      e.preventDefault();
+      var form = document.getElementById('parent-form');
+      var email = form.querySelector('[name="email"]').value;
+      var subjects = document.getElementById('parent-subjects-hidden').value;
+      if (!subjects) {
+        var trigger = document.querySelector('#parent-subject-select .multi-select-trigger');
+        trigger.style.borderColor = '#D32F2F';
+        setTimeout(function() { trigger.style.borderColor = ''; }, 2000);
+        return;
+      }
+      showOtpModal(email);
+    }
+
+    function handleTeacher(e) {
+      e.preventDefault();
+      var form = document.getElementById('teacher-form');
+      var email = form.querySelector('[name="email"]').value;
+      var subjects = document.getElementById('teacher-subjects-hidden').value;
+      if (!subjects) {
+        var trigger = document.querySelector('#teacher-subject-select .multi-select-trigger');
+        trigger.style.borderColor = '#D32F2F';
+        setTimeout(function() { trigger.style.borderColor = ''; }, 2000);
+        return;
+      }
+      showOtpModal(email);
+    }
+
+    // Init
+    initMultiSelects();
+  </script>
+</body>
+</html>

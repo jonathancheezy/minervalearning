@@ -1471,14 +1471,40 @@ function switchTab(tab) {
   
     // ── Multi-select data ──
     var SUBJECTS = [
-      'English', 'Maths', 'Cantonese', 'Mandarin',
-      'HKDSE Maths', 'HKDSE English', 'HKDSE Chinese',
-      'Biology', 'Chemistry', 'Physics',
-      'Economics', 'BAFS', 'ICT',
-      'Music', 'Visual Arts', 'Physical Education'
+      // Language
+      'Chinese Language (中文)',
+      'English Language (英文)',
+      'Mandarin / 普通話',
+      'Cantonese / 廣東話',
+      // Numeracy & General
+      'Mathematics (數學)',
+      '跟功課 / Homework Guidance',
+      '全科 (All Subjects)',
+      // Sciences
+      'Physics (物理)',
+      'Chemistry (化學)',
+      'Biology (生物)',
+      'Science (綜合科學)',
+      // Humanities & Social
+      'Liberal Studies / 通識',
+      'Economics (經濟)',
+      'BAFS (企業、會計與財務概論)',
+      'Geography (地理)',
+      'History (歷史)',
+      'Chinese History (中國歷史)',
+      'Ethics & Religious Studies (倫理與宗教)',
+      // Tech & Creative
+      'ICT / Computer Studies (資訊科技)',
+      'Visual Arts (視覺藝術)',
+      'Music (音樂)',
+      'Physical Education (體育)',
+      // Exam Prep
+      'DSE / HKDSE Exam Prep',
+      // Other
+      '其他 (Other)'
     ];
 
-    var LEVELS = ['Primary', 'Secondary', 'HKDSE', 'University / Adult', 'All levels'];
+    var LEVELS = ['Primary (小一至小六)', 'Secondary F.1–F.3 (初中)', 'HKDSE F.4–F.6 (高中)', 'IB / International Curriculum', 'University / Adult (大學/成人)'];
 
     function initMultiSelects() {
       initSubjectSelects();

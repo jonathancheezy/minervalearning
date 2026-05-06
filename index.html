@@ -759,6 +759,20 @@
     }
 
   </style>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyA50vtTGq5RNPAalle6CafSLP2Pq4dPbCE",
+      authDomain: "minerva-learning-a7eac.firebaseapp.com",
+      projectId: "minerva-learning-a7eac",
+      storageBucket: "minerva-learning-a7eac.firebasestorage.app",
+      messagingSenderId: "140471258134",
+      appId: "1:140471258134:web:722fb03d6c3748d2a4b937"
+    });
+    var db = firebase.firestore();
+  </script>
 </head>
 <body>
 
@@ -2253,8 +2267,17 @@ function switchTab(tab) {
     }
 
     function submitParentReg() {
+      var heroData = {
+        email: pendingEmail,
+        firstName: document.getElementById('parent-first-name') ? document.getElementById('parent-first-name').value : '',
+        lastName: document.getElementById('parent-last-name') ? document.getElementById('parent-last-name').value : '',
+        whatsapp: document.getElementById('parent-whatsapp') ? document.getElementById('parent-whatsapp').value : '',
+        level: document.getElementById('parent-level-hidden') ? document.getElementById('parent-level-hidden').value : '',
+        subjects: selectedSubjects.parent || []
+      };
       var data = {
-        type: 'parent',
+        ...heroData,
+        userType: 'parent',
         studentFirst: document.getElementById('reg-student-first').value,
         studentLast: document.getElementById('reg-student-last').value,
         level: document.getElementById('reg-level').value,
@@ -2275,14 +2298,29 @@ function switchTab(tab) {
         return;
       }
       console.log('Parent registration data:', data);
+      db.collection('submissions').add({
+        ...data,
+        status: 'pending',
+        submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(function(err) { console.error('Firestore error:', err); });
       document.getElementById('parentRegOverlay').classList.remove('show');
       document.getElementById('regSuccessOverlay').classList.add('show');
       selectedDays = [];
     }
 
     function submitTeacherReg() {
+      var heroData = {
+        email: pendingEmail,
+        firstName: document.getElementById('teacher-first-name') ? document.getElementById('teacher-first-name').value : '',
+        lastName: document.getElementById('teacher-last-name') ? document.getElementById('teacher-last-name').value : '',
+        whatsapp: document.getElementById('teacher-whatsapp') ? document.getElementById('teacher-whatsapp').value : '',
+        level: document.getElementById('teacher-level-hidden') ? document.getElementById('teacher-level-hidden').value.split(',') : [],
+        subjects: selectedSubjects.teacher || [],
+        experience: document.getElementById('teacher-experience') ? document.getElementById('teacher-experience').value : ''
+      };
       var data = {
-        type: 'teacher',
+        ...heroData,
+        userType: 'teacher',
         qualification: document.getElementById('reg-qualification').value,
         institution: document.getElementById('reg-institution').value,
         experience: document.getElementById('reg-teacher-experience').value,
@@ -2298,6 +2336,11 @@ function switchTab(tab) {
         return;
       }
       console.log('Teacher registration data:', data);
+      db.collection('submissions').add({
+        ...data,
+        status: 'pending',
+        submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(function(err) { console.error('Firestore error:', err); });
       document.getElementById('teacherRegOverlay').classList.remove('show');
       document.getElementById('regSuccessOverlay').classList.add('show');
       teacherLevels = [];

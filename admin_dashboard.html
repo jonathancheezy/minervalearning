@@ -323,7 +323,7 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getFirestore, collection, getDocs, query, orderBy, limit, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+    import { getFirestore, collection, getDocs, query, orderBy, limit, doc, updateDoc, where } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s',
@@ -394,7 +394,7 @@
       const tbody = document.getElementById('submissions-tbody');
       tbody.innerHTML = '<tr class="skeleton-row"><td colspan="5"><div class="skeleton" style="height:20px;width:60%;"></div></td></tr>';
       try {
-        const q = query(collection(db, 'registrations'), orderBy('submittedAt', 'desc'), limit(200));
+        const q = query(collection(db, 'registrations'), limit(200));
         const snapshot = await getDocs(q);
         allRegistrations = snapshot.docs.map(d => ({ id: d.id, ...flattenFields(d.data()) }));
         console.log('[Minerva Admin] Loaded registrations:', allRegistrations.length, allRegistrations.map(r => ({id: r.id, name: r.fullName || r.parentName, role: r.role, status: r.status})));

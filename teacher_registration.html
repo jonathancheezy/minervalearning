@@ -607,18 +607,46 @@
  document.getElementById('email').value = decodeURIComponent(email);
  }
 
- document.getElementById('registrationForm').addEventListener('submit', function(e) {
+ // Firebase SDK
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s',
+  authDomain: 'minerva-learning-a7eac.firebaseapp.com',
+  projectId: 'minerva-learning-a7eac',
+  storageBucket: 'minerva-learning-a7eac.appspot.com',
+  messagingSenderId: '140471258134',
+  appId: '1:140471258134:web:minerva-admin'
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.getElementById('registrationForm').addEventListener('submit', async function(e) {
  e.preventDefault();
+  const form = document.getElementById('registrationForm');
+  const submitBtn = form.querySelector('button[type="submit"]');
 
- // Show success message
- document.getElementById('registrationForm').style.display = 'none';
- document.getElementById('formSuccess').style.display = 'block';
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Registering...'; }
 
- // Log form data (in production, this would send to backend)
- const formData = new FormData(this);
- console.log('Registration:', Object.fromEntries(formData));
- });
- </script>
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+
+  try {
+    await addDoc(collection(db, 'registrations'), {
+      ...data,
+      role: 'teacher',
+      submittedAt: serverTimestamp(),
+      status: 'pending'
+    });
+    form.style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  } catch (err) {
+    console.error('Registration error:', err);
+    alert('Something went wrong. Please try again.');
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Register →'; }
+  }
+});</script>
 <script src="i18n.js"></script>
 <script>
 (function(){

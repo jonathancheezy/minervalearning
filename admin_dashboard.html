@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Admin Dashboard - Minerva</title>
+   <style>
+ :root {
+ --navy: #1e3a5f;
+ --navy-dark: #0f1f33;
+ --teal: #3b82f6;
+ --gold: #F9A828;
+ --gold-light: #FBB81C;
+ --white: #ffffff;
+ --gray-100: #f8fafc;
+ --gray-200: #e2e8f0;
+ --gray-500: #64748b;
+ --gray-700: #334155;
+ --green: #22c55e;
+ --red: #ef4444;
+ --orange: #f59e0b;
+ }
+
+ * { margin: 0; padding: 0; box-sizing: border-box; }
+
+ body {
+ font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+ background: #f8fafc; padding-top: 60px;
+ color: var(--gray-700);
+ line-height: 1.6;
+ }
+
+ /* Nav */
+ nav {
+ background: var(--navy);
+ color: white;
+ padding: 16px 24px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ position: fixed;
+ top: 0;
+ left: 0;
+ right: 0;
+ height: 60px;
+ z-index: 100;
+ }
+
+ .nav-left {
+ display: flex;
+ align-items: center;
+ gap: 16px;
+ }
+
+ .logo {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ font-weight: 800;
+ font-size: 20px;
+ color: white;
+ text-decoration: none;
+ }
+
+ .logo-icon { width: 32px; height: 32px; }
+
+ .nav-right {
+ display: flex;
+ align-items: center;
+ gap: 16px;
+ flex-wrap: wrap;
+ justify-content: flex-end;
+ }
+
+ .nav-links {
+ display: flex;
+ gap: 24px;
+ justify-content: center;
+ flex: 1;
+ }
+
+ .mobile-menu-btn {
+ display: none;
+ font-size: 24px;
+ cursor: pointer;
+ padding: 8px;
+ color: white;
+ background: none;
+ border: none;
+ }
+
+ .nav-links a {
+ color: rgba(255,255,255,0.7);
+ text-decoration: none;
+ font-size: 14px;
+ font-weight: 500;
+ transition: color 0.2s;
+ }
+ .nav-links a:hover { color: white; }
+ .nav-links a.active { color: #F9A828 !important; }
+
+ 
+
+ .user-info {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ }
+
+ .avatar {
+ width: 36px;
+ height: 36px;
+ background: var(--gold);
+ border-radius: 50%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-weight: 700;
+ color: var(--navy-dark);
+ font-size: 14px;
+ }
+ .lang-selector {
+  display: flex;
+  gap: 2px;
+  background: rgba(0,0,0,0.25);
+  padding: 3px;
+  border-radius: 6px;
+ }
+ .lang-btn {
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  transition: all 0.2s;
+ }
+ .lang-btn:hover { color: white; }
+ .lang-btn.active { background: rgba(255,255,255,0.15); color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+ @media (max-width: 768px) {
+  .lang-btn { padding: 4px 8px; font-size: 12px; }
+  .lang-selector { padding: 2px; gap: 1px; }
+  .lang-btn:hover { color: white; }
+  .lang-btn.active { background: rgba(255,255,255,0.15); color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+ }
+
+ .user-name {
+ font-size: 14px;
+ font-weight: 600;
+ }
+
+ /* Main */
+ .main {
+ max-width: 1400px;
+ margin: 0 auto;
+ padding: 32px 24px;
+ }
+
+ .page-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 32px;
+ }
+
+ .page-header h1 {
+ font-size: 28px;
+ font-weight: 800;
+ color: var(--navy-dark);
+ }
+
+ .page-header p {
+ color: white;
+ font-size: 14px;
+ }
+
+ /* Stats */
+ .stats-grid {
+ display: grid;
+ grid-template-columns: repeat(5, 1fr);
+ gap: 20px;
+ margin-bottom: 32px;
+ }
+
+ @media (max-width: 1100px) {
+ .stats-grid { grid-template-columns: repeat(3, 1fr); }
+ }
+
+ .stat-card {
+ background: white;
+ border-radius: 16px;
+ padding: 24px;
+ border: 1px solid var(--gray-200);
+ }
+
+ .stat-card .label {
+ font-size: 12px;
+ color: white;
+ font-weight: 500;
+ margin-bottom: 8px;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ }
+
+ .stat-card .value {
+ font-size: 32px;
+ font-weight: 800;
+ color: var(--navy-dark);
+ }
+
+ .stat-card .value.green { color: var(--green); }
+ .stat-card .value.gold { color: var(--gold); }
+ .stat-card .value.teal { color: var(--teal); }
+ .stat-card .value.red { color: var(--red); }
+
+ .stat-card .sub {
+ font-size: 12px;
+ color: white;
+ margin-top: 4px;
+ }
+
+ /* Tabs */
+ .tabs {
+ display: flex;
+ gap: 4px;
+ margin-bottom: 24px;
+ background: white;
+ padding: 6px;
+ border-radius: 12px;
+ border: 1px solid var(--gray-200);
+ width: fit-content;
+ }
+
+ .tab {
+ padding: 10px 20px;
+ border-radius: 8px;
+ font-size: 14px;
+ font-weight: 600;
+ color: white;
+ cursor: pointer;
+ transition: all 0.2s;
+ border: none;
+ background: transparent;
+ }
+
+ .tab:hover { color: var(--navy-dark); }
+ .tab.active {
+ background: var(--navy);
+ color: white;
+ }
+
+ /* Table */
+ .card {
+ background: white;
+ border-radius: 16px;
+ border: 1px solid var(--gray-200);
+ overflow: hidden;
+ }
+
+ .card-header {
+ padding: 20px 24px;
+ border-bottom: 1px solid var(--gray-200);
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ }
+
+ .card-header h2 {
+ font-size: 16px;
+ font-weight: 700;
+ color: var(--navy-dark);
+ }
+
+ .search-input {
+ padding: 10px 16px;
+ border-radius: 8px;
+ border: 2px solid var(--gray-200);
+ font-size: 14px;
+ width: 250px;
+ }
+ .search-input:focus {
+ outline: none;
+ border-color: var(--teal);
+ }
+
+ table {
+ width: 100%;
+ border-collapse: collapse;
+ }
+
+ th, td {
+ padding: 14px 20px;
+ text-align: left;
+ border-bottom: 1px solid var(--gray-200);
+ font-size: 14px;
+ }
+
+ th {
+ background: rgba(0,0,0,0.25);
+ font-weight: 600;
+ color: white;
+ font-size: 12px;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ }
+
+ tr:hover td {
+ background: rgba(0,0,0,0.25);
+ }
+
+ .badge {
+ display: inline-block;
+ padding: 4px 10px;
+ border-radius: 50px;
+ font-size: 12px;
+ font-weight: 600;
+ }
+
+ .badge.active {
+ background: rgba(34, 197, 94, 0.1);
+ color: var(--green);
+ }
+
+ .badge.pending {
+ background: rgba(245, 158, 11, 0.1);
+ color: var(--orange);
+ }
+
+ .badge.inactive {
+ background: rgba(239, 68, 68, 0.1);
+ color: var(--red);
+ }
+
+ .action-btn {
+ padding: 6px 12px;
+ border-radius: 6px;
+ font-size: 12px;
+ font-weight: 600;
+ text-decoration: none;
+ border: none;
+ cursor: pointer;
+ background: var(--teal);
+ color: white;
+ }
+ .action-btn:hover { opacity: 0.9; }
+
+ /* Grid */
+ .grid-2 {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 24px;
+ }
+
+ @media (max-width: 1000px) {
+ .grid-2 { grid-template-columns: 1fr; }
+ }
+
+ /* List items */
+ .list-item {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 16px 0;
+ border-bottom: 1px solid var(--gray-200);
+ }
+ .list-item:last-child { border-bottom: none; }
+
+ .list-item .info h4 {
+ font-size: 14px;
+ font-weight: 600;
+ color: var(--navy-dark);
+ }
+ .list-item .info p {
+ font-size: 13px;
+ color: white;
+ }
+
+ .list-item .value {
+ font-weight: 700;
+ color: var(--navy-dark);
+ }
+ .list-item .value.green { color: var(--green); }
+
+ .lang-selector {
+ display: flex;
+ gap: 4px;
+ background: rgba(0,0,0,0.25);
+ padding: 4px;
+ border-radius: 8px;
+ }
+ .lang-btn {
+ padding: 6px 12px;
+ border: none;
+ background: transparent;
+ border-radius: 6px;
+ font-size: 13px;
+ font-weight: 600;
+ cursor: pointer;
+ color: white;
+ text-decoration: none;
+ transition: all 0.2s;
+ }
+ .lang-btn:hover { color: white; }
+ .lang-btn.active {
+ background: rgba(255,255,255,0.15);
+ color: white;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+ }
+
+.mobile-menu-btn {
+ display: none;
+ width: 36px; height: 36px;
+ border: 1.5px solid rgba(255,255,255,0.25);
+ border-radius: 8px;
+ background: transparent;
+ color: white;
+ font-size: 18px;
+ cursor: pointer;
+ align-items: center;
+ justify-content: center;
+ flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+.mobile-menu-btn { display: flex !important; }
+.nav-links {
+ display: none;
+ position: absolute;
+ top: 100%;
+ left: 0; right: 0;
+ background: var(--navy);
+ flex-direction: column;
+ padding: 12px 16px;
+ gap: 4px;
+ box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+ z-index: 100;
+}
+.nav-links.active { display: flex; }
+.nav-links a { color: rgba(255,255,255,0.85) !important; margin-left: 0 !important; padding: 8px 0; font-size: 15px; }
+.lang-btn { padding: 6px 12px; font-size: 13px; }
+.lang-selector { padding: 2px; gap: 1px; }
+}
+footer { padding: 40px 24px; text-align: center; color: var(--gray-500); font-size: 13px; border-top: 1px solid var(--gray-200); }
+footer a { color: var(--gold); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+</style>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+ 
+</head>
+<body>
+ <nav>
+ <div class="nav-left">
+ <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('active');">☰</button>
+ <a href="minerva_landing.html?v=ad001" class="logo">
+ <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+ <rect width="40" height="40" rx="12" fill="#1e3a5f"/>
+ <path d="M10 28V12L20 20L30 12V28" stroke="#F9A828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M20 20V32" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+ </svg>
+ Minerva
+ </a>
+ </div>
+ <div class="nav-links">
+ <a href="#" class="active" style="color: #F9A828 !important;">Dashboard</a>
+ <a href="#" class="active" style="color: #F9A828 !important;">Teachers</a>
+ <a href="#" class="active" style="color: #F9A828 !important;">Students</a>
+ <a href="#" class="active" style="color: #F9A828 !important;">Reports</a>
+ </div>
+ <div class="nav-right">
+ <div class="nav-meta">
+ <div class="user-info">
+ <a href="teacher_profile.html?v=ad001" style="text-decoration:none"><div class="avatar" style="color:#0f1f33;">TC</div></a>
+ </div>
+  </div>
+  <div class="lang-selector">
+ <a href="messages.html?lang=en&v=ad001" class="lang-btn">EN</a>
+ <a href="messages.html?lang=zh-TW&v=ad001" class="lang-btn">繁</a>
+ <a href="messages.html?lang=zh-CN&v=ad001" class="lang-btn">简</a>
+ </div>
+ </div>
+ </nav>
+
+ <main class="main">
+ <div class="page-header">
+ <div>
+ <h1 data-i18n="admin_dash.title"><span data-i18n="admin_dash.heading_admin_dash"> data-i18n="admin_dash.title"</span>Admin Dashboard
+ <p>Overview of your Minerva platform</p>
+ </div>
+ </div>
+
+ <div class="stats-grid">
+ <div class="stat-card">
+ <div class="label" data-i18n="admin_dash.total_teachers">Total Teachers</div>
+ <div class="value teal">128</div>
+ <div class="sub">+12 this week</div>
+ </div>
+ <div class="stat-card">
+ <div class="label" data-i18n="admin_dash.total_students">Total Students</div>
+ <div class="value">256</div>
+ <div class="sub">+24 this week</div>
+ </div>
+ <div class="stat-card">
+ <div class="label">Active Lessons</div>
+ <div class="value green">342</div>
+ <div class="sub">This month</div>
+ </div>
+ <div class="stat-card">
+ <div class="label">Revenue (MTD)</div>
+ <div class="value gold">HK$18,420</div>
+ <div class="sub">+23% vs last month</div>
+ </div>
+ <div class="stat-card">
+ <div class="label" data-i18n="admin_dash.pending_review">Pending Review</div>
+ <div class="value red">8</div>
+ <div class="sub">Applications</div>
+ </div>
+ </div>
+
+ <div class="tabs">
+ <button class="tab active" data-i18n="admin_dash.tab_all_teachers"><span data-i18n="admin_dash.tab_all_teachers">All Teachers</span></button>
+ <button class="tab" data-i18n="admin_dash.tab_pending"><span data-i18n="admin_dash.tab_pending">Pending Approval</span></button>
+ <button class="tab" data-i18n="admin_dash.tab_students"><span data-i18n="admin_dash.tab_students">All Students</span></button>
+ <button class="tab" data-i18n="admin_dash.tab_lessons"><span data-i18n="admin_dash.tab_lessons">Recent Lessons</span></button>
+ </div>
+
+ <div class="card">
+ <div class="card-header">
+ <h2 data-i18n="admin_dash.teachers" data-i18n="admin_dash.nav_teachers">Teachers</h2>
+ <input type="text" class="search-input" data-i18n="admin_dash.search_teachers" placeholder="Search teachers...">
+ </div>
+ <table>
+ <thead>
+ <tr>
+ <th data-i18n="admin_dash.col_name">Name</th>
+ <th data-i18n="admin_dash.col_subject">Subject</th>
+ <th data-i18n="admin_dash.col_students" data-i18n="admin_dash.nav_students">Students</th>
+ <th data-i18n="admin_dash.col_rating">Rating</th>
+ <th data-i18n="admin_dash.col_status">Status</th>
+ <th data-i18n="admin_dash.col_actions">Actions</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>Ms. Sarah Piano</td>
+ <td>Piano</td>
+ <td>12</td>
+ <td>4.9 ⭐</td>
+ <td><span class="badge active"><span data-i18n="admin_dash.status_active">Active</span></span></td>
+ <td><button class="action-btn" data-i18n="admin_dash.view"><span data-i18n="admin_dash.btn_view">View</span></button></td>
+ </tr>
+ <tr>
+ <td>Mr. Chen Math</td>
+ <td>Mathematics</td>
+ <td>18</td>
+ <td>4.8 ⭐</td>
+ <td><span class="badge active"><span data-i18n="admin_dash.status_active">Active</span></span></td>
+ <td><button class="action-btn" data-i18n="admin_dash.view"><span data-i18n="admin_dash.btn_view">View</span></button></td>
+ </tr>
+ <tr>
+ <td>Ms. Amy English</td>
+ <td>English</td>
+ <td>15</td>
+ <td>5.0 ⭐</td>
+ <td><span class="badge active"><span data-i18n="admin_dash.status_active">Active</span></span></td>
+ <td><button class="action-btn" data-i18n="admin_dash.view"><span data-i18n="admin_dash.btn_view">View</span></button></td>
+ </tr>
+ <tr>
+ <td>Mr. David Violin</td>
+ <td>Violin</td>
+ <td>8</td>
+ <td>4.7 ⭐</td>
+ <td><span class="badge pending"><span data-i18n="admin_dash.status_pending">Pending</span></span></td>
+ <td><button class="action-btn"><span data-i18n="admin_dash.btn_review">Review</span></button></td>
+ </tr>
+ <tr>
+ <td>Ms. Lisa Physics</td>
+ <td>Physics</td>
+ <td>0</td>
+ <td>-</td>
+ <td><span class="badge pending"><span data-i18n="admin_dash.status_pending">Pending</span></span></td>
+ <td><button class="action-btn"><span data-i18n="admin_dash.btn_review">Review</span></button></td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+
+ <div style="height: 24px;"></div>
+
+ <div class="grid-2">
+ <div class="card">
+ <div class="card-header">
+ <h2><span data-i18n="admin_dash.heading_recent_students"></span>Recent Students
+ </div>
+ <div style="padding: 0 24px;">
+ <div class="list-item">
+ <div class="info">
+ <h4>Emma Wong</h4>
+ <p>Parent • Piano lessons</p>
+ </div>
+ <span class="badge active"><span data-i18n="admin_dash.status_active">Active</span></span>
+ </div>
+ <div class="list-item">
+ <div class="info">
+ <h4>Lucas Lee</h4>
+ <p>Student • Violin lessons</p>
+ </div>
+ <span class="badge active"><span data-i18n="admin_dash.status_active">Active</span></span>
+ </div>
+ <div class="list-item">
+ <div class="info">
+ <h4>Sophie Chen</h4>
+ <p>Parent • Math lessons</p>
+ </div>
+ <span class="badge pending"><span data-i18n="admin_dash.status_new">New</span></span>
+ </div>
+ <div class="list-item">
+ <div class="info">
+ <h4>Ryan Lam</h4>
+ <p>Student • English lessons</p>
+ </div>
+ <span class="badge active"><span data-i18n="admin_dash.status_active">Active</span></span>
+ </div>
+ </div>
+ </div>
+
+ <div class="card">
+ <div class="card-header">
+ <h2>Recent Lessons</h2>
+ </div>
+ <div style="padding: 0 24px;">
+ <div class="list-item">
+ <div class="info">
+ <h4>Emma Wong + Ms. Sarah Piano</h4>
+ <p>Today, 4:00 PM • Piano</p>
+ </div>
+ <span class="badge active"><span data-i18n="admin_dash.status_completed">Completed</span></span>
+ </div>
+ <div class="list-item">
+ <div class="info">
+ <h4>Lucas Lee + Mr. David Violin</h4>
+ <p>Tomorrow, 10:00 AM • Violin</p>
+ </div>
+ <span class="badge pending"><span data-i18n="admin_dash.status_scheduled">Scheduled</span></span>
+ </div>
+ <div class="list-item">
+ <div class="info">
+ <h4>Sophie Chen + Mr. Chen Math</h4>
+ <p>Jan 16, 2:00 PM • Math</p>
+ </div>
+ <span class="badge pending"><span data-i18n="admin_dash.status_pending">Pending</span></span>
+ </div>
+ <div class="list-item">
+ <div class="info">
+ <h4>Ryan Lam + Ms. Amy English</h4>
+ <p>Jan 16, 5:00 PM • English</p>
+ </div>
+ <span class="badge pending"><span data-i18n="admin_dash.status_scheduled">Scheduled</span></span>
+ </div>
+ </div>
+ </div>
+ </div>
+ </main>
+<!-- Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getFirestore, collection, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s',
+    authDomain: 'minerva-learning-a7eac.firebaseapp.com',
+    projectId: 'minerva-learning-a7eac',
+    storageBucket: 'minerva-learning-a7eac.appspot.com',
+    messagingSenderId: '140471258134',
+    appId: '1:140471258134:web:minerva-admin'
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  async function loadAdminData() {
+    try {
+      // Load registrations from Firestore
+      const q = query(collection(db, 'registrations'), orderBy('submittedAt', 'desc'), limit(50));
+      const snapshot = await getDocs(q);
+      const registrations = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      // Count stats
+      const total = registrations.length;
+      const pending = registrations.filter(r => r.status === 'pending').length;
+
+      // Update stat cards
+      const statCards = document.querySelectorAll('.stat-card');
+      // First card: Total Submissions
+      if (statCards[0]) {
+        statCards[0].querySelector('.label').textContent = 'Total Submissions';
+        const valEl = statCards[0].querySelector('.value');
+        valEl.textContent = total;
+        valEl.className = 'value teal';
+        statCards[0].querySelector('.sub').textContent = 'Parent registrations';
+      }
+      // Fifth card: Pending Review
+      if (statCards[4]) {
+        const valEl = statCards[4].querySelector('.value');
+        valEl.textContent = pending;
+        valEl.className = 'value red';
+        statCards[4].querySelector('.label').textContent = 'Pending Review';
+        statCards[4].querySelector('.sub').textContent = 'Registrations';
+      }
+
+      // Add Submissions tab if not exists
+      const existingTab = document.querySelector('[data-tab="submissions"]');
+      if (!existingTab) {
+        const tabsContainer = document.querySelector('.tabs');
+        if (tabsContainer) {
+          const subTab = document.createElement('button');
+          subTab.className = 'tab';
+          subTab.dataset.tab = 'submissions';
+          subTab.innerHTML = '<span>Submissions</span>';
+          subTab.addEventListener('click', () => showTab('submissions'));
+          tabsContainer.appendChild(subTab);
+        }
+      }
+
+      // Build submissions card
+      const existingSubCard = document.getElementById('submissions-card');
+      if (existingSubCard) existingSubCard.remove();
+
+      const subCard = document.createElement('div');
+      subCard.className = 'card';
+      subCard.id = 'submissions-card';
+      subCard.style.display = 'none';
+
+      let tableHTML = `
+        <div class="card-header">
+          <h2>Recent Registrations</h2>
+          <input type="text" class="search-input" placeholder="Search..." onkeyup="filterSubmissions(this.value)">
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Parent Name</th>
+              <th>Email</th>
+              <th>Student Level</th>
+              <th>Lesson Type</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="submissions-tbody">`;
+
+      registrations.forEach(r => {
+        const date = r.submittedAt ? new Date(r.submittedAt.seconds * 1000).toLocaleDateString() : '—';
+        const level = r.studentLevel || '—';
+        const lessonType = r.lessonType || '—';
+        const statusClass = r.status === 'pending' ? 'pending' : 'active';
+        const statusText = r.status === 'pending' ? 'Pending' : 'Reviewed';
+
+        tableHTML += `
+            <tr>
+              <td>${date}</td>
+              <td>${escapeHtml(r.parentName || '—')}</td>
+              <td>${escapeHtml(r.email || '—')}</td>
+              <td>${escapeHtml(level)}</td>
+              <td>${escapeHtml(lessonType)}</td>
+              <td><span class="badge ${statusClass}">${statusText}</span></td>
+            </tr>`;
+      });
+
+      if (registrations.length === 0) {
+        tableHTML += `<tr><td colspan="6" style="text-align:center;padding:20px;color:#888;">No submissions yet</td></tr>`;
+      }
+
+      tableHTML += `</tbody></table>`;
+
+      subCard.innerHTML = tableHTML;
+
+      // Insert after the first card div
+      const firstCard = document.querySelector('.card');
+      if (firstCard) firstCard.parentNode.insertBefore(subCard, firstCard);
+
+      // Show submissions tab content
+      window.showTab = function(tab) {
+        document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.card').forEach(c => c.style.display = 'none');
+        document.querySelectorAll('.grid-2').forEach(g => g.style.display = 'none');
+        const target = document.querySelector(`[data-tab="${tab}"]`);
+        if (target) target.classList.add('active');
+        const card = tab === 'submissions' ? subCard : document.querySelector('.card');
+        if (card) card.style.display = 'block';
+        if (tab !== 'submissions') {
+          document.querySelectorAll('.grid-2').forEach(g => g.style.display = 'grid');
+        }
+      };
+
+      // Make first tab active by default
+      const firstTab = document.querySelector('.tabs .tab');
+      if (firstTab) {
+        firstTab.addEventListener('click', () => showTab(firstTab.dataset.tab));
+      }
+
+    } catch (err) {
+      console.error('Failed to load admin data:', err);
+    }
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  window.filterSubmissions = function(query) {
+    const rows = document.querySelectorAll('#submissions-tbody tr');
+    const q = query.toLowerCase();
+    rows.forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  };
+
+  // Init
+  loadAdminData();
+</script>
+<script src="i18n.js"></script>
+</body>
+</html>

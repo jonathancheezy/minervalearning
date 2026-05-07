@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Parent/Student Registration — Minerva</title>
+  <style>
+ :root {
+ --navy: #1e3a5f;
+ --navy-dark: #0f1f33;
+ --teal: #3b82f6;
+ --teal-light: #60a5fa;
+ --gold: #F9A828;
+ --gold-light: #FBB81C;
+ --white: #ffffff;
+ --gray-100: #f8fafc;
+ --gray-200: #e2e8f0;
+ --gray-500: #64748b;
+ --gray-700: #334155;
+ }
+
+ * { margin: 0; padding: 0; box-sizing: border-box; }
+
+ body {
+ font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+ background: var(--white);
+ color: var(--gray-700);
+ line-height: 1.6;
+ padding-top: 64px;
+ }
+
+
+ /* Nav */
+ nav {
+ position: fixed;
+ top: 0; left: 0; right: 0;
+ z-index: 100;
+ background: var(--navy);
+ color: white;
+ height: 60px;
+ padding: 16px 24px;
+ }
+
+ .nav-inner {
+ max-width: 1100px;
+ margin: 0 auto;
+ }
+
+.logo {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ font-weight: 800;
+ font-size: 22px;
+ color: white;
+ text-decoration: none;
+ margin-right: 32px;
+ white-space: nowrap;
+ flex-shrink: 0;
+ }
+
+ .logo-icon { width: 36px; height: 36px; }
+
+ .nav-right {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ width: 100%;
+ gap: 16px;
+ flex-wrap: nowrap;
+ }
+
+ .nav-controls {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ flex-shrink: 0;
+ }
+
+ .nav-links {
+ display: flex;
+ gap: 24px;
+ align-items: center;
+ }
+
+ .mobile-menu-btn {
+ display: none;
+ font-size: 20px;
+ cursor: pointer;
+ padding: 4px;
+ color: var(--gold);
+ background: none;
+ border: none;
+ }
+
+ .nav-links a {
+ color: rgba(255,255,255,0.75);
+ text-decoration: none;
+ font-size: 14px;
+ font-weight: 500;
+ transition: color 0.2s;
+ }
+ .nav-links a:hover { color: var(--gold); }
+ .nav-links a.active { color: var(--gold) !important; }
+
+ 
+
+ .user-info {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ }
+
+ .avatar {
+ width: 36px;
+ height: 36px;
+ background: var(--gold);
+ border-radius: 50%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-weight: 700;
+ color: var(--navy-dark);
+ font-size: 14px;
+ }
+ /* Language Selector */
+ .lang-selector { position: relative; display: flex; align-items: center; }
+
+ .globe {
+ width: 18px;
+ height: 18px;
+ color: var(--gold);
+ cursor: pointer;
+ transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s;
+ flex-shrink: 0;
+ }
+ .globe:hover { transform: rotate(20deg); color: var(--gold-light); }
+ .lang-selector.open .globe { transform: rotate(180deg); }
+
+ .lang-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  width: 55px;
+  background: var(--navy);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  z-index: 200;
+}
+ .lang-selector.open .lang-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+ .lang-option {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 6px;
+ padding: 10px 14px;
+ cursor: pointer;
+ font-size: 13px;
+ font-weight: 600;
+ color: rgba(255,255,255,0.65);
+ background: transparent;
+ border-bottom: 1px solid rgba(255,255,255,0.06);
+ transition: background 0.15s, color 0.15s, padding-left 0.15s;
+ position: relative;
+ overflow: hidden;
+ }
+ .lang-option:last-child { border-bottom: none; }
+ .lang-option:hover { background: rgba(255,255,255,0.06); color: white; padding-left: 18px; }
+ .lang-option.selected { color: var(--gold); }
+
+ .lang-selector.open .lang-dropdown .lang-option:nth-child(1) { animation: rowReveal 0.25s 0ms both; }
+ .lang-selector.open .lang-dropdown .lang-option:nth-child(2) { animation: rowReveal 0.25s 50ms both; }
+ .lang-selector.open .lang-dropdown .lang-option:nth-child(3) { animation: rowReveal 0.25s 100ms both; }
+
+ @keyframes rowReveal {
+ from { opacity: 0; transform: translateX(-8px); }
+ to { opacity: 1; transform: translateX(0); }
+ }
+
+ .lang-option .check {
+ width: 14px;
+ height: 14px;
+ flex-shrink: 0;
+ opacity: 0;
+ transform: scale(0.5);
+ transition: opacity 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+ }
+ .lang-option.selected .check { opacity: 1; transform: scale(1); }
+ .lang-option .check svg {
+ width: 14px;
+ height: 14px;
+ stroke: var(--gold);
+ stroke-width: 2.5;
+ fill: none;
+ stroke-linecap: round;
+ stroke-linejoin: round;
+ stroke-dasharray: 20;
+ stroke-dashoffset: 20;
+ }
+ .lang-option.selected .check svg { stroke-dashoffset: 0; transition: stroke-dashoffset 0.3s; }
+
+ .lang-option.selected::before {
+ content: '';
+ position: absolute;
+ inset: 0;
+ background: linear-gradient(90deg, transparent, rgba(249,168,40,0.08), transparent);
+ transform: translateX(-100%);
+ transition: transform 0.4s;
+ }
+ .lang-option.selected:hover::before { transform: translateX(100%); }
+ @media (max-width: 768px) {
+ .nav-right { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; }
+ .mobile-menu-btn { display: flex; order: -1; }
+ .lang-selector { background: transparent; padding: 0; gap: 0; border-radius: 0; }
+ .nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--navy); flex-direction: column; padding: 20px 24px; gap: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 99; }
+ .nav-links.active { display: flex; }
+ .nav-links a { color: white; text-decoration: none; font-size: 14px; font-weight: 500; }
+ }
+ @media (min-width: 769px) {
+ .mobile-menu-btn { display: none; }
+ }
+
+ .user-name {
+ font-size: 14px;
+ font-weight: 600;
+ }
+
+ /* Hero */
+ .hero {
+ padding: 120px 24px 40px;
+ text-align: center;
+ background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+ }
+
+ .hero-badge {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ background: var(--navy);
+ color: white;
+ font-size: 12px;
+ font-weight: 600;
+ padding: 6px 14px;
+ border-radius: 50px;
+ margin-bottom: 24px;
+ letter-spacing: 0.5px;
+ }
+
+ .hero h1 {
+ font-size: clamp(28px, 5vw, 48px);
+ font-weight: 800;
+ color: var(--navy-dark);
+ line-height: 1.2;
+ margin-bottom: 16px;
+ }
+
+ .hero p {
+ font-size: 17px;
+ font-size: 17px;
+ color: var(--gray-500);
+ max-width: 500px;
+ margin: 0 auto;
+ }
+
+ /* Form Section */
+ .form-section {
+ padding: 40px 24px 80px;
+ max-width: 640px;
+ margin: 0 auto;
+ }
+
+ .form-card {
+ background: rgba(0,0,0,0.25);
+ border-radius: 20px;
+ padding: 40px;
+ }
+
+ .form-group {
+ margin-bottom: 24px;
+ }
+
+ .form-group label {
+ display: block;
+ font-size: 14px;
+ font-weight: 600;
+ color: var(--navy-dark);
+ margin-bottom: 8px;
+ }
+
+ .form-group input,
+ .form-group select,
+ .form-group textarea {
+ width: 100%;
+ padding: 14px 16px;
+ border-radius: 12px;
+ border: 2px solid var(--gray-200);
+ background: white;
+ font-size: 15px;
+ font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+ color: var(--gray-700);
+ transition: border-color 0.2s;
+ }
+
+ .form-group input:focus,
+ .form-group select:focus,
+ .form-group textarea:focus {
+ outline: none;
+ border-color: var(--teal);
+ }
+
+ .form-group textarea {
+ min-height: 100px;
+ resize: vertical;
+ }
+
+ .form-group small {
+ display: block;
+ font-size: 13px;
+ color: white;
+ margin-top: 6px;
+ }
+
+ .form-row {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 16px;
+ }
+
+ @media (max-width: 500px) {
+ .form-row { grid-template-columns: 1fr; }
+ }
+
+ .btn-primary {
+ width: 100%;
+ background: var(--gold);
+ color: var(--navy-dark);
+ font-weight: 700;
+ font-size: 16px;
+ padding: 16px 32px;
+ border-radius: 50px;
+ border: none;
+ cursor: pointer;
+ transition: all 0.2s;
+ font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+ margin-top: 16px;
+ }
+
+ .btn-primary:hover {
+ background: var(--gold-light);
+ transform: translateY(-1px);
+ }
+ .terms { margin-top: 16px; font-size: 12px; color: white; text-align: center; }
+ .terms a { color: var(--teal); }
+
+ .form-success {
+ display: none;
+ text-align: center;
+ padding: 40px;
+ }
+
+ .form-success h3 {
+ font-size: 24px;
+ color: var(--navy-dark);
+ margin-bottom: 12px;
+ }
+
+ .form-success p {
+ color: white;
+ }
+
+ /* Benefits */
+ .benefits {
+ padding: 40px 24px;
+ background: var(--navy);
+ text-align: center;
+ }
+
+ .benefits h2 {
+ font-size: 24px;
+ font-weight: 700;
+ color: white;
+ margin-bottom: 32px;
+ }
+
+ .benefits-grid { justify-content: center;
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ text-align: center;
+ gap: 24px;
+ max-width: 800px;
+ margin: 0 auto;
+ }
+
+ .benefit {
+ color: white;
+ }
+
+ .benefit h4 {
+ font-size: 16px;
+ font-weight: 700;
+ margin-bottom: 8px;
+ color: var(--gold);
+ }
+
+ .benefit p {
+ font-size: 14px;
+ color: rgba(255,255,255,0.7);
+ }
+
+ /* Footer */
+ footer {
+ padding: 40px 24px;
+ text-align: center;
+ color: var(--gray-500);
+ font-size: 13px;
+ border-top: 1px solid var(--gray-200);
+ }
+ footer a { color: var(--gold); text-decoration: none; }
+ footer a:hover { text-decoration: underline; }
+
+
+
+@media (max-width: 768px) {
+.nav-right { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 8px; }
+.nav-controls { display: flex; align-items: center; gap: 10px; }
+.mobile-menu-btn { display: flex; order: -1; }
+.lang-selector { background: transparent; padding: 0; gap: 0; border-radius: 0; }
+.nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--navy); flex-direction: column; padding: 20px 24px; gap: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 99; }
+.nav-links.active { display: flex; }
+.nav-links a { color: white; text-decoration: none; font-size: 14px; font-weight: 500; }
+}
+@media (min-width: 769px) {
+.mobile-menu-btn { display: none; }
+}
+</style>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+</head>
+<body>
+ <nav>
+ <div class="nav-inner">
+ <div class="nav-right">
+ <a href="minerva_landing.html" class="logo">
+ <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+ <rect width="40" height="40" rx="12" fill="#1e3a5f"/>
+ <path d="M10 28V12L20 20L30 12V28" stroke="#F9A828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M20 20V32" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+ </svg>
+ Minerva
+ </a>
+ <div class="nav-controls">
+ <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('active')">☰</button>
+ <div class="lang-selector" id="langSelector">
+ <svg class="globe" id="langGlobe" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+ <circle cx="12" cy="12" r="10"/>
+ <line x1="2" y1="12" x2="22" y2="12"/>
+ <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+ </svg>
+ <div class="lang-dropdown" id="langDropdown">
+ <div class="lang-option selected" data-lang="en">EN <span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+ <div class="lang-option" data-lang="zh-TW">繁 <span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+ <div class="lang-option" data-lang="zh-CN">简 <span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+ </div>
+ </div>
+ </div>
+ <div class="nav-links">
+ <a href="minerva_landing.html" data-i18n="register.nav_home">Home</a>
+ <a href="faq.html" data-i18n="register.nav_faq">FAQ</a>
+ <a href="login.html" data-i18n="register.nav_login">Login</a>
+ <a href="privacy.html" data-i18n="nav_privacy">Privacy Policy</a>
+ <a href="terms.html" data-i18n="register.nav_terms">Terms & Conditions</a>
+ </div>
+ </div>
+ </div>
+ </nav>
+ <section class="hero">
+ <div class="hero-badge" data-i18n="register.parent_register_hero">Join as a Parent or Student</div>
+ <h1 data-i18n="register.find_teacher">Find a Teacher</h1>
+ <p data-i18n="register.first_class_free">First class FREE when you sign up for 4 lessons.</p>
+ </section>
+
+ <section class="form-section">
+ <div class="form-card">
+ <form id="parentForm" action="https://formspree.io/f/mvzdgbod" method="POST">
+ <div class="form-row">
+ <div class="form-group">
+ <label for="parentName"><span data-i18n="register.label_your_name">Your Name</span></label>
+ <input type="text" id="parentName" name="parentName" required data-i18n="register.label_parent_name_placeholder" placeholder="Parent or student name">
+ </div>
+ <div class="form-group">
+ <label for="email"><span data-i18n="register.email">Email Address</span></label>
+ <input type="email" id="email" name="email" required data-i18n="register.label_email_placeholder" placeholder="Email address">
+ </div>
+ </div>
+
+ <div class="form-group">
+ <label for="phone"><span data-i18n="register.label_phone">WhatsApp / Phone Number</span></label>
+ <input type="tel" id="phone" name="phone" data-i18n="register.label_phone_placeholder" placeholder="+852 XXXX XXXX">
+ </div>
+
+ <div class="form-group">
+ <label for="studentLevel"><span data-i18n="register.label_current_level">Student's Current Level</span></label>
+ <select id="studentLevel" name="studentLevel" required>
+ <option value="" data-i18n="register.label_select_level">Select level</option>
+ <option value="p1" data-i18n="register.opt_p1">Primary 1-3</option>
+ <option value="p4" data-i18n="register.opt_p4">Primary 4-6</option>
+ <option value="s1" data-i18n="register.opt_s1">Secondary 1-3</option>
+ <option value="s4" data-i18n="register.opt_s4">Secondary 4-6 / DSE</option>
+ <option value="university" data-i18n="register.opt_university">University / Tertiary</option>
+ <option value="adult" data-i18n="register.opt_adult">Adult Learning</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="lessonType"><span data-i18n="register.label_lesson_type">Preferred Lesson Type</span></label>
+ <select id="lessonType" name="lessonType">
+ <option value="" data-i18n="register.label_select_lesson_type">Select preference</option>
+ <option value="individual" data-i18n="register.opt_individual">Individual (One-on-One)</option>
+ <option value="small-group" data-i18n="register.opt_small_group">Small Group (2-4 students)</option>
+ <option value="group" data-i18n="register.opt_group">Group Class (5+ students)</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="preferredLocation"><span data-i18n="register.label_location">Preferred Teaching Location</span></label>
+ <select id="preferredLocation" name="preferredLocation">
+ <option value="" data-i18n="register.label_select_location">Select location</option>
+ <option value="student-home" data-i18n="register.opt_student_home">Student's Home</option>
+ <option value="tutor-home" data-i18n="register.opt_tutor_home">Tutor's Home / Studio</option>
+ <option value="library" data-i18n="register.opt_library">Library / Public Space</option>
+ <option value="online" data-i18n="register.opt_online_video">Online (Video Call)</option>
+ <option value="flexible" data-i18n="register.opt_location_flexible">Flexible</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="budget"><span data-i18n="register.label_budget">Budget per Hour (HK$)</span></label>
+ <input type="number" id="budget" name="budget" data-i18n="register.label_budget_placeholder" placeholder="e.g., 300" min="0">
+ </div>
+
+ <div class="form-group">
+ <label for="lessonFrequency"><span data-i18n="register.label_frequency">Lesson Frequency</span></label>
+ <select id="lessonFrequency" name="lessonFrequency">
+ <option value="" data-i18n="register.label_select_frequency">Select frequency</option>
+ <option value="once" data-i18n="register.opt_once">Once a week</option>
+ <option value="twice" data-i18n="register.opt_twice">2 times a week</option>
+ <option value="thrice" data-i18n="register.opt_thrice">3+ times a week</option>
+ <option value="flexible" data-i18n="register.opt_freq_flexible">Flexible / As needed</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="preferredLanguage"><span data-i18n="register.label_teaching_lang">Preferred Teaching Language</span></label>
+ <select id="preferredLanguage" name="preferredLanguage">
+ <option value="" data-i18n="register.label_select_language">Select language</option>
+ <option value="cantonese" data-i18n="register.opt_cantonese">Cantonese</option>
+ <option value="english" data-i18n="register.opt_lang_english">English</option>
+ <option value="mandarin" data-i18n="register.opt_mandarin">Mandarin</option>
+ <option value="flexible" data-i18n="register.opt_location_flexible">Flexible</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="studentName"><span data-i18n="register.label_student_name">Student's Name</span></label>
+ <input type="text" id="studentName" name="studentName" data-i18n="register.label_student_name_placeholder" placeholder="If different from above">
+ </div>
+
+ <div class="form-group">
+ <label for="genderPreference"><span data-i18n="register.label_tutor_gender">Preferred Tutor Gender</span></label>
+ <select id="genderPreference" name="genderPreference">
+ <option value="" data-i18n="register.label_no_preference">No preference</option>
+ <option value="male" data-i18n="register.gender_male">Male</option>
+ <option value="female" data-i18n="register.gender_female">Female</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="weaknesses"><span data-i18n="register.label_difficulty">Specific Areas of Difficulty</span></label>
+ <textarea id="weaknesses" name="weaknesses" data-i18n="register.label_difficulty_placeholder" placeholder="e.g., Algebra, Grammar, Reading comprehension, Sight-reading..."></textarea>
+ </div>
+
+ <div class="form-group">
+ <label for="specialNeeds"><span data-i18n="register.label_special_needs">Special Learning Needs (optional)</span></label>
+ <select id="specialNeeds" name="specialNeeds">
+ <option value="" data-i18n="register.label_select_applicable">Select if applicable</option>
+ <option value="none" data-i18n="register.opt_none">None</option>
+ <option value="adhd" data-i18n="register.opt_adhd">ADHD / ADD</option>
+ <option value="dyslexia" data-i18n="register.opt_dyslexia">Dyslexia</option>
+ <option value="dyscalculia" data-i18n="register.opt_dyscalculia">Dyscalculia</option>
+ <option value="autism" data-i18n="register.opt_autism">Autism Spectrum</option>
+ <option value="other" data-i18n="register.opt_disability_other">Other</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="urgency"><span data-i18n="register.label_how_soon">How Soon Do You Need a Tutor?</span></label>
+ <select id="urgency" name="urgency">
+ <option value="" data-i18n="register.label_select_timeline">Select timeline</option>
+ <option value="asap" data-i18n="register.opt_asap">As soon as possible</option>
+ <option value="1-2-weeks" data-i18n="register.opt_1_2_weeks">Within 1-2 weeks</option>
+ <option value="1-month" data-i18n="register.opt_1_month">Within 1 month</option>
+ <option value="exploring" data-i18n="register.opt_exploring">Just exploring</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="referral"><span data-i18n="register.label_how_hear">How did you hear about Minerva?</span></label>
+ <select id="referral" name="referral">
+ <option value="" data-i18n="register.label_select_source">Select source</option>
+ <option value="google" data-i18n="register.opt_google">Google Search</option>
+ <option value="facebook" data-i18n="register.opt_facebook">Facebook</option>
+ <option value="instagram" data-i18n="register.opt_instagram">Instagram</option>
+ <option value="whatsapp" data-i18n="register.opt_whatsapp">WhatsApp</option>
+ <option value="friend" data-i18n="register.opt_friend">Friend / Family</option>
+ <option value="school" data-i18n="register.opt_school">School / Teacher</option>
+ <option value="other" data-i18n="register.opt_source_other">Other</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="message"><span data-i18n="register.label_additional_notes">Additional notes</span></label>
+ <textarea id="message" name="message" data-i18n="register.label_message_placeholder" placeholder="Preferred schedule, specific requirements, or anything else we should know..."></textarea>
+ </div>
+
+ <button type="submit" class="btn-primary" data-i18n="register.btn_submit">Submit Registration</button>
+ <p class="terms"><span data-i18n="register.agree_text">By registering, you agree to our</span> <a href="terms.html" data-i18n="register.link_terms">Terms & Conditions</a> <span data-i18n="register.and_text">and</span> <a href="privacy.html" data-i18n="register.link_privacy">Privacy Policy</a>.</p>
+ </form>
+
+ <div class="form-success" id="formSuccess">
+ <h3 data-i18n="register.parent_success_title">✅ Thank you for registering!</h3>
+ <p data-i18n="register.parent_success_msg">We'll match you with the perfect teacher and be in touch soon. Check your email for confirmation.</p>
+ </div>
+<!-- Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s',
+    authDomain: 'minerva-learning-a7eac.firebaseapp.com',
+    projectId: 'minerva-learning-a7eac',
+    storageBucket: 'minerva-learning-a7eac.appspot.com',
+    messagingSenderId: '140471258134',
+    appId: '1:140471258134:web:minerva-admin'
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Pre-fill email from URL parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const emailParam = urlParams.get('email');
+  if (emailParam) {
+    document.getElementById('email').value = decodeURIComponent(emailParam);
+  }
+
+  const form = document.getElementById('parentForm');
+  const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+    }
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+
+    try {
+      await addDoc(collection(db, 'registrations'), {
+        ...data,
+        submittedAt: serverTimestamp(),
+        status: 'pending'
+      });
+
+      form.style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    } catch (err) {
+      console.error('Registration error:', err);
+      alert('Something went wrong. Please try again.');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Registration';
+      }
+    }
+  });
+</script>
+
+<script src="i18n.js"></script>
+<script>
+(function(){
+  var sel = document.getElementById('langSelector');
+  var globe = document.getElementById('langGlobe');
+  var dropdown = document.getElementById('langDropdown');
+  if (sel && globe && dropdown) {
+    globe.addEventListener('click', function(e){ e.stopPropagation(); sel.classList.toggle('open'); });
+    document.addEventListener('click', function(){ sel.classList.remove('open'); });
+    dropdown.addEventListener('click', function(e){ e.stopPropagation(); });
+    dropdown.querySelectorAll('.lang-option').forEach(function(opt){
+      opt.addEventListener('click', function(){
+        dropdown.querySelectorAll('.lang-option').forEach(function(o){ o.classList.remove('selected'); });
+        opt.classList.add('selected');
+        sel.classList.remove('open');
+        var lang = opt.dataset.lang;
+        if (typeof setLang === 'function') setLang(lang);
+      });
+    });
+  }
+  var params = new URLSearchParams(window.location.search);
+  var lp = params.get('lang');
+  if (!lp) lp = localStorage.getItem('minerva_lang');
+  if (lp && typeof setLang === 'function') setLang(lp);
+})();
+</script>
+</body>
+</html>

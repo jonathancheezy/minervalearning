@@ -652,6 +652,12 @@
  <span data-i18n="register.label_id_verified">I confirm I have valid HKID / passport for verification</span>
  </label>
  </div>
+
+ <div class="form-group">
+ <label for="certFile"><span data-i18n="register.label_cert_upload">Qualification Certificate (optional)</span></label>
+ <input type="file" id="certFile" name="certFile" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="font-size:0.875rem;color:var(--text-muted);padding:8px 0;">
+ <small style="color:var(--text-muted);font-size:0.75rem;display:block;margin-top:4px;" data-i18n="register.label_cert_hint">PDF, JPG, PNG or DOC — max 5MB</small>
+ </div>
 <button type="submit" class="btn-primary" data-i18n="register.btn_register">Register →</button>
  <p class="terms">By registering, you agree to our <a href="terms.html">Terms & Conditions</a> and <a href="privacy.html">Privacy Policy</a>.</p>
  </form>
@@ -674,6 +680,7 @@
 
  // Firebase SDK
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -686,6 +693,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 document.getElementById('registrationForm').addEventListener('submit', async function(e) {
  e.preventDefault();
@@ -694,12 +702,25 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
 
   if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Registering...'; }
 
-  const formData = new FormData(form);
+  const certFile = document.getElementById('certFile').files[0];
+      let certUrl = '';
+      if (certFile) {
+        if (certFile.size > 5 * 1024 * 1024) {
+          alert('Certificate file must be under 5MB.');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Register →'; }
+          return;
+        }
+        const storageRef = ref(storage, 'certificates/' + Date.now() + '_' + certFile.name);
+        const snap = await uploadBytes(storageRef, certFile);
+        certUrl = await getDownloadURL(snap.ref);
+      }
+      const formData = new FormData(form);
   const data = Object.fromEntries(formData);
 
   try {
     await addDoc(collection(db, 'registrations'), {
       ...data,
+      certUrl: certUrl,
       role: 'teacher',
       submittedAt: serverTimestamp(),
       status: 'pending'

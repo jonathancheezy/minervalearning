@@ -329,6 +329,27 @@
       parent_register_hero:{en:"Join as a Parent or Student",zhTW:"註冊成為家長或學生",zhCN:"註冊成為家長或學生"},
       parent_success_msg:{en:"Welcome to Minerva! Start exploring our verified teachers.",zhTW:"歡迎來到Minerva！開始探索我們的驗證導師。",zhCN:"歡迎來到Minerva！開始探索我們的驗證導師。"},
       parent_success_title:{en:"Registration Successful!",zhTW:"註冊成功！",zhCN:"註冊成功！"},
+      // New registration fields
+      label_preferred_days:{en:"Preferred Days / Times",zhTW:"偏好日子/時間",zhCN:"偏好日期/時間"},
+      opt_weekday_morning:{en:"Weekday Mornings",zhTW:"平日早上",zhCN:"平日早上"},
+      opt_weekday_afternoon:{en:"Weekday Afternoons",zhTW:"平日下午",zhCN:"平日下午"},
+      opt_weekday_evening:{en:"Weekday Evenings",zhTW:"平日晚上",zhCN:"平日晚上"},
+      opt_weekend_morning:{en:"Weekend Mornings",zhTW:"週末早上",zhCN:"週末早上"},
+      opt_weekend_afternoon:{en:"Weekend Afternoons",zhTW:"週末下午",zhCN:"週末下午"},
+      opt_weekend_evening:{en:"Weekend Evenings",zhTW:"週末晚上",zhCN:"週末晚上"},
+      opt_days_flexible:{en:"Flexible",zhTW:"彈性",zhCN:"彈性"},
+      label_lesson_duration:{en:"Preferred Lesson Duration",zhTW:"偏好課堂時長",zhCN:"偏好課堂時長"},
+      label_select_duration:{en:"Select duration",zhTW:"選擇時長",zhCN:"選擇時長"},
+      opt_45min:{en:"45 minutes",zhTW:"45分鐘",zhCN:"45分鐘"},
+      opt_60min:{en:"60 minutes",zhTW:"60分鐘",zhCN:"60分鐘"},
+      opt_90min:{en:"90 minutes",zhTW:"90分鐘",zhCN:"90分鐘"},
+      opt_120min:{en:"120 minutes",zhTW:"120分鐘",zhCN:"120分鐘"},
+      opt_duration_flexible:{en:"Flexible",zhTW:"彈性",zhCN:"彈性"},
+      label_school_name:{en:"School / Institution (optional)",zhTW:"學校/機構（可選）",zhCN:"學校/機構（可選）"},
+      label_school_name_placeholder:{en:"e.g., St. Francis' Canossian College",zhTW:"例如：耀中國際學校",zhCN:"例如：耀中國際學校"},
+      label_learning_goals:{en:"Learning Goals",zhTW:"學習目標",zhCN:"學習目標"},
+      label_goals_placeholder:{en:"e.g., Improve DSE Maths by 2 grades, Pass HKDSE English, Build confidence in speaking...",zhTW:"例如：數學提升2個等級、通過DSE英文、建立自信...",zhCN:"例如：數學提升2個等級、通過DSE英文、建立自信..."},
+
     },
 
     // ── Parent Dashboard ──

@@ -1683,7 +1683,7 @@ function switchTab(tab) {
         lucide.createIcons();
         setTimeout(function() {
           document.getElementById('otpOverlay').classList.remove('show');
-          if (pendingUserType === 'teacher') {
+          if (pendingForm === 'teacher') {
             document.getElementById('teacherRegOverlay').classList.add('show');
           } else {
             document.getElementById('parentRegOverlay').classList.add('show');

@@ -397,6 +397,12 @@
         const q = query(collection(db, 'registrations'), limit(200));
         const snapshot = await getDocs(q);
         allRegistrations = snapshot.docs.map(d => ({ id: d.id, ...flattenFields(d.data()) }));
+        // Sort by submittedAt desc client-side (no index needed)
+        allRegistrations.sort((a, b) => {
+          const ta = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;
+          const tb = b.submittedAt ? new Date(b.submittedAt).getTime() : 0;
+          return tb - ta;
+        });
         console.log('[Minerva Admin] Loaded registrations:', allRegistrations.length, allRegistrations.map(r => ({id: r.id, name: r.fullName || r.parentName, role: r.role, status: r.status})));
         // Load all teachers separately for matching
         const tq = query(collection(db, 'registrations'), where('role', '==', 'teacher'), limit(100));

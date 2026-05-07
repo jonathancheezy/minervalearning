@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — Minerva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #7C3AED;
+      --primary-dark: #6D28D9;
+      --primary-light: #8B5CF6;
+      --dark: #0F172A;
+      --dark-2: #1E293B;
+      --surface: #F8FAFC;
+      --border: #E2E8F0;
+      --text-muted: #64748B;
+      --danger: #EF4444;
+      --white: #FFFFFF;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--surface);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    h1, h2, h3 { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; }
+
+    .login-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 24px rgba(124,58,237,0.08), 0 1px 3px rgba(0,0,0,0.04);
+      border: 1px solid var(--border);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 2rem;
+      justify-content: center;
+    }
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-mark svg { width: 22px; height: 22px; }
+    .logo-text {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--dark);
+    }
+    .logo-text span { color: var(--primary); }
+    h2 {
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 1.75rem;
+    }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--dark-2);
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.9375rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--dark);
+      background: var(--white);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+    .form-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+    }
+    .form-group input::placeholder { color: var(--text-muted); }
+    .error-msg {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.2);
+      color: var(--danger);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.15s;
+      margin-top: 0.5rem;
+    }
+    .btn-login:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,58,237,0.3); }
+    .btn-login:active { transform: translateY(0); }
+    .btn-login:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <span class="logo-text">Minerva <span>Admin</span></span>
+    </div>
+    <h2>Welcome back</h2>
+    <p class="subtitle">Sign in to access the dashboard</p>
+    <div class="error-msg" id="error-msg">Invalid email or password. Please try again.</div>
+    <form id="login-form">
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="admin@minerva.ai" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-login" id="submit-btn">Sign in</button>
+    </form>
+    <a href="/" class="back-link">← Back to site</a>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s',
+      authDomain: 'minerva-learning-a7eac.firebase.firebaseapp.com',
+      projectId: 'minerva-learning-a7eac',
+      appId: '1:140471258134:web:minerva-admin'
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Check if already logged in
+    const sessionToken = sessionStorage.getItem('minerva_admin_token');
+    if (sessionToken) {
+      window.location.href = '/admin_dashboard';
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('submit-btn');
+      const err = document.getElementById('error-msg');
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+      err.classList.remove('show');
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        // Set session token (simplified - in production use proper token)
+        sessionStorage.setItem('minerva_admin_token', userCredential.user.uid);
+        window.location.href = '/admin_dashboard';
+      } catch (error) {
+        console.error('Login failed:', error.code, error.message);
+        err.classList.add('show');
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+      }
+    });
+  </script>
+</body>
+</html>

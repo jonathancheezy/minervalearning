@@ -368,18 +368,24 @@
     function getEmail(reg) { return reg.email || '—'; }
 
     function flattenFields(data) {
+      // Handle both REST API wrapped format and SDK plain format
       const flat = {};
       for (const [k, v] of Object.entries(data)) {
         if (v === null || v === undefined) { flat[k] = ''; continue; }
-        if (typeof v === 'object') {
+        if (typeof v === 'object' && v !== null) {
+          // REST API wrapped format
           if (v.stringValue !== undefined) flat[k] = v.stringValue;
           else if (v.integerValue !== undefined) flat[k] = String(v.integerValue);
           else if (v.arrayValue !== undefined) {
             try { flat[k] = v.arrayValue.values.map(x => x.stringValue || x.integerValue || '').join(', '); } catch { flat[k] = ''; }
           }
           else if (v.timestampValue !== undefined) flat[k] = v.timestampValue;
-          else flat[k] = v;
-        } else flat[k] = v;
+          else if (v.booleanValue !== undefined) flat[k] = v.booleanValue;
+          else flat[k] = v; // already a plain object (like GeoPoint)
+        } else {
+          // Already a plain value (from SDK)
+          flat[k] = v;
+        }
       }
       return flat;
     }

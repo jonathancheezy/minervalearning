@@ -321,27 +321,17 @@
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getFirestore, collection, getDocs, query, orderBy, limit, doc, updateDoc, where } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-
-    const firebaseConfig = {
-      apiKey: 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s',
-      authDomain: 'minerva-learning-a7eac.firebaseapp.com',
-      projectId: 'minerva-learning-a7eac',
-      storageBucket: 'minerva-learning-a7eac.appspot.com',
-      messagingSenderId: '140471258134',
-      appId: '1:140471258134:web:minerva-admin'
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  <script>
+    // ── Direct Firestore REST API — bypasses SDK initialization issues ──
+    const PROJECT_ID = 'minerva-learning-a7eac';
+    const API_KEY = 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s';
+    const FIRESTORE_BASE = 'https://firestore.googleapis.com/v1/projects/' + PROJECT_ID + '/databases/(default)/documents';
 
     let allRegistrations = [];
     let allTeachers = [];
     let currentFilter = 'all';
     let selectedReg = null;
 
-    // ── Auth guard ──────────────────────────────────────
     if (sessionStorage.getItem('minerva_admin_auth') !== 'ok') {
       window.location.href = '/admin_login';
     }
@@ -360,399 +350,85 @@
 
     function formatDate(ts) {
       if (!ts) return '—';
-      const d = ts.toDate ? ts.toDate() : new Date(ts);
-      return d.toLocaleDateString('en-HK', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      try { return new Date(ts).toLocaleDateString('en-HK', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+      catch { return String(ts); }
     }
 
     function getName(reg) { return reg.fullName || reg.parentName || reg.name || reg.email || '—'; }
     function getEmail(reg) { return reg.email || '—'; }
 
     function flattenFields(data) {
-      // Handle both REST API wrapped format and SDK plain format
+      if (!data) return {};
       const flat = {};
       for (const [k, v] of Object.entries(data)) {
         if (v === null || v === undefined) { flat[k] = ''; continue; }
-        if (typeof v === 'object' && v !== null) {
-          // REST API wrapped format
+        if (typeof v === 'object') {
           if (v.stringValue !== undefined) flat[k] = v.stringValue;
           else if (v.integerValue !== undefined) flat[k] = String(v.integerValue);
+          else if (v.booleanValue !== undefined) flat[k] = v.booleanValue;
           else if (v.arrayValue !== undefined) {
             try { flat[k] = v.arrayValue.values.map(x => x.stringValue || x.integerValue || '').join(', '); } catch { flat[k] = ''; }
           }
           else if (v.timestampValue !== undefined) flat[k] = v.timestampValue;
-          else if (v.booleanValue !== undefined) flat[k] = v.booleanValue;
-          else flat[k] = v; // already a plain object (like GeoPoint)
-        } else {
-          // Already a plain value (from SDK)
-          flat[k] = v;
-        }
+          else flat[k] = v;
+        } else { flat[k] = v; }
       }
       return flat;
+    }
+
+    async function firestoreQuery(collectionId) {
+      const url = FIRESTORE_BASE + '/' + collectionId + '?key=' + API_KEY + '&pageSize=200';
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error('Firestore error ' + resp.status + ': ' + resp.statusText);
+      return resp.json();
+    }
+
+    async function firestoreUpdateDoc(collectionId, docId, fields) {
+      const url = FIRESTORE_BASE + '/' + collectionId + '/' + docId + '?key=' + API_KEY;
+      const resp = await fetch(url, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields })
+      });
+      if (!resp.ok) throw new Error('Update error ' + resp.status);
+      return resp.json();
+    }
+
+    function docIdFromPath(name) {
+      const parts = String(name).split('/');
+      return parts[parts.length - 1];
     }
 
     async function loadRegistrations() {
       const tbody = document.getElementById('submissions-tbody');
       tbody.innerHTML = '<tr class="skeleton-row"><td colspan="5"><div class="skeleton" style="height:20px;width:60%;"></div></td></tr>';
       try {
-        const q = query(collection(db, 'registrations'), limit(200));
-        const snapshot = await getDocs(q);
-        allRegistrations = snapshot.docs.map(d => ({ id: d.id, ...flattenFields(d.data()) }));
-        // Sort by submittedAt desc client-side (no index needed)
-        allRegistrations.sort((a, b) => {
+        const data = await firestoreQuery('registrations');
+        const docs = (data.documents || []).map(d => ({
+          id: docIdFromPath(d.name),
+          ...flattenFields(d.fields)
+        }));
+        docs.sort((a, b) => {
           const ta = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;
           const tb = b.submittedAt ? new Date(b.submittedAt).getTime() : 0;
           return tb - ta;
         });
-        console.log('[Minerva Admin] Loaded registrations:', allRegistrations.length, allRegistrations.map(r => ({id: r.id, name: r.fullName || r.parentName, role: r.role, status: r.status})));
-        // Load all teachers separately for matching
-        const tq = query(collection(db, 'registrations'), where('role', '==', 'teacher'), limit(100));
-        const tSnapshot = await getDocs(tq);
-        allTeachers = tSnapshot.docs.map(d => ({ id: d.id, ...flattenFields(d.data()) }));
+        allRegistrations = docs;
+        allTeachers = docs.filter(r => String(r.role || '').toLowerCase() === 'teacher');
+        console.log('[Minerva Admin] Loaded:', allRegistrations.length, 'docs', allRegistrations.map(r => ({id: r.id, name: r.fullName || r.parentName, role: r.role})));
         updateStats();
         renderTable(allRegistrations);
       } catch (err) {
-        console.error('Load error:', err);
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--danger);padding:2rem;">Failed to load data.</td></tr>';
+        console.error('[Minerva Admin] Load error:', err);
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--danger);padding:2rem;">Failed to load: ' + err.message + '</td></tr>';
       }
     }
-
-    function updateStats() {
-      const total = allRegistrations.length;
-      const parents = allRegistrations.filter(r => String(r.role || '').toLowerCase() === 'parent').length;
-      const teachers = allRegistrations.filter(r => String(r.role || '').toLowerCase() === 'teacher').length;
-      const pending = allRegistrations.filter(r => String(r.status || 'pending') === 'pending').length;
-      document.getElementById('stat-total').textContent = total || '0';
-      document.getElementById('stat-parents').textContent = parents || '0';
-      document.getElementById('stat-teachers').textContent = teachers || '0';
-      document.getElementById('stat-pending').textContent = pending || '0';
-    }
-
-    function renderTable(regs) {
-      const tbody = document.getElementById('submissions-tbody');
-      const emptyState = document.getElementById('empty-state');
-      const noResults = document.getElementById('no-results-state');
-      const resultCount = document.getElementById('result-count');
-
-      tbody.innerHTML = '';
-      emptyState.style.display = 'none';
-      noResults.style.display = 'none';
-
-      if (regs.length === 0) {
-        if (allRegistrations.length === 0) emptyState.style.display = 'block';
-        else noResults.style.display = 'block';
-        resultCount.textContent = '';
-        return;
-      }
-
-      resultCount.textContent = regs.length + ' result' + (regs.length !== 1 ? 's' : '');
-
-      for (const reg of regs) {
-        const name = getName(reg);
-        const email = getEmail(reg);
-        const role = String(reg.role || 'parent').toLowerCase();
-        const status = String(reg.status || 'pending').toLowerCase();
-        const time = formatDate(reg.submittedAt);
-        const roleLabel = role === 'teacher' ? '👨‍🏫 Teacher' : '👨‍👩‍👧 Parent';
-        const statusLabel = status === 'pending' ? '⏳ Pending' : status === 'approved' ? '✅ Approved' : status === 'rejected' ? '❌ Rejected' : status === 'matched' ? '🎯 Matched' : '⏳ ' + status;
-        const isMatched = status === 'matched';
-        const isPending = status === 'pending';
-        const isParent = role === 'parent';
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><div class="td-name">${name}</div><div class="td-email">${email}</div></td>
-          <td><span class="td-role ${role}">${roleLabel}</span></td>
-          <td><span class="td-status ${status}">${statusLabel}</span></td>
-          <td><span class="td-time">${time}</span></td>
-          <td>
-            <div class="td-actions">
-              <button class="btn-action btn-view" onclick="openModal('${reg.id}')">View</button>
-              ${isParent && isPending ? `<button class="btn-action btn-match" onclick="findMatches('${reg.id}')">🎯 Match</button>` : ''}
-              ${isPending ? `<button class="btn-action btn-approve" onclick="updateStatus('${reg.id}', 'approved')">✓</button><button class="btn-action btn-reject" onclick="updateStatus('${reg.id}', 'rejected')">✗</button>` : ''}
-            </div>
-          </td>`;
-        tbody.appendChild(row);
-      }
-    }
-
-    function setFilter(filter) {
-      currentFilter = filter;
-      document.getElementById('filter-all').classList.toggle('active', filter === 'all');
-      document.getElementById('filter-parent').classList.toggle('active', filter === 'parent');
-      document.getElementById('filter-teacher').classList.toggle('active', filter === 'teacher');
-      const filtered = filter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === filter);
-      renderTable(filtered);
-    }
-
-    function handleSearch(q) {
-      q = q.toLowerCase();
-      const searched = allRegistrations.filter(r => {
-        const name = getName(r).toLowerCase();
-        const email = getEmail(r).toLowerCase();
-        return name.includes(q) || email.includes(q);
-      });
-      const roleFiltered = currentFilter === 'all' ? searched : searched.filter(r => String(r.role || '').toLowerCase() === currentFilter);
-      renderTable(roleFiltered);
-    }
-
-    // ── Match Scoring Engine ─────────────────────────────
-    function scoreMatch(teacher, parent) {
-      let score = 0;
-      const reasons = [];
-
-      // Subject match (0-40 pts)
-      const teacherSubjects = (teacher.subjects || teacher.subject || '').toLowerCase().split(',').map(s => s.trim());
-      const parentSubject = (parent.subject || '').toLowerCase();
-      const subjectMatch = teacherSubjects.some(s => s && (parentSubject.includes(s) || s.includes(parentSubject)));
-      if (subjectMatch) { score += 40; reasons.push('Subject match'); }
-      else if (parentSubject && teacherSubjects.some(s => s && (s.includes(parentSubject) || parentSubject.includes(s)))) { score += 20; reasons.push('Related subject'); }
-
-      // Age group (0-25 pts)
-      const teacherAges = (teacher.studentAgeGroups || '').toLowerCase();
-      const parentAge = parseInt(parent.studentAge) || 0;
-      const ageMatch = parentAge >= 4 && parentAge <= 18;
-      if (ageMatch) {
-        if (teacherAges.includes('p1') || teacherAges.includes('p2') || teacherAges.includes('primary')) score += 25;
-        else if (teacherAges.includes('p3') || teacherAges.includes('p4') || teacherAges.includes('p5') || teacherAges.includes('p6')) score += 25;
-        else if (teacherAges.includes('secondary') || teacherAges.includes('s1') || teacherAges.includes('s2')) score += 20;
-        else if (teacherAges) score += 15;
-        else score += 5;
-      } else score += 10;
-      if (teacherAges || parentAge) reasons.push('Age group covered');
-
-      // Location (0-20 pts)
-      const parentLocation = (parent.location || '').toLowerCase();
-      const teacherLocation = (teacher.teachingLocation || '').toLowerCase();
-      if (parentLocation.includes('teacher') && teacherLocation.includes('student')) { score += 20; reasons.push('Teacher travels to student'); }
-      else if (parentLocation.includes('online')) { score += 15; reasons.push('Online lessons OK'); }
-      else if (parentLocation.includes('center') && teacherLocation.includes('center')) { score += 18; reasons.push('Centre match'); }
-      else if (parentLocation.includes('teacher') && teacherLocation.includes('both')) { score += 18; reasons.push('Flexible location'); }
-      else if (parentLocation.includes('student') && (teacherLocation.includes('student') || teacherLocation.includes('home'))) { score += 12; reasons.push('Home visits possible'); }
-      else score += 5;
-
-      // Days overlap (0-15 pts)
-      const teacherDays = (teacher.preferredDays || '').toLowerCase();
-      const parentDays = (parent.preferredDays || '').toLowerCase();
-      if (teacherDays && parentDays) {
-        const overlap = teacherDays.split(',').some(d => parentDays.includes(d.trim()));
-        if (overlap) { score += 15; reasons.push('Day availability overlap'); }
-        else score += 5;
-      } else score += 8;
-
-      // Bonus: has certificate (+5)
-      if (teacher.certUrl) { score += 5; reasons.push('Certificate verified'); }
-
-      // Bonus: has intro video (+3)
-      if (teacher.introVideoUrl) { score += 3; reasons.push('Has intro video'); }
-
-      // Penalty: no free matches remaining (+0 but noted)
-      const freeRemaining = parseInt(teacher.freeMatchesRemaining) || 0;
-      const hasFreeMatch = freeRemaining > 0;
-
-      return {
-        score,
-        reasons: reasons.slice(0, 4),
-        hasFreeMatch,
-        freeRemaining,
-        maxScore: 108
-      };
-    }
-
-    function getMatchLabel(score, max) {
-      const pct = Math.round((score / max) * 100);
-      if (pct >= 70) return { label: 'Strong', class: 'score-high' };
-      if (pct >= 45) return { label: 'Good', class: 'score-mid' };
-      return { label: 'Fair', class: 'score-low' };
-    }
-
-    // ── Find Matches ────────────────────────────────────
-    async function findMatches(parentId) {
-      const parent = allRegistrations.find(r => r.id === parentId);
-      if (!parent) return;
-
-      document.getElementById('match-parent-name').textContent = `${getName(parent)} — ${parent.subject || 'General'} | ${parent.studentAge ? 'Age ' + parent.studentAge : ''}`;
-      document.getElementById('match-results-body').innerHTML = '<div class="match-loading"><div class="match-loading-spinner"></div>Finding best teacher matches...</div>';
-      document.getElementById('match-overlay').classList.add('open');
-
-      // Score all teachers
-      const scored = allTeachers
-        .filter(t => String(t.status || '') !== 'rejected')
-        .map(t => {
-          const result = scoreMatch(t, parent);
-          return { teacher: t, ...result };
-        })
-        .filter(x => x.score > 0)
-        .sort((a, b) => b.score - a.score);
-
-      if (scored.length === 0) {
-        document.getElementById('match-results-body').innerHTML = '<div class="match-empty">No teachers found matching this student's profile yet. Try adjusting the criteria.</div>';
-        return;
-      }
-
-      const html = scored.slice(0, 10).map(({ teacher: t, score, reasons, hasFreeMatch, freeRemaining }) => {
-        const pct = Math.round((score / 108) * 100);
-        const { label, class: cls } = getMatchLabel(score, 108);
-        const reasonText = reasons.join(' · ') || 'General profile match';
-        const isAssigned = String(t.status || '') === 'matched';
-        const freeTag = hasFreeMatch ? '<span class="teacher-tag free">🎁 1 free match</span>' : '<span class="teacher-tag paid">Paid match</span>';
-        const verifiedTag = t.certUrl ? '<span class="teacher-tag verified">✓ Cert</span>' : '';
-
-        return `<div class="teacher-card" id="tcard-${t.id}">
-          <div class="match-score ${cls}">
-            <span class="score-num">${pct}</span>
-            <span class="score-label">%</span>
-          </div>
-          <div class="teacher-info">
-            <div class="teacher-name">${getName(t)}</div>
-            <div class="teacher-meta">
-              ${t.subjects || t.subject ? '<span>' + (t.subjects || t.subject) + '</span>' : ''}
-              ${t.studentAgeGroups ? '<span>' + t.studentAgeGroups + '</span>' : ''}
-              ${t.teachingLocation ? '<span>' + t.teachingLocation + '</span>' : ''}
-            </div>
-            <div class="teacher-tags">${freeTag}${verifiedTag}</div>
-            <div class="ai-reason">
-              <div class="ai-reason-label"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg> AI Match Reason</div>
-              ${reasonText}
-            </div>
-          </div>
-          <div class="teacher-actions">
-            ${isAssigned
-              ? '<button class="btn-assign assigned" disabled>✓ Matched</button>'
-              : `<button class="btn-assign" onclick="assignMatch('${parent.id}', '${t.id}', '${getName(t).replace(/'/g,"\'")}')">Assign Match</button>
-                 <span style="font-size:0.6875rem;color:var(--text-muted);">${hasFreeMatch ? 'Free' : 'Paid'}</span>`
-            }
-          </div>
-        </div>`;
-      }).join('');
-
-      document.getElementById('match-results-body').innerHTML = `
-        <p style="font-size:0.8125rem;color:var(--text-muted);margin-bottom:1rem;">Showing top ${Math.min(scored.length, 10)} matches — ranked by subject, age, location & availability</p>
-        ${html}`;
-    }
-
-    async function assignMatch(parentId, teacherId, teacherName) {
-      const btn = event.target;
-      btn.disabled = true;
-      btn.textContent = 'Assigning...';
-
-      try {
-        const parentRef = doc(db, 'registrations', parentId);
-        await updateDoc(parentRef, {
-          status: 'matched',
-          matchedTeacherId: teacherId,
-          matchedTeacherName: teacherName,
-          matchedAt: new Date().toISOString()
-        });
-
-        const teacherRef = doc(db, 'registrations', teacherId);
-        const teacher = allTeachers.find(t => t.id === teacherId);
-        const currentFree = parseInt(teacher?.freeMatchesRemaining) || 0;
-        await updateDoc(teacherRef, {
-          freeMatchesRemaining: Math.max(0, currentFree - 1)
-        });
-
-        // Update local state
-        const pi = allRegistrations.findIndex(r => r.id === parentId);
-        if (pi >= 0) {
-          allRegistrations[pi].status = 'matched';
-          allRegistrations[pi].matchedTeacherName = teacherName;
-        }
-
-        updateStats();
-        const filtered = currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === currentFilter);
-        renderTable(filtered);
-        closeMatchModal();
-        closeModal();
-        showToast(`🎯 Matched with ${teacherName}! ${currentFree > 0 ? 'Free match used.' : 'Paid match recorded.'}`);
-      } catch (err) {
-        console.error('Assign error:', err);
-        showToast('Failed to assign match', 'error');
-        btn.disabled = false;
-        btn.textContent = 'Assign Match';
-      }
-    }
-
-    function closeMatchModal() {
-      document.getElementById('match-overlay').classList.remove('open');
-    }
-
-    // ── Detail Modal ─────────────────────────────────────
-    function openModal(id) {
-      selectedReg = allRegistrations.find(r => r.id === id);
-      if (!selectedReg) return;
-      const r = selectedReg;
-      const role = String(r.role || 'parent').toLowerCase();
-      const status = String(r.status || 'pending').toLowerCase();
-      const roleLabel = role === 'teacher' ? '👨‍🏫 Teacher' : '👨‍👩‍👧 Parent';
-      const statusLabel = status === 'pending' ? '⏳ Pending' : status === 'approved' ? '✅ Approved' : status === 'rejected' ? '❌ Rejected' : status === 'matched' ? '🎯 Matched' : '⏳ ' + status;
-
-      const fields = [];
-      fields.push({ label: 'Full Name', value: getName(r) });
-      fields.push({ label: 'Email', value: r.email || '—' });
-      if (r.phone) fields.push({ label: 'Phone', value: r.phone });
-      if (r.studentAge) fields.push({ label: 'Student Age', value: r.studentAge });
-      if (r.subject) fields.push({ label: 'Subject', value: r.subject });
-      if (r.preferredDays) fields.push({ label: 'Preferred Days', value: r.preferredDays });
-      if (r.preferredTime) fields.push({ label: 'Preferred Time', value: r.preferredTime });
-      if (r.lessonDuration) fields.push({ label: 'Lesson Duration', value: r.lessonDuration + ' min' });
-      if (r.location) fields.push({ label: 'Lesson Location', value: r.location });
-      if (r.schoolName) fields.push({ label: 'School', value: r.schoolName });
-      if (r.learningGoals) fields.push({ label: 'Learning Goals', value: r.learningGoals, multiline: true });
-      if (role === 'teacher') {
-        if (r.teachingLocation) fields.push({ label: 'Teaching Location', value: r.teachingLocation });
-        if (r.studentAgeGroups) fields.push({ label: 'Student Age Groups', value: r.studentAgeGroups });
-        if (r.teachingStyle) fields.push({ label: 'Teaching Style', value: r.teachingStyle });
-        if (r.maxTravelDistance) fields.push({ label: 'Max Travel Distance', value: r.maxTravelDistance });
-        if (r.certUrl) fields.push({ label: 'Certificate', value: r.certUrl, isLink: true });
-        if (r.introVideoUrl) fields.push({ label: 'Intro Video', value: r.introVideoUrl, isLink: true });
-        const free = parseInt(r.freeMatchesRemaining);
-        if (!isNaN(free)) fields.push({ label: 'Free Matches Left', value: free > 0 ? `🎁 ${free} remaining` : '0 — paid only' });
-        if (r.matchedTeacherName) fields.push({ label: 'Matched With', value: r.matchedTeacherName });
-      }
-      if (r.matchedTeacherName) fields.push({ label: 'Matched Teacher', value: r.matchedTeacherName });
-      fields.push({ label: 'Submitted', value: formatDate(r.submittedAt) });
-
-      let html = '';
-      for (let i = 0; i < fields.length; i += 2) {
-        const a = fields[i];
-        const b = fields[i + 1];
-        html += '<div class="detail-grid">';
-        html += `<div class="detail-section"><div class="detail-label">${a.label}</div><div class="detail-value${a.multiline ? ' multiline' : ''}">${a.isLink ? '<a href="'+a.value+'" target="_blank" style="color:var(--primary);word-break:break-all;">View Certificate ↗</a>' : a.value}</div></div>`;
-        if (b) html += `<div class="detail-section"><div class="detail-label">${b.label}</div><div class="detail-value${b.multiline ? ' multiline' : ''}">${b.isLink ? '<a href="'+b.value+'" target="_blank" style="color:var(--primary);word-break:break-all;">View ↗</a>' : b.value}</div></div>`;
-        else html += '<div class="detail-section"></div>';
-        html += '</div>';
-        if (i < fields.length - 2) html += '<hr class="detail-divider">';
-      }
-
-      document.getElementById('modal-title').textContent = role === 'teacher' ? 'Teacher Details' : 'Parent Submission';
-      document.getElementById('modal-body').innerHTML = `
-        <div style="display:flex;gap:12px;align-items:center;margin-bottom:1.25rem;">
-          <span class="detail-role-badge ${role}">${roleLabel}</span>
-          <span class="detail-status-badge ${status}">${statusLabel}</span>
-        </div>
-        ${html}`;
-
-      const isPending = status === 'pending';
-      const isParentPending = isPending && role === 'parent';
-      document.getElementById('modal-footer').innerHTML = isPending ? `
-        <button class="btn-modal close-btn" onclick="closeModal()">Close</button>
-        <button class="btn-modal reject" onclick="updateStatus('${r.id}', 'rejected')">✗ Reject</button>
-        ${role === 'parent' ? `<button class="btn-modal" style="background:rgba(14,165,233,0.1);color:#0284C7;" onclick="closeModal();findMatches('${r.id}')">🎯 Find Matches</button>` : ''}
-        <button class="btn-modal approve" onclick="updateStatus('${r.id}', 'approved')">✓ Approve</button>` : '';
-    }
-
-    function closeModal() {
-      document.getElementById('modal-overlay').classList.remove('open');
-      selectedReg = null;
-    }
-
     async function updateStatus(id, newStatus) {
       const btn = event.target;
       btn.disabled = true;
       btn.textContent = newStatus === 'approved' ? '✓ Approving...' : '✗ Rejecting...';
       try {
-        const docRef = doc(db, 'registrations', id);
-        await updateDoc(docRef, { status: newStatus });
+        await firestoreUpdateDoc('registrations', id, { status: { stringValue: newStatus } });
         const idx = allRegistrations.findIndex(r => r.id === id);
         if (idx >= 0) allRegistrations[idx].status = newStatus;
         updateStats();
@@ -762,9 +438,44 @@
         showToast(newStatus === 'approved' ? 'Registration approved!' : 'Registration rejected');
       } catch (err) {
         console.error('Update error:', err);
-        showToast('Failed to update status', 'error');
+        showToast('Failed to update: ' + err.message, 'error');
         btn.disabled = false;
         btn.textContent = newStatus === 'approved' ? '✓ Approve' : '✗ Reject';
+      }
+    }
+
+    async function assignMatch(parentId, teacherId, teacherName) {
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = 'Assigning...';
+      try {
+        await firestoreUpdateDoc('registrations', parentId, {
+          status: { stringValue: 'matched' },
+          matchedTeacherId: { stringValue: teacherId },
+          matchedTeacherName: { stringValue: teacherName },
+          matchedAt: { timestampValue: new Date().toISOString() }
+        });
+        const teacher = allTeachers.find(t => t.id === teacherId);
+        const currentFree = parseInt(teacher?.freeMatchesRemaining) || 0;
+        await firestoreUpdateDoc('registrations', teacherId, {
+          freeMatchesRemaining: { integerValue: Math.max(0, currentFree - 1) }
+        });
+        const pi = allRegistrations.findIndex(r => r.id === parentId);
+        if (pi >= 0) {
+          allRegistrations[pi].status = 'matched';
+          allRegistrations[pi].matchedTeacherName = teacherName;
+        }
+        updateStats();
+        const filtered = currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === currentFilter);
+        renderTable(filtered);
+        closeMatchModal();
+        closeModal();
+        showToast('Matched with ' + teacherName + '! ' + (currentFree > 0 ? 'Free match used.' : 'Paid match.'));
+      } catch (err) {
+        console.error('Assign error:', err);
+        showToast('Failed to assign match: ' + err.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Assign Match';
       }
     }
 
@@ -777,8 +488,6 @@
     window.assignMatch = assignMatch;
     window.closeMatchModal = closeMatchModal;
     window.logout = logout;
-
-    // Need where for the teachers query
 
     loadRegistrations();
   </script>

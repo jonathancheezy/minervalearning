@@ -587,7 +587,72 @@
  <input type="text" id="availability" name="availability" data-i18n="register.label_availability_placeholder" placeholder="e.g., Weekday evenings, Saturday afternoons">
  </div>
 
- <button type="submit" class="btn-primary" data-i18n="register.btn_register">Register →</button>
+ 
+ <div class="form-group">
+ <label for="teachingLocation"><span data-i18n="register.label_teaching_location">Where Can You Teach?</span></label>
+ <select id="teachingLocation" name="teachingLocation">
+ <option value="" data-i18n="register.label_select_location">Select location</option>
+ <option value="student-home" data-i18n="register.opt_student_home">Student's Home</option>
+ <option value="tutor-home" data-i18n="register.opt_tutor_home">My Home / Studio</option>
+ <option value="library" data-i18n="register.opt_library">Library / Public Space</option>
+ <option value="online" data-i18n="register.opt_online_video">Online Only</option>
+ <option value="flexible" data-i18n="register.opt_location_flexible">Flexible</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="studentAgeGroups"><span data-i18n="register.label_student_age">Student Age Groups</span></label>
+ <select id="studentAgeGroups" name="studentAgeGroups">
+ <option value="" data-i18n="register.label_select_age">Select age groups</option>
+ <option value="primary" data-i18n="register.opt_primary">Primary (P1-P6)</option>
+ <option value="secondary" data-i18n="register.opt_secondary">Secondary (S1-S3)</option>
+ <option value="dse" data-i18n="register.opt_dse">DSE / S4-S6</option>
+ <option value="university" data-i18n="register.opt_university_age">University / Adult</option>
+ <option value="all" data-i18n="register.opt_all_levels">All Levels</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="teachingStyle"><span data-i18n="register.label_teaching_style">Teaching Style</span></label>
+ <select id="teachingStyle" name="teachingStyle">
+ <option value="" data-i18n="register.label_select_style">Select style</option>
+ <option value="exam-prep" data-i18n="register.opt_exam_prep">Exam Preparation (DSE, GCSE, etc.)</option>
+ <option value="conceptual" data-i18n="register.opt_conceptual">Conceptual / Theory Understanding</option>
+ <option value="conversational" data-i18n="register.opt_conversational">Conversational / Speaking Practice</option>
+ <option value="homework" data-i18n="register.opt_homework">Homework Help & Revision</option>
+ <option value="all" data-i18n="register.opt_teach_all">All of the above</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="maxTravel"><span data-i18n="register.label_max_travel">Maximum Travel Distance (optional)</span></label>
+ <select id="maxTravel" name="maxTravel">
+ <option value="" data-i18n="register.label_select_travel">Select distance</option>
+ <option value="5km">Within 5 km</option>
+ <option value="10km">Within 10 km</option>
+ <option value="15km">Within 15 km</option>
+ <option value="20km">Within 20 km</option>
+ <option value="any" data-i18n="register.opt_travel_any">No limit / Happy to travel</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="profilePhoto"><span data-i18n="register.label_profile_photo">Profile Photo URL (optional)</span></label>
+ <input type="url" id="profilePhoto" name="profilePhoto" placeholder="https://...">
+ </div>
+
+ <div class="form-group">
+ <label for="introVideo"><span data-i18n="register.label_intro_video">Intro Video URL (optional)</span></label>
+ <input type="url" id="introVideo" name="introVideo" placeholder="https://youtube.com/...">
+ </div>
+
+ <div class="form-group checkbox-group">
+ <label>
+ <input type="checkbox" id="idVerified" name="idVerified" value="yes">
+ <span data-i18n="register.label_id_verified">I confirm I have valid HKID / passport for verification</span>
+ </label>
+ </div>
+<button type="submit" class="btn-primary" data-i18n="register.btn_register">Register →</button>
  <p class="terms">By registering, you agree to our <a href="terms.html">Terms & Conditions</a> and <a href="privacy.html">Privacy Policy</a>.</p>
  </form>
 

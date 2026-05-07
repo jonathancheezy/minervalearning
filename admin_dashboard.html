@@ -399,7 +399,7 @@
         allRegistrations = snapshot.docs.map(d => ({ id: d.id, ...flattenFields(d.data()) }));
         console.log('[Minerva Admin] Loaded registrations:', allRegistrations.length, allRegistrations.map(r => ({id: r.id, name: r.fullName || r.parentName, role: r.role, status: r.status})));
         // Load all teachers separately for matching
-        const tq = query(collection(db, 'registrations'), where('role', '==', 'teacher'), orderBy('submittedAt', 'desc'), limit(100));
+        const tq = query(collection(db, 'registrations'), where('role', '==', 'teacher'), limit(100));
         const tSnapshot = await getDocs(tq);
         allTeachers = tSnapshot.docs.map(d => ({ id: d.id, ...flattenFields(d.data()) }));
         updateStats();
@@ -773,7 +773,6 @@
     window.logout = logout;
 
     // Need where for the teachers query
-    import { where } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
     loadRegistrations();
   </script>

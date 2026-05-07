@@ -322,6 +322,7 @@
     <div class="header-actions">
       <a href="/" class="header-link">← Back to Site</a>
       <span class="header-badge">Live</span>
+      <button onclick="logout()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:0.8125rem;font-weight:500;font-family:'DM Sans',sans-serif;padding:4px 8px;border-radius:6px;transition:color 0.15s;" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--text-muted)'">Logout</button>
     </div>
   </header>
 
@@ -421,6 +422,16 @@
     };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+// Auth guard — redirect to login if not authenticated
+if (sessionStorage.getItem('minerva_admin_auth') !== 'ok') {
+  window.location.href = '/admin_login';
+}
+
+// Logout function
+function logout() {
+  sessionStorage.removeItem('minerva_admin_auth');
+  window.location.href = '/admin_login';
+}
 
     let allRegistrations = [];
     let currentFilter = 'all';

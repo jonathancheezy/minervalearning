@@ -497,7 +497,11 @@
     window.closeMatchModal = closeMatchModal;
     window.logout = logout;
 
-    loadRegistrations();
+    // Give module script time to load functions first
+    setTimeout(function() {
+      console.log('[Minerva Admin] Starting loadRegistrations...');
+      loadRegistrations();
+    }, 100);
   </script>
 </body>
 </html>

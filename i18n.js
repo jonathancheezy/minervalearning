@@ -352,6 +352,9 @@
       label_intro_video:{en:"Intro Video URL (optional)",zhTW:"自我介紹影片連結（可選）",zhCN:"自我介绍影片链接（可选）"},
       label_video_placeholder:{en:"https://youtube.com/...",zhTW:"https://youtube.com/...",zhCN:"https://youtube.com/..."},
       label_id_verified:{en:"I confirm I have valid HKID / passport for verification",zhTW:"我確認持有有效身份證明文件以供驗證",zhCN:"我确认持有有效身份证明文件以供验证"},
+      label_cert_upload:{en:"Qualification Certificate (optional)",zhTW:"學歷證明文件（可選）",zhCN:"学历证明文件（可选）"},
+      label_cert_hint:{en:"PDF, JPG, PNG or DOC — max 5MB",zhTW:"PDF、JPG、PNG 或 DOC — 最大 5MB",zhCN:"PDF、JPG、PNG 或 DOC — 最大 5MB"},
+
 
       parent_success_title:{en:"Registration Successful!",zhTW:"註冊成功！",zhCN:"註冊成功！"},
       // New registration fields

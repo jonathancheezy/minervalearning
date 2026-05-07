@@ -684,7 +684,7 @@ footer a:hover { text-decoration: underline; }
   async function loadAdminData() {
     try {
       // Load registrations from Firestore
-      const q = query(collection(db, 'registrations'), orderBy('submittedAt', 'desc'), limit(50));
+      const q = query(collection(db, 'registrations'), limit(50));
       const snapshot = await getDocs(q);
       const registrations = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
 

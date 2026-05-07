@@ -560,6 +560,41 @@
  <option value="flexible" data-i18n="register.opt_freq_flexible">Flexible / As needed</option>
  </select>
  </div>
+ <div class="form-group">
+ <label for="preferredDays"><span data-i18n="register.label_preferred_days">Preferred Days / Times</span></label>
+ <select id="preferredDays" name="preferredDays" multiple>
+ <option value="weekday-morning" data-i18n="register.opt_weekday_morning">Weekday Mornings</option>
+ <option value="weekday-afternoon" data-i18n="register.opt_weekday_afternoon">Weekday Afternoons</option>
+ <option value="weekday-evening" data-i18n="register.opt_weekday_evening">Weekday Evenings</option>
+ <option value="weekend-morning" data-i18n="register.opt_weekend_morning">Weekend Mornings</option>
+ <option value="weekend-afternoon" data-i18n="register.opt_weekend_afternoon">Weekend Afternoons</option>
+ <option value="weekend-evening" data-i18n="register.opt_weekend_evening">Weekend Evenings</option>
+ <option value="flexible" data-i18n="register.opt_days_flexible">Flexible</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="lessonDuration"><span data-i18n="register.label_lesson_duration">Preferred Lesson Duration</span></label>
+ <select id="lessonDuration" name="lessonDuration">
+ <option value="" data-i18n="register.label_select_duration">Select duration</option>
+ <option value="45min" data-i18n="register.opt_45min">45 minutes</option>
+ <option value="60min" data-i18n="register.opt_60min">60 minutes</option>
+ <option value="90min" data-i18n="register.opt_90min">90 minutes</option>
+ <option value="120min" data-i18n="register.opt_120min">120 minutes</option>
+ <option value="flexible" data-i18n="register.opt_duration_flexible">Flexible</option>
+ </select>
+ </div>
+
+ <div class="form-group">
+ <label for="schoolName"><span data-i18n="register.label_school_name">School / Institution (optional)</span></label>
+ <input type="text" id="schoolName" name="schoolName" data-i18n="register.label_school_name_placeholder" placeholder="e.g., St. Francis' Canossian College">
+ </div>
+
+ <div class="form-group">
+ <label for="learningGoals"><span data-i18n="register.label_learning_goals">Learning Goals</span></label>
+ <textarea id="learningGoals" name="learningGoals" data-i18n="register.label_goals_placeholder" placeholder="e.g., Improve DSE Maths by 2 grades, Pass HKDSE English, Build confidence in speaking..."></textarea>
+ </div>
+
 
  <div class="form-group">
  <label for="preferredLanguage"><span data-i18n="register.label_teaching_lang">Preferred Teaching Language</span></label>

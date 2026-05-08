@@ -2294,16 +2294,15 @@ function switchTab(tab) {
         goals: document.getElementById('reg-goals').value
       };
       // Basic validation
-      if (!data.level || !data.district || !data.mode) {
-        alert('Please fill in all required fields.');
-        return;
-      }
+      if (!data.level) { alert('Please select a student level.'); return; }
+      if (!data.district) { alert('Please select your area/district.'); return; }
+      if (!data.mode) { alert('Please select a lesson mode.'); return; }
       console.log('Parent registration data:', data);
       db.collection('submissions').add({
         ...data,
         status: 'pending',
         submittedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).catch(function(err) { console.error('Firestore error:', err); });
+      }).catch(function(err) { console.error('Firestore error:', err); alert('Registration failed: ' + err.message); return; });
       document.getElementById('parentRegOverlay').classList.remove('show');
       document.getElementById('regSuccessOverlay').classList.add('show');
       selectedDays = [];
@@ -2332,16 +2331,15 @@ function switchTab(tab) {
         rate: document.getElementById('reg-teacher-rate').value,
         days: selectedDays.join(', ')
       };
-      if (!data.qualification || !data.experience || teacherLevels.length === 0) {
-        alert('Please fill in all required fields.');
-        return;
-      }
+      if (!data.qualification) { alert('Please select your highest qualification.'); return; }
+      if (!data.experience) { alert('Please select years of tutoring experience.'); return; }
+      if (teacherLevels.length === 0) { alert('Please select at least one student level you can teach.'); return; }
       console.log('Teacher registration data:', data);
       db.collection('submissions').add({
         ...data,
         status: 'pending',
         submittedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).catch(function(err) { console.error('Firestore error:', err); });
+      }).catch(function(err) { console.error('Firestore error:', err); alert('Registration failed: ' + err.message); return; });
       document.getElementById('teacherRegOverlay').classList.remove('show');
       document.getElementById('regSuccessOverlay').classList.add('show');
       teacherLevels = [];

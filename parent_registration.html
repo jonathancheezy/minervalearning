@@ -493,7 +493,7 @@
 
  <section class="form-section">
  <div class="form-card">
- <form id="parentForm" action="https://formspree.io/f/mvzdgbod" method="POST">
+ <form id="parentForm" method="POST">
  <div class="form-row">
  <div class="form-group">
  <label for="parentName"><span data-i18n="register.label_your_name">Your Name</span></label>
@@ -677,19 +677,18 @@
  <h3 data-i18n="register.parent_success_title">✅ Thank you for registering!</h3>
  <p data-i18n="register.parent_success_msg">We'll match you with the perfect teacher and be in touch soon. Check your email for confirmation.</p>
  </div>
-<!-- Firebase via REST API (no module/CND dependency) -->
+<!-- Firebase via REST API -->
 <script>
 (function() {
-  console.log('[DEBUG] Script starting...');
   var firebaseProject = 'minerva-learning-a7eac';
   var firebaseApiKey = 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s';
+  var firestoreUrl = 'https://firestore.googleapis.com/v1/projects/' + firebaseProject + '/databases/(default)/documents/registrations?key=' + firebaseApiKey;
 
   var form = document.getElementById('parentForm');
-  console.log('[DEBUG] Form element:', form);
-  console.log('[DEBUG] Form action:', form ? form.action : 'null');
-  console.log('[DEBUG] Submit button:', form ? form.querySelector('button[type="submit"]') : 'null');
+  if (!form) { console.error('[Firebase] Form not found'); return; }
+  var submitBtn = form.querySelector('button[type="submit"]');
 
-  // Pre-fill email from URL parameter
+  // Pre-fill email from URL
   var urlParams = new URLSearchParams(window.location.search);
   var emailParam = urlParams.get('email');
   if (emailParam) {
@@ -697,56 +696,46 @@
     if (emailField) emailField.value = decodeURIComponent(emailParam);
   }
 
-
-
-  var submitBtn = form ? form.querySelector('button[type="submit"]') : null;
-
-  form.addEventListener('submit', async function(e) {
+  form.addEventListener('submit', function(e) {
     e.preventDefault();
-    console.log('[DEBUG] Event listener triggered');
+    e.stopPropagation();
+    console.log('[Firebase] Submit fired');
 
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting...';
     }
 
-    var formData = new FormData(form);
-    var data = {};
-    formData.forEach(function(value, key) {
-      data[key] = value;
+    var fd = new FormData(form);
+    var fields = {};
+    fd.forEach(function(value, key) {
+      fields[key] = { stringValue: String(value) };
     });
-    data.submittedAt = { timestampValue: new Date().toISOString() };
-    data.status = 'pending';
+    fields.submittedAt = { timestampValue: new Date().toISOString() };
+    fields.status = { stringValue: 'pending' };
 
-    console.log('[DEBUG] Submit handler fired, sending to Firestore...');
-    try {
-      var response = await fetch(
-        'https://firestore.googleapis.com/v1/projects/' + firebaseProject + '/databases/(default)/documents/registrations?key=' + firebaseApiKey,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fields: data })
-        }
-      );
-
+    fetch(firestoreUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: fields })
+    })
+    .then(function(response) {
       if (!response.ok) throw new Error('Server error: ' + response.status);
-
       form.style.display = 'none';
       var success = document.getElementById('formSuccess');
       if (success) success.style.display = 'block';
-    } catch (err) {
-      console.error('Registration error:', err);
+    })
+    .catch(function(err) {
+      console.error('[Firebase] Error:', err);
       alert('Something went wrong. Please try again.');
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit Registration';
       }
-    }
+    });
   });
 })();
-<\/script>
-
-<script src="i18n.js"></script>
+</script>
 <script>
 (function(){
   var sel = document.getElementById('langSelector');

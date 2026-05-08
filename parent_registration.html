@@ -677,32 +677,22 @@
  <h3 data-i18n="register.parent_success_title">✅ Thank you for registering!</h3>
  <p data-i18n="register.parent_success_msg">We'll match you with the perfect teacher and be in touch soon. Check your email for confirmation.</p>
  </div>
-<!-- Firebase SDKs -->
-<script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-
-  const firebaseConfig = {
-    apiKey: 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s',
-    authDomain: 'minerva-learning-a7eac.firebaseapp.com',
-    projectId: 'minerva-learning-a7eac',
-    storageBucket: 'minerva-learning-a7eac.appspot.com',
-    messagingSenderId: '140471258134',
-    appId: '1:140471258134:web:minerva-admin'
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+<!-- Firebase via REST API (no module/CND dependency) -->
+<script>
+(function() {
+  var firebaseProject = 'minerva-learning-a7eac';
+  var firebaseApiKey = 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s';
 
   // Pre-fill email from URL parameter
-  const urlParams = new URLSearchParams(window.location.search);
-  const emailParam = urlParams.get('email');
+  var urlParams = new URLSearchParams(window.location.search);
+  var emailParam = urlParams.get('email');
   if (emailParam) {
-    document.getElementById('email').value = decodeURIComponent(emailParam);
+    var emailField = document.getElementById('email');
+    if (emailField) emailField.value = decodeURIComponent(emailParam);
   }
 
-  const form = document.getElementById('parentForm');
-  const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+  var form = document.getElementById('parentForm');
+  var submitBtn = form ? form.querySelector('button[type="submit"]') : null;
 
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -712,18 +702,29 @@
       submitBtn.textContent = 'Submitting...';
     }
 
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
+    var formData = new FormData(form);
+    var data = {};
+    formData.forEach(function(value, key) {
+      data[key] = value;
+    });
+    data.submittedAt = { timestampValue: new Date().toISOString() };
+    data.status = 'pending';
 
     try {
-      await addDoc(collection(db, 'registrations'), {
-        ...data,
-        submittedAt: serverTimestamp(),
-        status: 'pending'
-      });
+      var response = await fetch(
+        'https://firestore.googleapis.com/v1/projects/' + firebaseProject + '/databases/(default)/documents/registrations?key=' + firebaseApiKey,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fields: data })
+        }
+      );
+
+      if (!response.ok) throw new Error('Server error: ' + response.status);
 
       form.style.display = 'none';
-      document.getElementById('formSuccess').style.display = 'block';
+      var success = document.getElementById('formSuccess');
+      if (success) success.style.display = 'block';
     } catch (err) {
       console.error('Registration error:', err);
       alert('Something went wrong. Please try again.');
@@ -733,7 +734,8 @@
       }
     }
   });
-</script>
+})();
+<\/script>
 
 <script src="i18n.js"></script>
 <script>

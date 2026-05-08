@@ -670,70 +670,90 @@
 
 
 
- <script type="module">
- // Pre-fill email from URL parameter
- const params = new URLSearchParams(window.location.search);
- const email = params.get('email');
- if (email) {
- document.getElementById('email').value = decodeURIComponent(email);
- }
+ <script>
+(function() {
+  var firebaseProject = 'minerva-learning-a7eac';
+  var firebaseApiKey = 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s';
+  var storageBucket = 'minerva-learning-a7eac.appspot.com';
 
- // Firebase SDK
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-
-const firebaseConfig = {
-  apiKey: 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s',
-  authDomain: 'minerva-learning-a7eac.firebaseapp.com',
-  projectId: 'minerva-learning-a7eac',
-  storageBucket: 'minerva-learning-a7eac.appspot.com',
-  messagingSenderId: '140471258134',
-  appId: '1:140471258134:web:minerva-admin'
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-document.getElementById('registrationForm').addEventListener('submit', async function(e) {
- e.preventDefault();
-  const form = document.getElementById('registrationForm');
-  const submitBtn = form.querySelector('button[type="submit"]');
-
-  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Registering...'; }
-
-  const certFile = document.getElementById('certFile').files[0];
-      let certUrl = '';
-      if (certFile) {
-        if (certFile.size > 5 * 1024 * 1024) {
-          alert('Certificate file must be under 5MB.');
-          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Register →'; }
-          return;
-        }
-        const storageRef = ref(storage, 'certificates/' + Date.now() + '_' + certFile.name);
-        const snap = await uploadBytes(storageRef, certFile);
-        certUrl = await getDownloadURL(snap.ref);
-      }
-      const formData = new FormData(form);
-  const data = Object.fromEntries(formData);
-
-  try {
-    await addDoc(collection(db, 'registrations'), {
-      ...data,
-      certUrl: certUrl,
-      role: 'teacher',
-      freeMatchesRemaining: 1,
-      submittedAt: serverTimestamp(),
-      status: 'pending'
-    });
-    form.style.display = 'none';
-    document.getElementById('formSuccess').style.display = 'block';
-  } catch (err) {
-    console.error('Registration error:', err);
-    alert('Something went wrong. Please try again.');
-    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Register →'; }
+  // Pre-fill email from URL parameter
+  var params = new URLSearchParams(window.location.search);
+  var email = params.get('email');
+  if (email) {
+    var emailField = document.getElementById('email');
+    if (emailField) emailField.value = decodeURIComponent(email);
   }
-});</script>
+
+  document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var form = document.getElementById('registrationForm');
+    var submitBtn = form.querySelector('button[type="submit"]');
+
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Registering...'; }
+
+    var certFile = document.getElementById('certFile') ? document.getElementById('certFile').files[0] : null;
+    var certUrl = '';
+
+    // Upload certificate to Firebase Storage via REST API
+    if (certFile) {
+      if (certFile.size > 5 * 1024 * 1024) {
+        alert('Certificate file must be under 5MB.');
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Register'; }
+        return;
+      }
+      try {
+        var uploadPath = 'certificates/' + Date.now() + '_' + certFile.name;
+        var storageUrl = 'https://firebasestorage.googleapis.com/v0/b/' + storageBucket + '/o?uploadType=media&name=' + encodeURIComponent(uploadPath);
+        var formData = new FormData();
+        formData.append('file', certFile);
+        var uploadResp = await fetch(storageUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': certFile.type },
+          body: certFile
+        });
+        var uploadData = await uploadResp.json();
+        // Get download URL
+        certUrl = 'https://firebasestorage.googleapis.com/v0/b/' + storageBucket + '/o/' + encodeURIComponent(uploadPath) + '?alt=media';
+      } catch (uploadErr) {
+        console.warn('Certificate upload failed:', uploadErr);
+        // Continue without certificate rather than failing
+      }
+    }
+
+    // Collect form data
+    var fd = new FormData(form);
+    var data = {};
+    fd.forEach(function(value, key) {
+      data[key] = value;
+    });
+    data.certUrl = certUrl;
+    data.role = 'teacher';
+    data.freeMatchesRemaining = 1;
+    data.submittedAt = { timestampValue: new Date().toISOString() };
+    data.status = 'pending';
+
+    try {
+      var firestoreUrl = 'https://firestore.googleapis.com/v1/projects/' + firebaseProject + '/databases/(default)/documents/registrations?key=' + firebaseApiKey;
+      var response = await fetch(firestoreUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: data })
+      });
+
+      if (!response.ok) throw new Error('Server error: ' + response.status);
+
+      form.style.display = 'none';
+      var successEl = document.getElementById('formSuccess');
+      if (successEl) successEl.style.display = 'block';
+    } catch (err) {
+      console.error('Registration error:', err);
+      alert('Something went wrong. Please try again.');
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Register'; }
+    }
+  });
+})();
+<\/script>
+
 <script src="i18n.js"></script>
 <script>
 (function(){

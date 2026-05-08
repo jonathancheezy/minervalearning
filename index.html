@@ -600,163 +600,6 @@
     }
 
 
-    /* ── DETAILED REGISTRATION MODAL ── */
-    .reg-overlay {
-      display: none; align-items: center; justify-content: center;
-      position: fixed; inset: 0; z-index: 600;
-      background: rgba(15,23,42,0.6);
-      backdrop-filter: blur(8px);
-      padding: 20px;
-    }
-    .reg-overlay.show { display: flex; }
-    .reg-modal {
-      background: var(--white);
-      border-radius: 24px;
-      width: 100%; max-width: 560px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.2);
-      position: relative;
-    }
-    .reg-modal-header {
-      padding: 28px 32px 20px;
-      border-bottom: 1px solid var(--surface-2);
-      display: flex; align-items: flex-start; justify-content: space-between;
-      position: sticky; top: 0; background: var(--white);
-      z-index: 1;
-    }
-    .reg-modal-header h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.25rem; font-weight: 800;
-      color: var(--dark); margin-bottom: 4px;
-    }
-    .reg-modal-header p {
-      font-size: 0.875rem; color: var(--gray-500);
-    }
-    .reg-close {
-      width: 32px; height: 32px; border-radius: 50%;
-      border: none; background: var(--surface);
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      color: var(--gray-500); flex-shrink: 0;
-      transition: background 0.15s;
-    }
-    .reg-close:hover { background: var(--surface-2); color: var(--dark); }
-    .reg-body { padding: 24px 32px 32px; }
-    .reg-section { margin-bottom: 24px; }
-    .reg-section-title {
-      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--primary);
-      margin-bottom: 14px;
-    }
-    .reg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .reg-row.full { grid-template-columns: 1fr; }
-    .reg-group { margin-bottom: 12px; }
-    .reg-group label {
-      display: block; font-size: 0.8125rem; font-weight: 600;
-      color: var(--dark-2); margin-bottom: 5px;
-    }
-    .reg-group input,
-    .reg-group select,
-    .reg-group textarea {
-      width: 100%; padding: 10px 13px;
-      border: 1.5px solid var(--surface-2);
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9375rem; color: var(--dark);
-      background: var(--white); outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .reg-group input::placeholder,
-    .reg-group textarea::placeholder { color: var(--gray-400); }
-    .reg-group input:focus,
-    .reg-group select:focus,
-    .reg-group textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
-    }
-    .reg-group select { cursor: pointer; }
-    .reg-group textarea { resize: vertical; min-height: 80px; }
-    .reg-mode-options {
-      display: flex; gap: 8px;
-    }
-    .reg-mode-btn {
-      flex: 1; padding: 10px 8px;
-      border: 1.5px solid var(--surface-2);
-      border-radius: 10px; background: var(--white);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.875rem; font-weight: 600;
-      color: var(--gray-500); cursor: pointer;
-      transition: all 0.15s; text-align: center;
-    }
-    .reg-mode-btn.active {
-      border-color: var(--primary);
-      background: rgba(124,58,237,0.06);
-      color: var(--primary);
-    }
-    .reg-checkbox-row {
-      display: flex; flex-wrap: wrap; gap: 8px;
-    }
-    .reg-checkbox {
-      display: flex; align-items: center; gap: 6px;
-      padding: 6px 12px;
-      border: 1.5px solid var(--surface-2); border-radius: 100px;
-      background: var(--white); cursor: pointer;
-      font-size: 0.8125rem; font-weight: 600; color: var(--gray-500);
-      transition: all 0.15s;
-    }
-    .reg-checkbox input { display: none; }
-    .reg-checkbox.selected {
-      border-color: var(--primary);
-      background: rgba(124,58,237,0.08);
-      color: var(--primary);
-    }
-    .reg-submit {
-      width: 100%; padding: 14px;
-      background: var(--primary); color: white;
-      border: none; border-radius: 12px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9375rem; font-weight: 600;
-      cursor: pointer; transition: background 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 16px rgba(124,58,237,0.3);
-    }
-    .reg-submit:hover { background: var(--primary-light); box-shadow: 0 6px 20px rgba(124,58,237,0.4); }
-    .reg-success-overlay {
-      display: none; align-items: center; justify-content: center;
-      position: fixed; inset: 0; z-index: 700;
-      background: rgba(15,23,42,0.6);
-      backdrop-filter: blur(8px);
-    }
-    .reg-success-overlay.show { display: flex; }
-    .reg-success-card {
-      background: var(--white); border-radius: 24px;
-      padding: 48px 40px; text-align: center;
-      max-width: 400px; width: 90%;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.2);
-    }
-    .reg-success-icon {
-      width: 64px; height: 64px; border-radius: 50%;
-      background: rgba(16,185,129,0.1); color: #10b981;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 20px;
-    }
-    .reg-success-card h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.5rem; font-weight: 800;
-      color: var(--dark); margin-bottom: 10px;
-    }
-    .reg-success-card p {
-      font-size: 0.9375rem; color: var(--gray-500);
-      line-height: 1.6; margin-bottom: 8px;
-    }
-    .reg-success-card .reg-note {
-      font-size: 0.8125rem; color: var(--gray-400);
-      margin-top: 16px;
-    }
-    @media (max-width: 600px) {
-      .reg-modal-header { padding: 20px 20px 16px; }
-      .reg-body { padding: 20px 20px 24px; }
-      .reg-row { grid-template-columns: 1fr; }
-    }
 
   </style>
   <!-- Firebase -->
@@ -1079,336 +922,6 @@
     </div>
   </div>
 
-  <!-- PARENT DETAILED REGISTRATION MODAL -->
-  <div class="reg-overlay" id="parentRegOverlay">
-    <div class="reg-modal">
-      <div class="reg-modal-header">
-        <div>
-          <h3>Student details</h3>
-          <p>Help us find the right teacher for you</p>
-        </div>
-        <button class="reg-close" onclick="closeParentReg()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-      </div>
-      <div class="reg-body">
-        <div class="reg-section">
-          <div class="reg-section-title">Student information</div>
-          <div class="reg-row">
-            <div class="reg-group">
-              <label>Student's first name</label>
-              <input type="text" id="reg-student-first" placeholder="e.g. Marcus" />
-            </div>
-            <div class="reg-group">
-              <label>Student's last name</label>
-              <input type="text" id="reg-student-last" placeholder="e.g. Cheung" />
-            </div>
-          </div>
-          <div class="reg-row">
-            <div class="reg-group">
-              <label>Year / Form level</label>
-              <select id="reg-level">
-                <option value="" disabled selected>Select</option>
-                <option>Pre-Nursery / 學前</option>
-                <option>K1</option>
-                <option>K2</option>
-                <option>K3 / Primary 1</option>
-                <option>Primary 1</option>
-                <option>Primary 2</option>
-                <option>Primary 3</option>
-                <option>Primary 4</option>
-                <option>Primary 5</option>
-                <option>Primary 6</option>
-                <option>Secondary 1 (F.1)</option>
-                <option>Secondary 2 (F.2)</option>
-                <option>Secondary 3 (F.3)</option>
-                <option>Secondary 4 (F.4) / HKDSE Year 1</option>
-                <option>Secondary 5 (F.5) / HKDSE Year 2</option>
-                <option>Secondary 6 (F.6) / HKDSE Year 3</option>
-                <option>University / Adult</option>
-              </select>
-            </div>
-            <div class="reg-group">
-              <label>School type</label>
-              <select id="reg-school-type">
-                <option value="" disabled selected>Select</option>
-                <option>Local (DSE)</option>
-                <option>International school (IB)</option>
-                <option>International school (IGCSE)</option>
-                <option>British curriculum (A-Level)</option>
-                <option>American curriculum (AP)</option>
-                <option>ESF / Direct Subsidy</option>
-                <option>Not sure yet</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="reg-section">
-          <div class="reg-section-title">Learning preferences</div>
-          <div class="reg-row">
-            <div class="reg-group">
-              <label>Preferred district</label>
-              <select id="reg-district">
-                <option value="" disabled selected>Select area</option>
-                <option>Hong Kong Island - Central & Western</option>
-                <option>Hong Kong Island - Wan Chai</option>
-                <option>Hong Kong Island - Eastern</option>
-                <option>Hong Kong Island - Southern</option>
-                <option>Kowloon - Yau Tsim Mong</option>
-                <option>Kowloon - Sham Shui Po</option>
-                <option>Kowloon - Kowloon City</option>
-                <option>Kowloon - Wong Tai Sin</option>
-                <option>Kowloon - Kwun Tong</option>
-                <option>New Territories - Kwai Tsing</option>
-                <option>New Territories - Tsuen Wan</option>
-                <option>New Territories - Tuen Mun</option>
-                <option>New Territories - Yuen Long</option>
-                <option>New Territories - North</option>
-                <option>New Territories - Tai Po</option>
-                <option>New Territories - Sha Tin</option>
-                <option>New Territories - Sai Kung</option>
-                <option>New Territories - Islands (Lantau)</option>
-                <option>Online only</option>
-              </select>
-            </div>
-            <div class="reg-group">
-              <label>Preferred lesson mode</label>
-              <div class="reg-mode-options">
-                <button type="button" class="reg-mode-btn active" data-mode="in-person" onclick="setMode(this, 'parent')">In-person</button>
-                <button type="button" class="reg-mode-btn" data-mode="online" onclick="setMode(this, 'parent')">Online</button>
-                <button type="button" class="reg-mode-btn" data-mode="both" onclick="setMode(this, 'parent')">Both</button>
-              </div>
-              <input type="hidden" id="reg-parent-mode" value="in-person" />
-            </div>
-          </div>
-          <div class="reg-row">
-            <div class="reg-group">
-              <label>Lessons per week</label>
-              <select id="reg-lessons-per-week">
-                <option value="" disabled selected>Select</option>
-                <option>1 session / week</option>
-                <option>2 sessions / week</option>
-                <option>3 sessions / week</option>
-                <option>4+ sessions / week</option>
-                <option>Flexible / as needed</option>
-              </select>
-            </div>
-            <div class="reg-group">
-              <label>Session length</label>
-              <select id="reg-session-length">
-                <option value="" disabled selected>Select</option>
-                <option>1 hour</option>
-                <option>1.5 hours</option>
-                <option>2 hours</option>
-                <option>2.5 hours</option>
-                <option>3 hours</option>
-              </select>
-            </div>
-          </div>
-          <div class="reg-group">
-            <label>Preferred days / times</label>
-            <div class="reg-checkbox-row" id="reg-days-row">
-              <label class="reg-checkbox"><input type="checkbox" value="Mon" onchange="toggleDay(this)"/> Mon</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Tue" onchange="toggleDay(this)"/> Tue</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Wed" onchange="toggleDay(this)"/> Wed</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Thu" onchange="toggleDay(this)"/> Thu</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Fri" onchange="toggleDay(this)"/> Fri</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Sat" onchange="toggleDay(this)"/> Sat</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Sun" onchange="toggleDay(this)"/> Sun</label>
-            </div>
-          </div>
-          <div class="reg-group">
-            <label>Preferred time slot</label>
-            <select id="reg-time-slot">
-              <option value="" disabled selected>Select</option>
-              <option>Morning (9am – 12pm)</option>
-              <option>Afternoon (12pm – 3pm)</option>
-              <option>Late afternoon (3pm – 6pm)</option>
-              <option>Evening (6pm – 9pm)</option>
-              <option>Flexible</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="reg-section">
-          <div class="reg-section-title">Budget & goals</div>
-          <div class="reg-row">
-            <div class="reg-group">
-              <label>Hourly budget (HKD)</label>
-              <select id="reg-budget">
-                <option value="" disabled selected>Select range</option>
-                <option>$150 – $250 / hour</option>
-                <option>$250 – $400 / hour</option>
-                <option>$400 – $600 / hour</option>
-                <option>$600 – $800 / hour</option>
-                <option>$800+ / hour</option>
-                <option>Flexible / negotiable</option>
-              </select>
-            </div>
-            <div class="reg-group">
-              <label>Student's current level</label>
-              <select id="reg-current-level">
-                <option value="" disabled selected>Select</option>
-                <option>Struggling — needs foundation work</option>
-                <option>Average — consistent support needed</option>
-                <option>Good — want to excel</option>
-                <option>High achiever — DSE/A-Level target</option>
-                <option>Not sure yet</option>
-              </select>
-            </div>
-          </div>
-          <div class="reg-group">
-            <label>Specific goals or requirements (optional)</label>
-            <textarea id="reg-goals" placeholder="e.g. Need a teacher with DSE experience, female teacher preferred, Exam prep for..."></textarea>
-          </div>
-        </div>
-
-        <button class="reg-submit" onclick="window._dbg=submitParentReg;submitParentReg();">Complete registration</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TEACHER DETAILED REGISTRATION MODAL -->
-  <div class="reg-overlay" id="teacherRegOverlay">
-    <div class="reg-modal">
-      <div class="reg-modal-header">
-        <div>
-          <h3>Your teaching profile</h3>
-          <p>Tell students about your experience and availability</p>
-        </div>
-        <button class="reg-close" onclick="closeTeacherReg()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-      </div>
-      <div class="reg-body">
-        <div class="reg-section">
-          <div class="reg-section-title">Qualifications</div>
-          <div class="reg-group">
-            <label>Highest qualification</label>
-            <select id="reg-qualification">
-              <option value="" disabled selected>Select</option>
-              <option>High School (HKDSE / GCSE / O-Level)</option>
-              <option>Diploma / Associate Degree</option>
-              <option>Bachelor's Degree</option>
-              <option>Master's Degree</option>
-              <option>PhD / Doctorate</option>
-              <option>Postgraduate Certificate in Education (PGCE / PGDE)</option>
-              <option>Current university student</option>
-            </select>
-          </div>
-          <div class="reg-group">
-            <label>University / Institution (optional)</label>
-            <input type="text" id="reg-institution" placeholder="e.g. HKU, CUHK, CityU..." />
-          </div>
-          <div class="reg-row">
-            <div class="reg-group">
-              <label>Years of tutoring experience</label>
-              <select id="reg-teacher-experience">
-                <option value="" disabled selected>Select</option>
-                <option>Less than 1 year</option>
-                <option>1 – 2 years</option>
-                <option>2 – 5 years</option>
-                <option>5 – 10 years</option>
-                <option>10+ years</option>
-              </select>
-            </div>
-            <div class="reg-group">
-              <label>Preferred lesson mode</label>
-              <div class="reg-mode-options">
-                <button type="button" class="reg-mode-btn active" data-mode="in-person" onclick="setMode(this, 'teacher')">In-person</button>
-                <button type="button" class="reg-mode-btn" data-mode="online" onclick="setMode(this, 'teacher')">Online</button>
-                <button type="button" class="reg-mode-btn" data-mode="both" onclick="setMode(this, 'teacher')">Both</button>
-              </div>
-              <input type="hidden" id="reg-teacher-mode" value="in-person" />
-            </div>
-          </div>
-        </div>
-
-        <div class="reg-section">
-          <div class="reg-section-title">Student levels & subjects</div>
-          <div class="reg-group">
-            <label>Which student levels can you teach?</label>
-            <div class="reg-checkbox-row" id="reg-teacher-levels">
-              <label class="reg-checkbox"><input type="checkbox" value="Primary" onchange="toggleRegCheckbox(this, 'teacher-levels')"/> Primary</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Secondary (F.1-3)" onchange="toggleRegCheckbox(this, 'teacher-levels')"/> Secondary F.1-3</label>
-              <label class="reg-checkbox"><input type="checkbox" value="HKDSE" onchange="toggleRegCheckbox(this, 'teacher-levels')"/> HKDSE</label>
-              <label class="reg-checkbox"><input type="checkbox" value="IB" onchange="toggleRegCheckbox(this, 'teacher-levels')"/> IB</label>
-              <label class="reg-checkbox"><input type="checkbox" value="IGCSE" onchange="toggleRegCheckbox(this, 'teacher-levels')"/> IGCSE</label>
-              <label class="reg-checkbox"><input type="checkbox" value="A-Level" onchange="toggleRegCheckbox(this, 'teacher-levels')"/> A-Level</label>
-              <label class="reg-checkbox"><input type="checkbox" value="University" onchange="toggleRegCheckbox(this, 'teacher-levels')"/> University</label>
-            </div>
-          </div>
-          <div class="reg-group">
-            <label>Short bio — tell students about yourself</label>
-            <textarea id="reg-teacher-bio" placeholder="e.g. HKU Year 3 Commerce student, DSE Math 5**. 2 years tutoring experience, specialize in helping students bridge from F.3 to F.4 math..."></textarea>
-          </div>
-        </div>
-
-        <div class="reg-section">
-          <div class="reg-section-title">Availability & rates</div>
-          <div class="reg-row">
-            <div class="reg-group">
-              <label>Districts you're willing to travel to</label>
-              <select id="reg-teacher-district">
-                <option value="" disabled selected>Select</option>
-                <option>Hong Kong Island — All districts</option>
-                <option>Kowloon — All districts</option>
-                <option>New Territories — All districts</option>
-                <option>Hong Kong Island - Central & Western</option>
-                <option>Hong Kong Island - Wan Chai</option>
-                <option>Hong Kong Island - Eastern</option>
-                <option>Hong Kong Island - Southern</option>
-                <option>Kowloon - Yau Tsim Mong</option>
-                <option>Kowloon - Sham Shui Po</option>
-                <option>Kowloon - Kowloon City</option>
-                <option>Kowloon - Wong Tai Sin</option>
-                <option>Kowloon - Kwun Tong</option>
-                <option>New Territories - Sha Tin</option>
-                <option>New Territories - Tuen Mun</option>
-                <option>New Territories - Yuen Long</option>
-                <option>Online only</option>
-                <option>All areas</option>
-              </select>
-            </div>
-            <div class="reg-group">
-              <label>Your hourly rate (HKD)</label>
-              <select id="reg-teacher-rate">
-                <option value="" disabled selected>Select range</option>
-                <option>$150 – $250 / hour</option>
-                <option>$250 – $400 / hour</option>
-                <option>$400 – $600 / hour</option>
-                <option>$600 – $800 / hour</option>
-                <option>$800 – $1,000 / hour</option>
-                <option>$1,000+ / hour</option>
-              </select>
-            </div>
-          </div>
-          <div class="reg-group">
-            <label>Available days / times</label>
-            <div class="reg-checkbox-row" id="reg-teacher-days">
-              <label class="reg-checkbox"><input type="checkbox" value="Mon" onchange="toggleDay(this)"/> Mon</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Tue" onchange="toggleDay(this)"/> Tue</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Wed" onchange="toggleDay(this)"/> Wed</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Thu" onchange="toggleDay(this)"/> Thu</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Fri" onchange="toggleDay(this)"/> Fri</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Sat" onchange="toggleDay(this)"/> Sat</label>
-              <label class="reg-checkbox"><input type="checkbox" value="Sun" onchange="toggleDay(this)"/> Sun</label>
-            </div>
-          </div>
-        </div>
-
-        <button class="reg-submit" onclick="window._dbg_t=submitTeacherReg;submitTeacherReg();">Complete registration</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- REGISTRATION SUCCESS -->
-  <div class="reg-success-overlay" id="regSuccessOverlay">
-    <div class="reg-success-card">
-      <div class="reg-success-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
       <h3>You're all set!</h3>
       <p>We've saved your details. Our team will reach out via WhatsApp within 48 hours to confirm your first match.</p>
       <p class="reg-note">Keep an eye on your messages — we'll send you a quick intro of the best-matched teacher.</p>
@@ -1451,6 +964,16 @@ function switchTab(tab) {
         }, 2000);
         return;
       }
+      // Store form data for Firestore submission after OTP
+      pendingFormData = {
+        email: email,
+        firstName: form.querySelector('[name="firstName"]').value,
+        lastName: form.querySelector('[name="lastName"]').value,
+        whatsapp: form.querySelector('[name="whatsapp"]').value,
+        level: form.querySelector('[name="level"]').value,
+        subjects: subjects,
+        subjectsOther: form.querySelector('[name="subjectsOther"]') ? form.querySelector('[name="subjectsOther"]').value : ''
+      };
       showOtpModal(email, 'parent');
     }
 
@@ -1480,6 +1003,17 @@ function switchTab(tab) {
         }, 2000);
         return;
       }
+      // Store form data for Firestore submission after OTP
+      pendingFormData = {
+        email: email,
+        firstName: form.querySelector('[name="firstName"]').value,
+        lastName: form.querySelector('[name="lastName"]').value,
+        whatsapp: form.querySelector('[name="whatsapp"]').value,
+        subjects: subjects,
+        subjectsOther: form.querySelector('[name="subjectsOther"]') ? form.querySelector('[name="subjectsOther"]').value : '',
+        experience: form.querySelector('[name="experience"]').value,
+        level: levels
+      };
       showOtpModal(email, 'teacher');
     }
   
@@ -1634,6 +1168,7 @@ function switchTab(tab) {
     // ── OTP Logic ──
     let pendingEmail = '';
     let pendingForm = '';
+    let pendingFormData = null;
     let generatedOTP = '';
 
     function showOtpModal(email, formType) {
@@ -1677,31 +1212,37 @@ function switchTab(tab) {
       const error = document.getElementById('otpError');
       const code = getOtpValue();
       if (code === generatedOTP) {
-        // OTP success — show reg modal after brief delay
+        // OTP success — submit form data to Firestore then show success
         document.getElementById('otpForm').style.display = 'none';
         document.getElementById('otpSuccess').classList.add('show');
         lucide.createIcons();
-        setTimeout(function() {
-          document.getElementById('otpOverlay').classList.remove('show');
-          if (pendingForm === 'teacher') {
-            document.getElementById('teacherRegOverlay').classList.add('show');
-          } else {
-            document.getElementById('parentRegOverlay').classList.add('show');
-          }
-        }, 1500);
-    // Kill pointer events on ALL Lucide SVG icons site-wide (backup CSS)
-    var style = document.createElement('style');
-    document.querySelectorAll('svg[data-lucide]').forEach(function(s){ s.style.pointerEvents='none'; });
 
-        // Show form success after delay
-        setTimeout(() => {
+        // Submit to Firestore
+        if (pendingFormData) {
+          var firestoreData = {};
+          for (var key in pendingFormData) {
+            if (pendingFormData[key]) {
+              firestoreData[key] = { stringValue: pendingFormData[key] };
+            }
+          }
+          firestoreData.role = { stringValue: pendingForm };
+          firestoreData.status = { stringValue: 'pending' };
+          firestoreData.submittedAt = { timestampValue: new Date().toISOString() };
+          firestoreData.userType = { stringValue: pendingForm };
+
+          var firestoreUrl = 'https://firestore.googleapis.com/v1/projects/minerva-learning-a7eac/databases/(default)/documents/registrations?key=AIzaSyA50vtTGq5RNPAalle6CafSLP2Pq4dPbCE';
+          fetch(firestoreUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fields: firestoreData })
+          }).catch(function(err) { console.error('Firestore submit error:', err); });
+        }
+
+        setTimeout(function() {
           document.getElementById('otpOverlay').classList.remove('show');
           document.getElementById(pendingForm + '-form').style.display = 'none';
           document.getElementById(pendingForm + '-success').classList.add('show');
           lucide.createIcons();
-    // Kill pointer events on ALL Lucide SVG icons site-wide (backup CSS)
-    var style = document.createElement('style');
-    document.querySelectorAll('svg[data-lucide]').forEach(function(s){ s.style.pointerEvents='none'; });
         }, 1500);
       } else {
         error.classList.add('show');
@@ -2259,94 +1800,4 @@ function switchTab(tab) {
         if (idx >= 0) teacherLevels.splice(idx, 1);
       }
     }
-
-    function closeParentReg() {
-      document.getElementById('parentRegOverlay').classList.remove('show');
-    }
-
-    function closeTeacherReg() {
-      document.getElementById('teacherRegOverlay').classList.remove('show');
-    }
-
-    function submitParentReg() {
-      var heroData = {
-        email: pendingEmail,
-        firstName: document.getElementById('parent-first-name') ? document.getElementById('parent-first-name').value : '',
-        lastName: document.getElementById('parent-last-name') ? document.getElementById('parent-last-name').value : '',
-        whatsapp: document.getElementById('parent-whatsapp') ? document.getElementById('parent-whatsapp').value : '',
-        level: document.getElementById('parent-level-hidden') ? document.getElementById('parent-level-hidden').value : '',
-        subjects: selectedSubjects.parent || []
-      };
-      var data = {
-        ...heroData,
-        userType: 'parent',
-        studentFirst: document.getElementById('reg-student-first').value,
-        studentLast: document.getElementById('reg-student-last').value,
-        level: document.getElementById('reg-level').value,
-        schoolType: document.getElementById('reg-school-type').value,
-        district: document.getElementById('reg-district').value,
-        mode: document.getElementById('reg-parent-mode').value,
-        lessonsPerWeek: document.getElementById('reg-lessons-per-week').value,
-        sessionLength: document.getElementById('reg-session-length').value,
-        days: selectedDays.join(', '),
-        timeSlot: document.getElementById('reg-time-slot').value,
-        budget: document.getElementById('reg-budget').value,
-        currentLevel: document.getElementById('reg-current-level').value,
-        goals: document.getElementById('reg-goals').value
-      };
-      // Basic validation
-      if (!data.level) { alert('Please select a student level.'); return; }
-      if (!data.district) { alert('Please select your area/district.'); return; }
-      if (!data.mode) { alert('Please select a lesson mode.'); return; }
-      console.log('Parent registration data:', data);
-      db.collection('registrations').add({
-        ...data,
-        role: 'parent',
-        status: 'pending',
-        submittedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).catch(function(err) { console.error('Firestore error:', err); alert('Registration failed: ' + err.message); return; });
-      document.getElementById('parentRegOverlay').classList.remove('show');
-      document.getElementById('regSuccessOverlay').classList.add('show');
-      selectedDays = [];
-    }
-
-    function submitTeacherReg() {
-      var heroData = {
-        email: pendingEmail,
-        firstName: document.getElementById('teacher-first-name') ? document.getElementById('teacher-first-name').value : '',
-        lastName: document.getElementById('teacher-last-name') ? document.getElementById('teacher-last-name').value : '',
-        whatsapp: document.getElementById('teacher-whatsapp') ? document.getElementById('teacher-whatsapp').value : '',
-        level: document.getElementById('teacher-level-hidden') ? document.getElementById('teacher-level-hidden').value.split(',') : [],
-        subjects: selectedSubjects.teacher || [],
-        experience: document.getElementById('teacher-experience') ? document.getElementById('teacher-experience').value : ''
-      };
-      var data = {
-        ...heroData,
-        userType: 'teacher',
-        qualification: document.getElementById('reg-qualification').value,
-        institution: document.getElementById('reg-institution').value,
-        experience: document.getElementById('reg-teacher-experience').value,
-        mode: document.getElementById('reg-teacher-mode').value,
-        levels: teacherLevels.join(', '),
-        bio: document.getElementById('reg-teacher-bio').value,
-        district: document.getElementById('reg-teacher-district').value,
-        rate: document.getElementById('reg-teacher-rate').value,
-        days: selectedDays.join(', ')
-      };
-      if (!data.qualification) { alert('Please select your highest qualification.'); return; }
-      if (!data.experience) { alert('Please select years of tutoring experience.'); return; }
-      if (teacherLevels.length === 0) { alert('Please select at least one student level you can teach.'); return; }
-      console.log('Teacher registration data:', data);
-      db.collection('registrations').add({
-        ...data,
-        role: 'teacher',
-        status: 'pending',
-        submittedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).catch(function(err) { console.error('Firestore error:', err); alert('Registration failed: ' + err.message); return; });
-      document.getElementById('teacherRegOverlay').classList.remove('show');
-      document.getElementById('regSuccessOverlay').classList.add('show');
-      teacherLevels = [];
-      selectedDays = [];
-    }
-
-  </script>
+    </script>

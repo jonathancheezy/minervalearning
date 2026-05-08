@@ -680,8 +680,14 @@
 <!-- Firebase via REST API (no module/CND dependency) -->
 <script>
 (function() {
+  console.log('[DEBUG] Script starting...');
   var firebaseProject = 'minerva-learning-a7eac';
   var firebaseApiKey = 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s';
+
+  var form = document.getElementById('parentForm');
+  console.log('[DEBUG] Form element:', form);
+  console.log('[DEBUG] Form action:', form ? form.action : 'null');
+  console.log('[DEBUG] Submit button:', form ? form.querySelector('button[type="submit"]') : 'null');
 
   // Pre-fill email from URL parameter
   var urlParams = new URLSearchParams(window.location.search);
@@ -691,11 +697,13 @@
     if (emailField) emailField.value = decodeURIComponent(emailParam);
   }
 
-  var form = document.getElementById('parentForm');
+
+
   var submitBtn = form ? form.querySelector('button[type="submit"]') : null;
 
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
+    console.log('[DEBUG] Event listener triggered');
 
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -710,6 +718,7 @@
     data.submittedAt = { timestampValue: new Date().toISOString() };
     data.status = 'pending';
 
+    console.log('[DEBUG] Submit handler fired, sending to Firestore...');
     try {
       var response = await fetch(
         'https://firestore.googleapis.com/v1/projects/' + firebaseProject + '/databases/(default)/documents/registrations?key=' + firebaseApiKey,

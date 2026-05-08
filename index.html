@@ -2299,8 +2299,9 @@ function switchTab(tab) {
       if (!data.district) { alert('Please select your area/district.'); return; }
       if (!data.mode) { alert('Please select a lesson mode.'); return; }
       console.log('Parent registration data:', data);
-      db.collection('submissions').add({
+      db.collection('registrations').add({
         ...data,
+        role: 'parent',
         status: 'pending',
         submittedAt: firebase.firestore.FieldValue.serverTimestamp()
       }).catch(function(err) { console.error('Firestore error:', err); alert('Registration failed: ' + err.message); return; });
@@ -2336,8 +2337,9 @@ function switchTab(tab) {
       if (!data.experience) { alert('Please select years of tutoring experience.'); return; }
       if (teacherLevels.length === 0) { alert('Please select at least one student level you can teach.'); return; }
       console.log('Teacher registration data:', data);
-      db.collection('submissions').add({
+      db.collection('registrations').add({
         ...data,
+        role: 'teacher',
         status: 'pending',
         submittedAt: firebase.firestore.FieldValue.serverTimestamp()
       }).catch(function(err) { console.error('Firestore error:', err); alert('Registration failed: ' + err.message); return; });

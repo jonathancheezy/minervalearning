@@ -658,7 +658,7 @@
  <input type="file" id="certFile" name="certFile" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="font-size:0.875rem;color:var(--text-muted);padding:8px 0;">
  <small style="color:var(--text-muted);font-size:0.75rem;display:block;margin-top:4px;" data-i18n="register.label_cert_hint">PDF, JPG, PNG or DOC — max 5MB</small>
  </div>
-<button type="submit" id="submitBtn" class="btn-primary" data-i18n="register.btn_register" onclick="window.__submitTeacher=true;">Register →</button>
+<button type="submit" id="submitBtn" class="btn-primary" data-i18n="register.btn_register" onclick="window.__teacherSubmit(this); return false;">Register →</button>
  <p class="terms">By registering, you agree to our <a href="terms.html">Terms & Conditions</a> and <a href="privacy.html">Privacy Policy</a>.</p>
  </form>
 
@@ -677,51 +677,17 @@
   var storageBucket = 'minerva-learning-a7eac.appspot.com';
   var firestoreUrl = 'https://firestore.googleapis.com/v1/projects/' + firebaseProject + '/databases/(default)/documents/registrations?key=' + firebaseApiKey;
 
-  var form = document.getElementById('registrationForm');
-  if (!form) { console.error('[Firebase] Form not found'); return; }
-  var submitBtn = form.querySelector('button[type="submit"]');
-
-  // Pre-fill email from URL
-  var params = new URLSearchParams(window.location.search);
-  var email = params.get('email');
-  if (email) {
-    var emailField = document.getElementById('email');
-    if (emailField) emailField.value = decodeURIComponent(email);
-  }
-
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('[Firebase] Submit fired');
-
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Registering...'; }
+  window.__teacherSubmit = function(btn) {
+    var form = document.getElementById('registrationForm');
+    if (!form) { alert('Form not found'); return; }
+    btn.disabled = true;
+    btn.textContent = 'Registering...';
 
     var certFile = document.getElementById('certFile');
     certFile = certFile ? certFile.files[0] : null;
     var certUrl = '';
 
-    var uploadPromise = Promise.resolve();
-    if (certFile) {
-      if (certFile.size > 5 * 1024 * 1024) {
-        alert('Certificate file must be under 5MB.');
-        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Register'; }
-        return;
-      }
-      uploadPromise = fetch(
-        'https://firebasestorage.googleapis.com/v0/b/' + storageBucket + '/o?uploadType=media&name=' + encodeURIComponent('certificates/' + Date.now() + '_' + certFile.name),
-        { method: 'POST', headers: { 'Content-Type': certFile.type }, body: certFile }
-      )
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        certUrl = 'https://firebasestorage.googleapis.com/v0/b/' + storageBucket + '/o/' + encodeURIComponent('certificates/' + Date.now() + '_' + certFile.name) + '?alt=media';
-      })
-      .catch(function(err) {
-        console.warn('[Firebase] Certificate upload failed:', err);
-        certUrl = '';
-      });
-    }
-
-    uploadPromise.then(function() {
+    var doSubmit = function() {
       var fd = new FormData(form);
       var fields = {};
       fd.forEach(function(value, key) {
@@ -733,23 +699,54 @@
       fields.submittedAt = { timestampValue: new Date().toISOString() };
       fields.status = { stringValue: 'pending' };
 
-      return fetch(firestoreUrl, {
+      fetch(firestoreUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fields: fields })
+      })
+      .then(function(r) {
+        if (!r.ok) throw new Error('Server error: ' + r.status);
+        form.style.display = 'none';
+        var s = document.getElementById('formSuccess');
+        if (s) s.style.display = 'block';
+      })
+      .catch(function(e) {
+        console.error(e);
+        alert('Something went wrong. Please try again.');
+        btn.disabled = false;
+        btn.textContent = 'Register';
       });
-    })
-    .then(function(response) {
-      if (!response.ok) throw new Error('Server error: ' + response.status);
-      form.style.display = 'none';
-      var successEl = document.getElementById('formSuccess');
-      if (successEl) successEl.style.display = 'block';
-    })
-    .catch(function(err) {
-      console.error('[Firebase] Error:', err);
-      alert('Something went wrong. Please try again.');
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Register'; }
-    });
+    };
+
+    if (certFile) {
+      if (certFile.size > 5 * 1024 * 1024) {
+        alert('Certificate must be under 5MB');
+        btn.disabled = false;
+        btn.textContent = 'Register';
+        return;
+      }
+      fetch(
+        'https://firebasestorage.googleapis.com/v0/b/' + storageBucket + '/o?uploadType=media&name=' + encodeURIComponent('certificates/' + Date.now() + '_' + certFile.name),
+        { method: 'POST', headers: { 'Content-Type': certFile.type }, body: certFile }
+      )
+      .then(function(r) { return r.json(); })
+      .then(function() {
+        certUrl = 'https://firebasestorage.googleapis.com/v0/b/' + storageBucket + '/o/' + encodeURIComponent('certificates/' + Date.now() + '_' + certFile.name) + '?alt=media';
+        doSubmit();
+      })
+      .catch(function(e) {
+        console.warn('Cert upload failed, submitting without:', e);
+        doSubmit();
+      });
+    } else {
+      doSubmit();
+    }
+  };
+
+  document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = document.getElementById('submitBtn');
+    if (btn) window.__teacherSubmit(btn);
   });
 })();
 </script>

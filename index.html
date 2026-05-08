@@ -1264,7 +1264,7 @@
           </div>
         </div>
 
-        <button class="reg-submit" onclick="submitParentReg()">Complete registration</button>
+        <button class="reg-submit" onclick="window._dbg=submitParentReg;submitParentReg();">Complete registration</button>
       </div>
     </div>
   </div>
@@ -1398,7 +1398,7 @@
           </div>
         </div>
 
-        <button class="reg-submit" onclick="submitTeacherReg()">Complete registration</button>
+        <button class="reg-submit" onclick="window._dbg_t=submitTeacherReg;submitTeacherReg();">Complete registration</button>
       </div>
     </div>
   </div>
@@ -2224,6 +2224,7 @@ function switchTab(tab) {
 
     // ── Detailed Registration Modals ──
     var selectedDays = [];
+    var selectedSubjects = { parent: [], teacher: [] };
     var teacherLevels = [];
 
     function setMode(btn, type) {

@@ -2299,10 +2299,10 @@ function switchTab(tab) {
         return;
       }
       console.log('Parent registration data:', data);
-      db.collection('submissions').add({
+      addDoc(collection(db, 'submissions'), {
         ...data,
         status: 'pending',
-        submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+        submittedAt: serverTimestamp()
       }).catch(function(err) { console.error('Firestore error:', err); });
       document.getElementById('parentRegOverlay').classList.remove('show');
       document.getElementById('regSuccessOverlay').classList.add('show');
@@ -2337,10 +2337,10 @@ function switchTab(tab) {
         return;
       }
       console.log('Teacher registration data:', data);
-      db.collection('submissions').add({
+      addDoc(collection(db, 'submissions'), {
         ...data,
         status: 'pending',
-        submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+        submittedAt: serverTimestamp()
       }).catch(function(err) { console.error('Firestore error:', err); });
       document.getElementById('teacherRegOverlay').classList.remove('show');
       document.getElementById('regSuccessOverlay').classList.add('show');

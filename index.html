@@ -959,16 +959,16 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
-      <div class="reg-body" style="padding:12px 20px 20px">
+            <div class="reg-body" style="padding:12px 20px 20px;max-height:70vh;overflow-y:auto;scrollbar-width:thin">
         <div class="reg-section">
-          <div class="reg-section-title">Student information</div>
+          <div class="reg-section-title">STUDENT INFORMATION</div>
           <div class="reg-row">
             <div class="reg-group">
-              <label>Student first name</label>
+              <label>First name</label>
               <input type="text" id="reg-student-first" placeholder="e.g. Marcus" />
             </div>
             <div class="reg-group">
-              <label>Student last name</label>
+              <label>Last name</label>
               <input type="text" id="reg-student-last" placeholder="e.g. Cheung" />
             </div>
           </div>
@@ -977,10 +977,10 @@
               <label>Year / Form</label>
               <select id="reg-level">
                 <option value="" disabled selected>Select</option>
-                <option>Primary 1</option><option>Primary 2</option><option>Primary 3</option>
-                <option>Primary 4</option><option>Primary 5</option><option>Primary 6</option>
-                <option>Secondary 1 (F.1)</option><option>Secondary 2 (F.2)</option><option>Secondary 3 (F.3)</option>
-                <option>Secondary 4 (F.4)</option><option>Secondary 5 (F.5)</option><option>Secondary 6 (F.6)</option>
+                <option>P1</option><option>P2</option><option>P3</option>
+                <option>P4</option><option>P5</option><option>P6</option>
+                <option>F.1</option><option>F.2</option><option>F.3</option>
+                <option>F.4</option><option>F.5</option><option>F.6</option>
                 <option>University / Adult</option>
               </select>
             </div>
@@ -988,63 +988,146 @@
               <label>School type</label>
               <select id="reg-school-type">
                 <option value="" disabled selected>Select</option>
-                <option>Local (DSE)</option><option>International school (IB)</option>
-                <option>International school (IGCSE)</option><option>ESF / Direct Subsidy</option>
+                <option>Local (DSE)</option>
+                <option>International (IB / IGCSE)</option>
+                <option>ESF / Direct Subsidy</option>
                 <option>Not sure yet</option>
               </select>
+            </div>
+          </div>
+          <div class="reg-row">
+            <div class="reg-group">
+              <label>Student gender</label>
+              <select id="reg-student-gender">
+                <option value="" disabled selected>Select</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>No preference</option>
+              </select>
+            </div>
+            <div class="reg-group">
+              <label>School name <span style="font-weight:400;color:var(--gray-400)">(optional)</span></label>
+              <input type="text" id="reg-student-school" placeholder="e.g. Diocesan Boys' School" />
             </div>
           </div>
         </div>
 
         <div class="reg-section">
-          <div class="reg-section-title">Learning goals</div>
+          <div class="reg-section-title">LEARNING GOALS</div>
           <div class="reg-group">
-            <label>What does the student want to achieve?</label>
+            <label>Main goal</label>
             <select id="reg-goal">
-              <option value="" disabled selected>Select main goal</option>
-              <option>Exam preparation (DSE / IB / IGCSE)</option>
-              <option>Improve grades at school</option>
-              <option>Catch up with class</option>
-              <option>Learn a new subject</option>
+              <option value="" disabled selected>What does the student want to achieve?</option>
+              <option>DSE exam preparation</option>
+              <option>IB / IGCSE exam preparation</option>
+              <option>Improve school grades</option>
+              <option>Catch up with classwork</option>
               <option>Homework guidance</option>
-              <option>Speaking / conversation practice</option>
+              <option>Language learning</option>
+              <option>Interview / aptitude test prep</option>
               <option>Other</option>
             </select>
           </div>
-          <div class="reg-group">
-            <label>Current level</label>
-            <select id="reg-current-level">
-              <option value="" disabled selected>How is the student performing?</option>
-              <option>Struggling — needs significant support</option>
-              <option>Below average — room to improve</option>
-              <option>Average — consistent progress wanted</option>
-              <option>Above average — wants to excel</option>
-              <option>Not sure</option>
-            </select>
+          <div class="reg-row">
+            <div class="reg-group">
+              <label>Current level</label>
+              <select id="reg-current-level">
+                <option value="" disabled selected>How is the student performing?</option>
+                <option>Struggling — needs extra support</option>
+                <option>Below average — room to improve</option>
+                <option>Average — steady progress wanted</option>
+                <option>Above average — wants to excel</option>
+                <option>Not sure yet</option>
+              </select>
+            </div>
+            <div class="reg-group">
+              <label>Target exam <span style="font-weight:400;color:var(--gray-400)">(if any)</span></label>
+              <select id="reg-target-exam">
+                <option value="" disabled selected>Select</option>
+                <option>DSE</option>
+                <option>IB Diploma</option>
+                <option>IB MYP</option>
+                <option>IGCSE / O-Level</option>
+                <option>GCSE</option>
+                <option>AP</option>
+                <option>Other</option>
+                <option>Not sure yet</option>
+              </select>
+            </div>
           </div>
           <div class="reg-group">
             <label>Anything else we should know? <span style="font-weight:400;color:var(--gray-400)">(optional)</span></label>
-            <input type="text" id="reg-notes" placeholder="e.g. Gets distracted easily, prefers female teachers" style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:0.9375rem;box-sizing:border-box" />
+            <input type="text" id="reg-notes" placeholder="E.g. loses focus easily, prefers patient teachers, needs homework help..." style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:0.9375rem;box-sizing:border-box" />
           </div>
         </div>
 
         <div class="reg-section">
-          <div class="reg-section-title">Preferences</div>
+          <div class="reg-section-title">PREFERENCES</div>
           <div class="reg-row">
             <div class="reg-group">
               <label>Preferred area</label>
               <select id="reg-district">
                 <option value="" disabled selected>Select</option>
-                <option>Hong Kong Island</option><option>Kowloon</option>
-                <option>New Territories</option><option>Online only</option>
+                <option>Hong Kong Island</option>
+                <option>Kowloon</option>
+                <option>New Territories</option>
+                <option>Online only</option>
               </select>
             </div>
             <div class="reg-group">
-              <label>Lesson frequency</label>
+              <label>Budget per hour</label>
+              <select id="reg-budget">
+                <option value="" disabled selected>Select range</option>
+                <option>$150–250</option>
+                <option>$250–400</option>
+                <option>$400–600</option>
+                <option>$600–800</option>
+                <option>$800+</option>
+                <option>Flexible</option>
+              </select>
+            </div>
+          </div>
+          <div class="reg-row">
+            <div class="reg-group">
+              <label>Lessons per week</label>
               <select id="reg-frequency">
                 <option value="" disabled selected>Select</option>
-                <option>Once a week</option><option>Twice a week</option>
-                <option>3+ times a week</option><option>Flexible / as needed</option>
+                <option>Once a week</option>
+                <option>Twice a week</option>
+                <option>3+ times a week</option>
+                <option>Flexible</option>
+              </select>
+            </div>
+            <div class="reg-group">
+              <label>Lesson duration</label>
+              <select id="reg-duration">
+                <option value="" disabled selected>Select</option>
+                <option>1 hour</option>
+                <option>1.5 hours</option>
+                <option>2 hours</option>
+                <option>Flexible</option>
+              </select>
+            </div>
+          </div>
+          <div class="reg-row">
+            <div class="reg-group">
+              <label>Preferred teacher gender</label>
+              <select id="reg-teacher-gender">
+                <option value="" disabled selected>Select</option>
+                <option>No preference</option>
+                <option>Male teacher</option>
+                <option>Female teacher</option>
+              </select>
+            </div>
+            <div class="reg-group">
+              <label>When to start</label>
+              <select id="reg-start-date">
+                <option value="" disabled selected>Select</option>
+                <option>As soon as possible</option>
+                <option>Within 2 weeks</option>
+                <option>Within 1 month</option>
+                <option>This term</option>
+                <option>Next term</option>
               </select>
             </div>
           </div>
@@ -1057,9 +1140,13 @@
             </div>
           </div>
         </div>
+
         <button class="reg-submit-btn" onclick="submitParentReg()">Complete Registration</button>
       </div>
     </div>
+  </div>
+
+  <!-- TEACHER REGISTRATION POPUP -->
   </div>
 
   <!-- TEACHER REGISTRATION POPUP -->
@@ -1074,12 +1161,12 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
-      <div class="reg-body" style="padding:12px 20px 20px">
+      <div class="reg-body" style="padding:12px 20px 20px;max-height:70vh;overflow-y:auto;scrollbar-width:thin">
         <div class="reg-section">
-          <div class="reg-section-title">Background</div>
+          <div class="reg-section-title">BACKGROUND</div>
           <div class="reg-group">
-            <label>About you <span style="font-weight:400;color:var(--gray-400)">(for students to read)</span></label>
-            <textarea id="reg-bio" rows="3" placeholder="Tell students about your teaching style, experience, and what makes your lessons unique..." style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:0.9375rem;box-sizing:border-box;font-family:inherit;resize:vertical;min-height:72px"></textarea>
+            <label>About you <span style="font-weight:400;color:var(--gray-400)">(shown to students)</span></label>
+            <textarea id="reg-bio" rows="3" placeholder="E.g. Patient teacher with 5 years experience helping students ace DSE Maths. I use real exam questions and breakdown concepts simply..." style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:0.9375rem;box-sizing:border-box;font-family:inherit;resize:vertical;min-height:80px"></textarea>
           </div>
           <div class="reg-row">
             <div class="reg-group">
@@ -1099,17 +1186,58 @@
               </select>
             </div>
           </div>
+          <div class="reg-row">
+            <div class="reg-group">
+              <label>Hourly rate</label>
+              <select id="reg-hourly-rate">
+                <option value="" disabled selected>Select range</option>
+                <option>$150–250</option>
+                <option>$250–400</option>
+                <option>$400–600</option>
+                <option>$600–800</option>
+                <option>$800+</option>
+              </select>
+            </div>
+            <div class="reg-group">
+              <label>Student age groups</label>
+              <select id="reg-age-groups">
+                <option value="" disabled selected>Select</option>
+                <option>Primary (P1–P6)</option>
+                <option>Secondary (F.1–F.3)</option>
+                <option>Senior secondary (F.4–F.6)</option>
+                <option>University / Adult</option>
+                <option>All ages</option>
+              </select>
+            </div>
+          </div>
+          <div class="reg-group">
+            <label>Other subjects you can teach <span style="font-weight:400;color:var(--gray-400)">(optional)</span></label>
+            <input type="text" id="reg-other-subjects" placeholder="E.g. Chemistry, Biology, Physics" style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:0.9375rem;box-sizing:border-box" />
+          </div>
         </div>
 
         <div class="reg-section">
-          <div class="reg-section-title">Coverage & preferences</div>
-          <div class="reg-group">
-            <label>Preferred area</label>
-            <select id="reg-teacher-district">
-              <option value="" disabled selected>Select</option>
-              <option>Hong Kong Island</option><option>Kowloon</option>
-              <option>New Territories</option><option>Online only</option>
-            </select>
+          <div class="reg-section-title">COVERAGE & PREFERENCES</div>
+          <div class="reg-row">
+            <div class="reg-group">
+              <label>Preferred area</label>
+              <select id="reg-teacher-district">
+                <option value="" disabled selected>Select</option>
+                <option>Hong Kong Island</option><option>Kowloon</option>
+                <option>New Territories</option><option>Online only</option>
+                <option>All areas</option>
+              </select>
+            </div>
+            <div class="reg-group">
+              <label>Max travel distance <span style="font-weight:400;color:var(--gray-400)">(in-person)</span></label>
+              <select id="reg-travel-distance">
+                <option value="" disabled selected>Select</option>
+                <option>Within 30 mins</option>
+                <option>Within 1 hour</option>
+                <option>1 hour+</option>
+                <option>No travel — online only</option>
+              </select>
+            </div>
           </div>
           <div class="reg-group">
             <label>Preferred lesson mode</label>
@@ -1128,13 +1256,24 @@
               <option>IGCSE / O-Level</option>
               <option>GCSE</option>
               <option>AP (Advanced Placement)</option>
-              <option>Other / N/A</option>
+              <option>Other</option>
+              <option>N/A</option>
+            </select>
+          </div>
+          <div class="reg-group">
+            <label>Lesson duration you offer</label>
+            <select id="reg-lesson-duration">
+              <option value="" disabled selected>Select</option>
+              <option>1 hour</option>
+              <option>1.5 hours</option>
+              <option>2 hours</option>
+              <option>Flexible</option>
             </select>
           </div>
         </div>
 
         <div class="reg-section">
-          <div class="reg-section-title">Availability</div>
+          <div class="reg-section-title">AVAILABILITY</div>
           <div class="reg-group">
             <label>Typical availability</label>
             <select id="reg-availability">
@@ -2049,11 +2188,18 @@ function switchTab(tab) {
         studentLastName: document.getElementById('reg-student-last').value,
         studentLevel: document.getElementById('reg-level').value,
         schoolType: document.getElementById('reg-school-type').value,
+        studentGender: document.getElementById('reg-student-gender').value,
+        studentSchool: document.getElementById('reg-student-school').value,
         district: document.getElementById('reg-district').value,
         lessonFrequency: document.getElementById('reg-frequency').value,
         learningGoal: document.getElementById('reg-goal').value,
         currentLevel: document.getElementById('reg-current-level').value,
+        targetExam: document.getElementById('reg-target-exam').value,
         notes: document.getElementById('reg-notes').value,
+        budget: document.getElementById('reg-budget').value,
+        lessonDuration: document.getElementById('reg-duration').value,
+        teacherGender: document.getElementById('reg-teacher-gender').value,
+        startDate: document.getElementById('reg-start-date').value,
         lessonMode: document.getElementById('parentRegOverlay').querySelector('.reg-modal').getAttribute('data-mode') || 'both'
       };
       // Merge with pendingFormData
@@ -2072,11 +2218,18 @@ function switchTab(tab) {
       if (popupData.studentLastName) firestoreData.studentLastName = { stringValue: popupData.studentLastName };
       if (popupData.studentLevel) firestoreData.studentLevel = { stringValue: popupData.studentLevel };
       if (popupData.schoolType) firestoreData.schoolType = { stringValue: popupData.schoolType };
+      if (popupData.studentGender) firestoreData.studentGender = { stringValue: popupData.studentGender };
+      if (popupData.studentSchool) firestoreData.studentSchool = { stringValue: popupData.studentSchool };
       if (popupData.district) firestoreData.district = { stringValue: popupData.district };
       if (popupData.lessonFrequency) firestoreData.lessonFrequency = { stringValue: popupData.lessonFrequency };
       if (popupData.learningGoal) firestoreData.learningGoal = { stringValue: popupData.learningGoal };
       if (popupData.currentLevel) firestoreData.currentLevel = { stringValue: popupData.currentLevel };
+      if (popupData.targetExam) firestoreData.targetExam = { stringValue: popupData.targetExam };
       if (popupData.notes) firestoreData.notes = { stringValue: popupData.notes };
+      if (popupData.budget) firestoreData.budget = { stringValue: popupData.budget };
+      if (popupData.lessonDuration) firestoreData.lessonDuration = { stringValue: popupData.lessonDuration };
+      if (popupData.teacherGender) firestoreData.teacherGender = { stringValue: popupData.teacherGender };
+      if (popupData.startDate) firestoreData.startDate = { stringValue: popupData.startDate };
       if (popupData.lessonMode) firestoreData.lessonMode = { stringValue: popupData.lessonMode };
 
       var submitUrl = 'https://minerva-submit.minerva-ai-learning.workers.dev/api/submit';
@@ -2095,8 +2248,13 @@ function switchTab(tab) {
         bio: document.getElementById('reg-bio').value,
         yearsExp: document.getElementById('reg-years').value,
         qualification: document.getElementById('reg-qualification').value,
+        hourlyRate: document.getElementById('reg-hourly-rate').value,
+        ageGroups: document.getElementById('reg-age-groups').value,
+        otherSubjects: document.getElementById('reg-other-subjects').value,
         district: document.getElementById('reg-teacher-district').value,
+        travelDistance: document.getElementById('reg-travel-distance').value,
         examSystems: document.getElementById('reg-exam-systems').value,
+        lessonDuration: document.getElementById('reg-lesson-duration').value,
         availability: document.getElementById('reg-availability').value,
         source: document.getElementById('reg-source').value,
         lessonMode: document.getElementById('teacherRegOverlay').querySelector('.reg-modal').getAttribute('data-mode') || 'both'
@@ -2114,8 +2272,13 @@ function switchTab(tab) {
       if (popupData.bio) firestoreData.bio = { stringValue: popupData.bio };
       if (popupData.yearsExp) firestoreData.yearsExperience = { stringValue: popupData.yearsExp };
       if (popupData.qualification) firestoreData.qualification = { stringValue: popupData.qualification };
+      if (popupData.hourlyRate) firestoreData.hourlyRate = { stringValue: popupData.hourlyRate };
+      if (popupData.ageGroups) firestoreData.ageGroups = { stringValue: popupData.ageGroups };
+      if (popupData.otherSubjects) firestoreData.otherSubjects = { stringValue: popupData.otherSubjects };
       if (popupData.district) firestoreData.district = { stringValue: popupData.district };
+      if (popupData.travelDistance) firestoreData.travelDistance = { stringValue: popupData.travelDistance };
       if (popupData.examSystems) firestoreData.examSystems = { stringValue: popupData.examSystems };
+      if (popupData.lessonDuration) firestoreData.lessonDuration = { stringValue: popupData.lessonDuration };
       if (popupData.availability) firestoreData.availability = { stringValue: popupData.availability };
       if (popupData.source) firestoreData.source = { stringValue: popupData.source };
       if (popupData.lessonMode) firestoreData.lessonMode = { stringValue: popupData.lessonMode };

@@ -496,12 +496,19 @@ window.openModal = function(id) {
     add('Student Name', r.studentFirstName && r.studentLastName ? r.studentFirstName + ' ' + r.studentLastName : (r.studentFirstName || r.firstName || ''));
     add('Year / Form', r.studentLevel, 'Not provided');
     add('School Type', r.schoolType, 'Not provided');
+    add('Student Gender', r.studentGender, 'Not provided');
+    add('Student School', r.studentSchool, 'Not provided');
     add('Subject', renderSubjectChips(r.subject || r.subjects));
     add('District', r.district, 'Not provided');
+    add('Budget', r.budget, 'Not provided');
     add('Lesson Mode', r.lessonMode, 'Not provided');
     add('Lesson Frequency', r.lessonFrequency, 'Not provided');
+    add('Lesson Duration', r.lessonDuration, 'Not provided');
     add('Learning Goal', r.learningGoal, 'Not provided');
     add('Current Level', r.currentLevel, 'Not provided');
+    add('Target Exam', r.targetExam, 'Not provided');
+    add('Preferred Teacher Gender', r.teacherGender, 'Not provided');
+    add('When to Start', r.startDate, 'Not provided');
     add('Notes', r.notes, 'Not provided');
     add('Phone', r.whatsapp || r.phone);
   }
@@ -509,9 +516,14 @@ window.openModal = function(id) {
     add('Bio', r.bio, 'Not provided');
     add('Experience', r.yearsExperience, 'Not provided');
     add('Qualification', r.qualification, 'Not provided');
+    add('Hourly Rate', r.hourlyRate, 'Not provided');
+    add('Student Age Groups', r.ageGroups, 'Not provided');
+    add('Other Subjects', r.otherSubjects, 'Not provided');
     add('Subject', renderSubjectChips(r.subject || r.subjects));
     add('District', r.district, 'Not provided');
+    add('Travel Distance', r.travelDistance, 'Not provided');
     add('Lesson Mode', r.lessonMode, 'Not provided');
+    add('Lesson Duration', r.lessonDuration, 'Not provided');
     add('Exam Systems', r.examSystems, 'Not provided');
     add('Availability', r.availability, 'Not provided');
     add('Referral Source', r.source, 'Not provided');

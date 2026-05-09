@@ -2079,7 +2079,7 @@ function switchTab(tab) {
       if (popupData.notes) firestoreData.notes = { stringValue: popupData.notes };
       if (popupData.lessonMode) firestoreData.lessonMode = { stringValue: popupData.lessonMode };
 
-      var submitUrl = 'https://minervalearning.minerva-ai-learning.workers.dev/api/submit';
+      var submitUrl = 'https://minerva-submit.minerva-ai-learning.workers.dev/api/submit';
       document.getElementById('parentRegOverlay').classList.remove('show');
       document.getElementById('parent-form').style.display = 'none';
       document.getElementById('parent-success').classList.add('show');
@@ -2120,7 +2120,7 @@ function switchTab(tab) {
       if (popupData.source) firestoreData.source = { stringValue: popupData.source };
       if (popupData.lessonMode) firestoreData.lessonMode = { stringValue: popupData.lessonMode };
 
-      var submitUrl = 'https://minervalearning.minerva-ai-learning.workers.dev/api/submit';
+      var submitUrl = 'https://minerva-submit.minerva-ai-learning.workers.dev/api/submit';
       document.getElementById('teacherRegOverlay').classList.remove('show');
       document.getElementById('teacher-form').style.display = 'none';
       document.getElementById('teacher-success').classList.add('show');

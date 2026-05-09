@@ -9,26 +9,25 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--surface); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; -webkit-font-smoothing: antialiased; }
-    :root { --primary: #7C3AED; --primary-light: #8B5CF6; --dark: #0F172A; --surface: #F8FAFC; --border: #E2E8F0; --danger: #EF4444; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: #F8FAFC; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; -webkit-font-smoothing: antialiased; }
     .login-card { background: #fff; border-radius: 16px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
     .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; text-decoration: none; }
-    .logo-mark { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-    .logo-text { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.125rem; color: var(--dark); }
-    .logo-text span { color: var(--primary); }
-    h2 { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+    .logo-mark { width: 36px; height: 36px; background: linear-gradient(135deg, #7C3AED, #8B5CF6); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .logo-text { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.125rem; color: #0F172A; }
+    .logo-text span { color: #7C3AED; }
+    h2 { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 700; color: #0F172A; margin-bottom: 6px; }
     .subtitle { color: #64748B; font-size: 0.9375rem; margin-bottom: 28px; }
     .form-group { margin-bottom: 16px; }
-    label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
-    input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.9375rem; font-family: 'DM Sans', sans-serif; color: var(--dark); background: #fff; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
-    input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(124,58,237,0.08); }
-    .btn-login { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 0.9375rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 8px; transition: background 0.2s, transform 0.1s; }
-    .btn-login:hover { background: var(--primary-light); transform: translateY(-1px); }
+    label { display: block; font-size: 0.875rem; font-weight: 600; color: #0F172A; margin-bottom: 6px; }
+    input { width: 100%; padding: 11px 14px; border: 1.5px solid #E2E8F0; border-radius: 8px; font-size: 0.9375rem; font-family: 'DM Sans', sans-serif; color: #0F172A; background: #fff; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+    input:focus { border-color: #7C3AED; box-shadow: 0 0 0 4px rgba(124,58,237,0.08); }
+    .btn-login { width: 100%; padding: 12px; background: #7C3AED; color: #fff; border: none; border-radius: 8px; font-size: 0.9375rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 8px; transition: background 0.2s, transform 0.1s; }
+    .btn-login:hover { background: #8B5CF6; transform: translateY(-1px); }
     .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    .error-msg { background: rgba(239,68,68,0.08); color: var(--danger); padding: 10px 14px; border-radius: 8px; font-size: 0.875rem; margin-bottom: 16px; display: none; }
+    .error-msg { background: rgba(239,68,68,0.08); color: #EF4444; padding: 10px 14px; border-radius: 8px; font-size: 0.875rem; margin-bottom: 16px; display: none; }
     .error-msg.show { display: block; }
     .back-link { display: block; text-align: center; margin-top: 20px; color: #64748B; font-size: 0.875rem; text-decoration: none; }
-    .back-link:hover { color: var(--primary); }
+    .back-link:hover { color: #7C3AED; }
   </style>
 </head>
 <body>
@@ -39,7 +38,7 @@
     </a>
     <h2>Sign in</h2>
     <p class="subtitle">Access the admin dashboard</p>
-    <div class="error-msg" id="error-msg">Incorrect email or password. Please try again.</div>
+    <div class="error-msg" id="Error-msg">Incorrect email or password. Please try again.</div>
     <form id="login-form" autocomplete="off">
       <div class="form-group">
         <label for="email">Email</label>
@@ -56,61 +55,38 @@
 
   <script>
     const AUTH_BASE = 'https://minerva-auth.minerva-ai-learning.workers.dev';
-    const ADMIN_PASSWORD = 'Minerva888';
-
-    // Redirect if already logged in
-    const token = sessionStorage.getItem('minerva_admin_token');
-    if (token) {
-      fetch(AUTH_BASE + '/api/auth/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token })
-      }).then(r => r.json()).then(data => {
-        if (data.valid) { window.location.href = '/admin_dashboard'; }
-      }).catch(() => {});
-    }
-
-    async function hmacSign(message, key) {
-      const encoder = new TextEncoder();
-      const keyData = encoder.encode(key);
-      const msgData = encoder.encode(message);
-      const cryptoKey = await crypto.subtle.importKey('raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-      const sig = await crypto.subtle.sign('HMAC', cryptoKey, msgData);
-      return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
 
     document.getElementById('login-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const btn = document.getElementById('submit-btn');
-      const err = document.getElementById('error-msg');
+      const err = document.getElementById('Error-msg');
       btn.disabled = true;
       btn.textContent = 'Signing in...';
       err.classList.remove('show');
 
       try {
-        const challengeRes = await fetch(AUTH_BASE + '/api/auth/challenge?email=' + encodeURIComponent(email));
-        const challengeData = await challengeRes.json();
-        if (!challengeData.challenge) throw new Error(challengeData.error || 'Failed to get challenge');
-
-        const signature = await hmacSign(challengeData.challenge, ADMIN_PASSWORD);
-
-        const loginRes = await fetch(AUTH_BASE + '/api/auth/login', {
+        const res = await fetch(AUTH_BASE + '/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, response: signature })
+          body: JSON.stringify({ email, password })
         });
-        const loginData = await loginRes.json();
-        if (!loginData.success || !loginData.token) throw new Error(loginData.error || 'Login failed');
+        const data = await res.json();
 
-        sessionStorage.setItem('minerva_admin_token', loginData.token);
+        if (!data.success || !data.token) {
+          err.classList.add('show');
+          btn.disabled = false;
+          btn.textContent = 'Sign in';
+          return;
+        }
+
+        sessionStorage.setItem('minerva_admin_token', data.token);
         window.location.href = '/admin_dashboard';
       } catch (e) {
         err.classList.add('show');
         btn.disabled = false;
         btn.textContent = 'Sign in';
-        setTimeout(() => { err.classList.remove('show'); }, 4000);
       }
     });
   </script>

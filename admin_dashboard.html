@@ -253,7 +253,7 @@
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, collection, getDocs, query, limit, where, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, collection, getDocs, query, limit, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s',
@@ -265,6 +265,41 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// Firestore REST API helpers
+const FIRESTORE_KEY = 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s';
+const FIRESTORE_PROJECT = 'minerva-learning-a7eac';
+const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT}/databases/(default)/documents`;
+
+function fromFirestoreValue(v) {
+  if (!v || typeof v !== 'object') return v;
+  if (v.stringValue !== undefined) return v.stringValue;
+  if (v.integerValue !== undefined) return String(v.integerValue);
+  if (v.booleanValue !== undefined) return v.booleanValue;
+  if (v.doubleValue !== undefined) return String(v.doubleValue);
+  if (v.timestampValue !== undefined) return v.timestampValue;
+  if (v.arrayValue && v.arrayValue.values) {
+    try { return v.arrayValue.values.map(x => x.stringValue || x.integerValue || '').join(', '); } catch { return ''; }
+  }
+  return v;
+}
+
+function flattenDoc(doc) {
+  const flat = { _id: doc.name.split('/').pop() };
+  if (doc.fields) {
+    for (const [k, v] of Object.entries(doc.fields)) {
+      flat[k] = fromFirestoreValue(v);
+    }
+  }
+  return flat;
+}
+
+async function loadViaRest() {
+  const url = FIRESTORE_URL + '/registrations?key=' + FIRESTORE_KEY + '&pageSize=200';
+  const res = await fetch(url);
+  const data = await res.json();
+  return (data.documents || []).map(flattenDoc);
+}
 
 let allRegistrations = [];
 let allTeachers = [];
@@ -336,12 +371,20 @@ async function loadRegistrations() {
   const tbody = document.getElementById('submissions-tbody');
   tbody.innerHTML = '<tr class="skeleton-row"><td colspan="5"><div class="skeleton" style="height:20px;width:60%;"></div></td></tr>';
   try {
-    const q = query(collection(db, 'registrations'), limit(200));
-    console.log('[Admin] Querying Firestore...');
-    const snapshot = await getDocs(q);
-    console.log('[Admin] Firestore snapshot size:', snapshot.size);
-    alert('Firestore returned ' + snapshot.size + ' documents. allRegistrations will have: ' + snapshot.docs.length);
-    allRegistrations = snapshot.docs.map(d => { const flat = flatten(d.data()); flat._id = d.id; return flat; });
+    console.log('[Admin] Loading via REST API...');
+    try {
+      const docs = await loadViaRest();
+      console.log('[Admin] REST returned', docs.length, 'documents');
+      alert('REST returned ' + docs.length + ' docs');
+      allRegistrations = docs;
+    } catch(restErr) {
+      console.error('[Admin] REST error, falling back to Firebase SDK:', restErr);
+      alert('REST failed: ' + restErr.message + '. Trying Firebase SDK...');
+      const q = query(collection(db, 'registrations'), limit(200));
+      const snapshot = await getDocs(q);
+      alert('Firebase returned ' + snapshot.size + ' documents');
+      allRegistrations = snapshot.docs.map(d => { const flat = flatten(d.data()); flat._id = d.id; return flat; });
+    }
     // Show debug
     const debugDiv = document.getElementById('debug-data');
     const debugContent = document.getElementById('debug-content');

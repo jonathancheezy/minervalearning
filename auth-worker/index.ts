@@ -1,46 +1,56 @@
 // Minerva Admin Auth Worker
-// Handles secure admin login with challenge-response
+// Uses Web Crypto API (fully async, no Node.js crypto needed)
 
 const ADMIN_EMAIL = 'admin@minerva.ai';
-// Password: Minerva888 — stored as HMAC secret (hex-encoded key)
-const ADMIN_PASSWORD_KEY = 'Minerva888';
-const CHALLENGE_TTL = 5 * 60 * 1000; // 5 minutes
+const ADMIN_PASSWORD = 'Minerva888';
+const SECRET = 'minerva-admin-2026-hmac-secret-key';
+const SESSION_TTL = 24 * 60 * 60 * 1000;
 
-// In-memory challenge store (resets on Worker cold start, acceptable for low-volume admin)
-const challenges = new Map<string, { email: string; expires: number }>();
-
-// Generate random hex challenge
-function generateChallenge(): string {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-// Simple HMAC-SHA256 using Web Crypto
 async function hmacSign(message: string, key: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(key);
-  const messageData = encoder.encode(message);
+  const enc = new TextEncoder();
   const cryptoKey = await crypto.subtle.importKey(
-    'raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+    'raw', enc.encode(key), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
   );
-  const signature = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
-  return Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('');
+  const sig = await crypto.subtle.sign('HMAC', cryptoKey, enc.encode(message));
+  return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-async function verifyHmac(message: string, signature: string, key: string): Promise<boolean> {
-  const expected = await hmacSign(message, key);
-  return expected === signature.toLowerCase();
+function base64url(str: string): string {
+  return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+async function createToken(email: string): Promise<string> {
+  const expiry = Date.now() + SESSION_TTL;
+  const payload = `${email}:${expiry}`;
+  const sig = await hmacSign(payload, SECRET);
+  return base64url(`${email}:${expiry}:${sig}`);
+}
+
+async function verifyToken(token: string): Promise<{ email: string; valid: boolean }> {
+  try {
+    const decoded = atob(token.replace(/-/g, '+').replace(/_/g, '/'));
+    const lastColon = decoded.lastIndexOf(':');
+    const sig = decoded.substring(lastColon + 1);
+    const beforeSig = decoded.substring(0, lastColon);
+    const lastColon2 = beforeSig.lastIndexOf(':');
+    const expiryStr = beforeSig.substring(lastColon2 + 1);
+    const email = beforeSig.substring(0, lastColon2);
+    const expiry = parseInt(expiryStr);
+    if (isNaN(expiry) || Date.now() > expiry) return { email, valid: false };
+    const expectedSig = await hmacSign(`${email}:${expiryStr}`, SECRET);
+    if (sig !== expectedSig) return { email, valid: false };
+    return { email, valid: true };
+  } catch {
+    return { email: '', valid: false };
+  }
 }
 
 export default {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
     const path = url.pathname;
-
-    // CORS headers
     const corsHeaders = {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'https://minervalearning.minerva-ai-learning.workers.dev',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     };
@@ -50,72 +60,25 @@ export default {
     }
 
     try {
-      if (path === '/api/auth/challenge') {
-        // Return a challenge for the given email
-        const email = url.searchParams.get('email') || '';
-        if (email !== ADMIN_EMAIL) {
-          return Response.json({ error: 'Invalid email' }, { status: 401, headers: corsHeaders });
-        }
-        const challenge = generateChallenge();
-        challenges.set(challenge, { email, expires: Date.now() + CHALLENGE_TTL });
-        return Response.json({ challenge }, { headers: corsHeaders });
-      }
-
       if (path === '/api/auth/login') {
-        // Verify challenge-response and return session token
-        const body = await request.json() as { email: string; response: string };
-        const { email, response } = body;
-
-        if (email !== ADMIN_EMAIL) {
+        const body = await request.json() as { email: string; password: string };
+        const { email, password } = body;
+        if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
           return Response.json({ error: 'Invalid credentials' }, { status: 401, headers: corsHeaders });
         }
-
-        // Find valid challenge for this email
-        let validChallenge: string | null = null;
-        for (const [ch, data] of challenges.entries()) {
-          if (data.email === email && data.expires > Date.now()) {
-            validChallenge = ch;
-            challenges.delete(ch);
-            break;
-          }
-        }
-
-        if (!validChallenge) {
-          return Response.json({ error: 'Challenge expired. Please refresh and try again.' }, { status: 401, headers: corsHeaders });
-        }
-
-        // Verify HMAC: response should be HMAC-SHA256(challenge, password)
-        const isValid = await verifyHmac(validChallenge, response, ADMIN_PASSWORD_KEY);
-        if (!isValid) {
-          return Response.json({ error: 'Invalid credentials' }, { status: 401, headers: corsHeaders });
-        }
-
-        // Generate session token (simple random string, signed)
-        const sessionToken = crypto.randomUUID();
-        const sessionData = { email, created: Date.now() };
-        sessionTokens.set(sessionToken, sessionData);
-
-        const resp = Response.json({ success: true, token: sessionToken }, { headers: corsHeaders });
-        resp.headers.set('Access-Control-Allow-Origin', 'https://minervalearning.minerva-ai-learning.workers.dev');
-        return resp;
+        const token = await createToken(email);
+        return Response.json({ success: true, token }, { headers: corsHeaders });
       }
 
       if (path === '/api/auth/verify') {
-        // Verify a session token
         const body = await request.json() as { token: string };
-        const data = sessionTokens.get(body.token);
-        if (!data || Date.now() - data.created > 24 * 60 * 60 * 1000) {
-          return Response.json({ valid: false }, { headers: corsHeaders });
-        }
-        return Response.json({ valid: true, email: data.email }, { headers: corsHeaders });
+        const result = await verifyToken(body.token);
+        return Response.json({ valid: result.valid, email: result.email }, { headers: corsHeaders });
       }
 
       return Response.json({ error: 'Not found' }, { status: 404, headers: corsHeaders });
     } catch (err) {
-      return Response.json({ error: 'Server error' }, { status: 500, headers: corsHeaders });
+      return Response.json({ error: 'Server error: ' + String(err) }, { status: 500, headers: corsHeaders });
     }
   }
 };
-
-// In-memory session store
-const sessionTokens = new Map<string, { email: string; created: number }>();

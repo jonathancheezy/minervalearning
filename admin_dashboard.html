@@ -494,7 +494,7 @@ window.openModal = function(id) {
   add('Full Name', getName(r)); add('Email', r.email); add('Phone', r.phone);
   if (role === 'parent') {
     add('Student Name', r.studentFirstName && r.studentLastName ? r.studentFirstName + ' ' + r.studentLastName : (r.studentFirstName || r.firstName || ''));
-    add('Year / Form', r.studentLevel || r.level);
+    add('Year / Form', r.studentLevel, 'Not provided');
     add('School Type', r.schoolType, 'Not provided');
     add('Subject', renderSubjectChips(r.subject || r.subjects));
     add('District', r.district, 'Not provided');
@@ -507,7 +507,7 @@ window.openModal = function(id) {
   }
   if (role === 'teacher') {
     add('Bio', r.bio, 'Not provided');
-    add('Experience', r.yearsExperience || r.yearsExp, 'Not provided');
+    add('Experience', r.yearsExperience, 'Not provided');
     add('Qualification', r.qualification, 'Not provided');
     add('Subject', renderSubjectChips(r.subject || r.subjects));
     add('District', r.district, 'Not provided');

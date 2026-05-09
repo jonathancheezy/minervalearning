@@ -1198,12 +1198,12 @@ function switchTab(tab) {
         return;
       }
       // Store form data for Firestore submission after OTP
+      // Note: level is NOT included here — popup sends studentLevel instead
       pendingFormData = {
         email: email,
         firstName: form.querySelector('[name="firstName"]').value,
         lastName: form.querySelector('[name="lastName"]').value,
         whatsapp: form.querySelector('[name="whatsapp"]').value,
-        level: form.querySelector('[name="level"]').value,
         subjects: subjects,
         subjectsOther: form.querySelector('[name="subjectsOther"]') ? form.querySelector('[name="subjectsOther"]').value : ''
       };
@@ -1246,15 +1246,14 @@ function switchTab(tab) {
         return;
       }
       // Store form data for Firestore submission after OTP
+      // Note: experience and level are NOT included — popup sends yearsExp and studentLevel
       pendingFormData = {
         email: email,
         firstName: form.querySelector('[name="firstName"]').value,
         lastName: form.querySelector('[name="lastName"]').value,
         whatsapp: form.querySelector('[name="whatsapp"]').value,
         subjects: subjects,
-        subjectsOther: form.querySelector('[name="subjectsOther"]') ? form.querySelector('[name="subjectsOther"]').value : '',
-        experience: form.querySelector('[name="experience"]').value,
-        level: levels
+        subjectsOther: form.querySelector('[name="subjectsOther"]') ? form.querySelector('[name="subjectsOther"]').value : ''
       };
       // Rate limit: 60 seconds between OTP requests
       const lastOtpRequest = sessionStorage.getItem('minerva_otp_last');

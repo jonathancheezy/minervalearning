@@ -2079,16 +2079,16 @@ function switchTab(tab) {
       if (popupData.notes) firestoreData.notes = { stringValue: popupData.notes };
       if (popupData.lessonMode) firestoreData.lessonMode = { stringValue: popupData.lessonMode };
 
-      var firestoreUrl = 'https://firestore.googleapis.com/v1/projects/minerva-learning-a7eac/databases/(default)/documents/registrations?key=AIzaSyA50vtTGq5RNPAalle6CafSLP2Pq4dPbCE';
+      var submitUrl = 'https://minervalearning.minerva-ai-learning.workers.dev/api/submit';
       document.getElementById('parentRegOverlay').classList.remove('show');
       document.getElementById('parent-form').style.display = 'none';
       document.getElementById('parent-success').classList.add('show');
       lucide.createIcons();
-      fetch(firestoreUrl, {
+      fetch(submitUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fields: firestoreData })
-      }).catch(function(err) { console.error('Firestore submit error:', err); });
+        body: JSON.stringify({ fields: firestoreData, role: 'parent' })
+      }).catch(function(err) { console.error('Submit error:', err); });
     }
     function submitTeacherReg() {
       var popupData = {
@@ -2120,16 +2120,16 @@ function switchTab(tab) {
       if (popupData.source) firestoreData.source = { stringValue: popupData.source };
       if (popupData.lessonMode) firestoreData.lessonMode = { stringValue: popupData.lessonMode };
 
-      var firestoreUrl = 'https://firestore.googleapis.com/v1/projects/minerva-learning-a7eac/databases/(default)/documents/registrations?key=AIzaSyA50vtTGq5RNPAalle6CafSLP2Pq4dPbCE';
+      var submitUrl = 'https://minervalearning.minerva-ai-learning.workers.dev/api/submit';
       document.getElementById('teacherRegOverlay').classList.remove('show');
       document.getElementById('teacher-form').style.display = 'none';
       document.getElementById('teacher-success').classList.add('show');
       lucide.createIcons();
-      fetch(firestoreUrl, {
+      fetch(submitUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fields: firestoreData })
-      }).catch(function(err) { console.error('Firestore submit error:', err); });
+        body: JSON.stringify({ fields: firestoreData, role: 'teacher' })
+      }).catch(function(err) { console.error('Submit error:', err); });
     }
 
     </script><!-- redeploy trigger Sat May  9 04:04:32 HKT 2026 -->

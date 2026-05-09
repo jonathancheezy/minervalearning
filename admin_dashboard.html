@@ -137,6 +137,12 @@
   </style>
 </head>
 <body>
+<!-- DEBUG DATA -->
+<div id="debug-data" style="position:fixed;top:70px;right:10px;background:#fff;border:2px solid #7C3AED;border-radius:12px;padding:12px;z-index:9999;max-width:320px;max-height:400px;overflow:auto;font-size:12px;display:none;">
+  <strong style="color:#7C3AED">DEBUG DATA</strong>
+  <pre id="debug-content" style="margin:6px 0 0;font-size:11px;"></pre>
+</div>
+
 
 <header class="header">
   <a href="/" class="header-logo">
@@ -334,8 +340,15 @@ async function loadRegistrations() {
     console.log('[Admin] Querying Firestore...');
     const snapshot = await getDocs(q);
     console.log('[Admin] Firestore snapshot size:', snapshot.size);
-    alert('Firestore returned ' + snapshot.size + ' documents');
-    allRegistrations = snapshot.docs.map(d => ({ id: d.id, ...flatten(d.data()) }));
+    alert('Firestore returned ' + snapshot.size + ' documents. allRegistrations will have: ' + snapshot.docs.length);
+    allRegistrations = snapshot.docs.map(d => { const flat = flatten(d.data()); flat._id = d.id; return flat; });
+    // Show debug
+    const debugDiv = document.getElementById('debug-data');
+    const debugContent = document.getElementById('debug-content');
+    if (debugDiv && debugContent) {
+      debugContent.textContent = JSON.stringify({ count: allRegistrations.length, sample: allRegistrations.slice(0,3) }, null, 2);
+      debugDiv.style.display = 'block';
+    }
     allRegistrations.sort((a, b) => {
       const ta = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;
       const tb = b.submittedAt ? new Date(b.submittedAt).getTime() : 0;

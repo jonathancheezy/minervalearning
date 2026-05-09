@@ -310,7 +310,7 @@ async function verifyAdmin() {
   const token = sessionStorage.getItem('minerva_admin_token');
   if (!token) { window.location.href = '/admin_login'; return false; }
   try {
-    const res = await fetch(AUTH_BASE + '/verify', {
+    const res = await fetch(AUTH_BASE + '/api/auth/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token })

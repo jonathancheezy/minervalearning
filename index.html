@@ -682,141 +682,25 @@
         An AI-powered learning marketplace connecting parents with verified teachers — zero platform fees during early access.
       </p>
 
-      <div class="form-section" id="signup">
+      <div class="form-section" id="signup" style="text-align:center;padding:48px 40px">
 
-        <div class="form-tabs">
-          <button class="form-tab active" id="tab-parent" onclick="switchTab('parent')">Parent / Student</button>
-          <button class="form-tab" id="tab-teacher" onclick="switchTab('teacher')">Teacher</button>
+        <div style="margin-bottom:32px">
+          <h3 style="font-family:'DM Sans',sans-serif;font-size:1.5rem;font-weight:700;color:var(--dark);margin:0 0 8px">Ready to get started?</h3>
+          <p style="color:var(--gray-500);font-size:0.9375rem;margin:0">Choose how you want to join Minerva</p>
         </div>
 
-        <!-- PARENT FORM -->
-        <div class="form-body active" id="form-parent">
-          <form id="parent-form" onsubmit="handleParent(event)">
-            <div class="form-row">
-              <div class="form-group">
-                <label>First name</label>
-                <input type="text" name="firstName" placeholder="e.g. Sarah" required />
-              </div>
-              <div class="form-group">
-                <label>Last name</label>
-                <input type="text" name="lastName" placeholder="e.g. Chan" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Email</label>
-              <input type="email" name="email" placeholder="you@example.com" required />
-            </div>
-            <div class="form-group">
-              <label>Student level</label>
-              <select name="level" required>
-                <option value="" disabled selected>Select level</option>
-                <option>Primary 1–3</option>
-                <option>Primary 4–6</option>
-                <option>Secondary 1–3</option>
-                <option>Secondary 4–6 (HKDSE)</option>
-                <option>University / Adult</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>WhatsApp number</label>
-              <input type="tel" name="whatsapp" inputmode="numeric" pattern="[0-9+ ]*" placeholder="+852 9123 4567" />
-            </div>
-            <div class="form-group">
-              <label>Subject(s) needed</label>
-              <div class="multi-select" id="parent-subject-select">
-                <div class="multi-select-trigger" onclick="toggleMultiSelect('parent')">
-                  <span class="multi-select-placeholder">Select subjects</span>
-                </div>
-                <div class="multi-select-dropdown" id="parent-subject-dropdown"></div>
-              </div>
-              <input type="hidden" name="subjects" id="parent-subjects-hidden" />
-            </div>
-            <div class="form-group" id="parent-subject-other-group" style="display:none">
-              <label>Please specify</label>
-              <input type="text" name="subjectsOther" placeholder="e.g. History, Literature" />
-            </div>
-            <button type="submit" class="btn btn-primary">
-              <i data-lucide="user-plus" width="16" height="16"></i>
-              Join Early Access — Free
-            </button>
-            <p class="form-note">No payment now. No fees during early access.</p>
-          </form>
-          <div class="success-msg" id="parent-success">
-            <div class="success-icon"><i data-lucide="check" width="22" height="22"></i></div>
-            <h3>You are on the list!</h3>
-            <p>We will reach out when Minerva launches in Hong Kong.</p>
-          </div>
+        <div style="display:flex;flex-direction:column;gap:16px;max-width:380px;margin:0 auto">
+          <a href="parent_register.html" class="btn btn-primary" style="padding:18px 24px;font-size:1rem;border-radius:14px;box-shadow:0 4px 16px rgba(0,140,114,0.25);text-decoration:none;justify-content:center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Find a Tutor — Parent / Student
+          </a>
+          <a href="teacher_register.html" class="btn btn-secondary" style="padding:18px 24px;font-size:1rem;border-radius:14px;border:2px solid var(--gray-200);color:var(--gray-700);text-decoration:none;justify-content:center;background:var(--white)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            Become a Tutor — Teacher
+          </a>
         </div>
 
-        <!-- TEACHER FORM -->
-        <div class="form-body" id="form-teacher">
-          <form id="teacher-form" onsubmit="handleTeacher(event)">
-            <div class="form-row">
-              <div class="form-group">
-                <label>First name</label>
-                <input type="text" name="firstName" placeholder="e.g. Marcus" required />
-              </div>
-              <div class="form-group">
-                <label>Last name</label>
-                <input type="text" name="lastName" placeholder="e.g. Chan" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Email</label>
-              <input type="email" name="email" placeholder="you@example.com" required />
-            </div>
-            <div class="form-group">
-              <label>WhatsApp number</label>
-              <input type="tel" name="whatsapp" inputmode="numeric" pattern="[0-9+ ]*" placeholder="+852 9123 4567" required />
-            </div>
-            <div class="form-group">
-              <label>Subject(s) you teach</label>
-              <div class="multi-select" id="teacher-subject-select">
-                <div class="multi-select-trigger" onclick="toggleMultiSelect('teacher')">
-                  <span class="multi-select-placeholder">Select subjects</span>
-                </div>
-                <div class="multi-select-dropdown" id="teacher-subject-dropdown"></div>
-              </div>
-              <input type="hidden" name="subjects" id="teacher-subjects-hidden" />
-            </div>
-            <div class="form-group" id="teacher-subject-other-group" style="display:none">
-              <label>Please specify</label>
-              <input type="text" name="subjectsOther" placeholder="e.g. History, Literature" />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Experience</label>
-                <select name="experience" required>
-                  <option value="" disabled selected>Select</option>
-                  <option>0–1 years</option>
-                  <option>2–3 years</option>
-                  <option>4–6 years</option>
-                  <option>7+ years</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Student level</label>
-                <div class="multi-select" id="teacher-level-select">
-                  <div class="multi-select-trigger" onclick="toggleMultiSelect('teacher-level')">
-                    <span class="multi-select-placeholder">Select level(s)</span>
-                  </div>
-                  <div class="multi-select-dropdown" id="teacher-level-dropdown"></div>
-                </div>
-                <input type="hidden" name="level" id="teacher-levels-hidden" />
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary">
-              <i data-lucide="briefcase" width="16" height="16"></i>
-              Get Your First Free Match
-            </button>
-            <p class="form-note">First student is free. Subscription plans coming soon.</p>
-          </form>
-          <div class="success-msg" id="teacher-success">
-            <div class="success-icon"><i data-lucide="check" width="22" height="22"></i></div>
-            <h3>You are on the list!</h3>
-            <p>First match is on us. We will contact you when we launch.</p>
-          </div>
-        </div>
+        <p style="margin-top:20px;font-size:0.8125rem;color:var(--gray-400)">Zero platform fees during early access · No payment now</p>
 
       </div>
     </div>

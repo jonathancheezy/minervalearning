@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Become a Tutor — Minerva Learning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --navy: #1e3a5f; --teal: #008C72; --teal-light: #00a88a; --gold: #F9A828; --white: #ffffff; --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-300: #d1d5db; --gray-400: #9ca3af; --gray-500: #6b7280; --gray-600: #4b5563; --gray-700: #374151; --gray-800: #1f2937; --red-500: #ef4444; --radius: 12px; --shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--gray-50); color: var(--gray-800); min-height: 100vh; display: flex; flex-direction: column; }
+    .page-header { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .page-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); font-weight: 700; font-size: 1.25rem; }
+    .page-logo-icon { width: 36px; height: 36px; background: var(--navy); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1.1rem; }
+    .back-link { color: var(--gray-500); text-decoration: none; font-size: 0.875rem; display: flex; align-items: center; gap: 4px; transition: color 0.2s; }
+    .back-link:hover { color: var(--navy); }
+    .page-main { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 48px 20px; }
+    .reg-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; max-width: 560px; }
+    .reg-card-header { background: linear-gradient(135deg, var(--teal), #00a88a); padding: 32px 40px 28px; color: var(--white); }
+    .reg-card-header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+    .reg-card-header p { color: rgba(255,255,255,0.75); font-size: 0.9375rem; }
+    .reg-card-body { padding: 32px 40px 36px; }
+    .steps-indicator { display: flex; gap: 8px; margin-bottom: 28px; }
+    .step-dot { height: 4px; flex: 1; background: var(--gray-200); border-radius: 2px; transition: background 0.3s; }
+    .step-dot.active { background: var(--teal); }
+    .step-dot.done { background: var(--teal); }
+    .step { display: none; }
+    .step.active { display: block; }
+    .step-title { font-size: 1.125rem; font-weight: 600; color: var(--gray-800); margin-bottom: 4px; }
+    .step-subtitle { font-size: 0.875rem; color: var(--gray-500); margin-bottom: 24px; }
+    .form-group { margin-bottom: 18px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--gray-700); margin-bottom: 6px; }
+    label span { font-weight: 400; color: var(--gray-400); }
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200); border-radius: 8px; font-size: 0.9375rem; font-family: inherit; color: var(--gray-800); background: var(--white); transition: border-color 0.2s, box-shadow 0.2s; appearance: none; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,140,114,0.1); }
+    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+    textarea { resize: vertical; min-height: 90px; }
+    .form-hint { font-size: 0.8125rem; color: var(--gray-400); margin-top: 4px; }
+    .mode-options { display: flex; gap: 8px; }
+    .mode-btn { flex: 1; padding: 10px; border: 1.5px solid var(--gray-200); border-radius: 8px; background: var(--white); font-size: 0.875rem; font-weight: 500; color: var(--gray-600); cursor: pointer; transition: all 0.2s; }
+    .mode-btn:hover { border-color: var(--gray-300); }
+    .mode-btn.active { border-color: var(--teal); background: rgba(0,140,114,0.06); color: var(--teal); }
+    .subjects-wrap { border: 1.5px solid var(--gray-200); border-radius: 8px; overflow: hidden; }
+    .subjects-wrap:focus-within { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,140,114,0.1); }
+    .subjects-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 14px; min-height: 46px; cursor: pointer; align-items: center; }
+    .subject-chip { display: inline-flex; align-items: center; gap: 4px; background: rgba(0,140,114,0.1); color: var(--teal); padding: 4px 10px; border-radius: 20px; font-size: 0.8125rem; font-weight: 500; }
+    .subject-chip-remove { cursor: pointer; opacity: 0.7; font-size: 14px; line-height: 1; }
+    .subject-chip-remove:hover { opacity: 1; }
+    .subject-placeholder { color: var(--gray-400); font-size: 0.9375rem; }
+    .subjects-dropdown { border-top: 1px solid var(--gray-200); padding: 8px; display: none; flex-wrap: wrap; gap: 6px; }
+    .subjects-dropdown.open { display: flex; }
+    .subject-option { padding: 6px 12px; border-radius: 20px; font-size: 0.8125rem; cursor: pointer; border: 1px solid var(--gray-200); color: var(--gray-600); background: var(--white); transition: all 0.15s; }
+    .subject-option:hover { border-color: var(--teal); color: var(--teal); }
+    .subject-option.selected { background: var(--teal); border-color: var(--teal); color: var(--white); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-size: 0.9375rem; font-weight: 600; font-family: inherit; cursor: pointer; border: none; transition: all 0.2s; text-decoration: none; }
+    .btn-primary { background: var(--teal); color: var(--white); }
+    .btn-primary:hover { background: var(--teal-light); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:disabled { background: var(--gray-300); cursor: not-allowed; transform: none; }
+    .btn-secondary { background: var(--gray-100); color: var(--gray-700); }
+    .btn-secondary:hover { background: var(--gray-200); }
+    .btn-ghost { background: transparent; color: var(--gray-500); }
+    .btn-ghost:hover { color: var(--gray-700); }
+    .btn-full { width: 100%; }
+    .btn-group { display: flex; gap: 12px; margin-top: 24px; }
+    .success-page { text-align: center; padding: 48px 20px; }
+    .success-icon { width: 72px; height: 72px; background: rgba(0,140,114,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--teal); }
+    .success-page h2 { font-size: 1.5rem; font-weight: 700; color: var(--gray-800); margin-bottom: 10px; }
+    .success-page p { color: var(--gray-500); margin-bottom: 8px; }
+    .success-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,140,114,0.08); color: var(--teal); padding: 6px 14px; border-radius: 20px; font-size: 0.8125rem; font-weight: 500; margin: 16px 0 32px; }
+    .page-footer { text-align: center; padding: 24px; color: var(--gray-400); font-size: 0.8125rem; }
+    .otp-section { text-align: center; }
+    .otp-code-display { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+    .otp-digit { width: 48px; height: 56px; text-align: center; font-size: 1.5rem; font-weight: 600; border: 2px solid var(--gray-200); border-radius: 10px; }
+    .otp-digit.filled { border-color: var(--teal); background: rgba(0,140,114,0.04); }
+    .otp-resend { font-size: 0.875rem; color: var(--gray-500); margin-top: 16px; }
+    .otp-resend a { color: var(--teal); text-decoration: none; cursor: pointer; }
+    .otp-resend a:hover { text-decoration: underline; }
+    .otp-timer { color: var(--gray-400); }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <a href="https://minervalearning.minerva-ai-learning.workers.dev/" class="page-logo">
+      <div class="page-logo-icon">✦</div>
+      Minerva
+    </a>
+    <a href="https://minervalearning.minerva-ai-learning.workers.dev/" class="back-link">← Back to home</a>
+  </header>
+
+  <main class="page-main">
+    <div class="reg-card">
+      <div class="success-page" id="successPage" style="display:none">
+        <div class="success-icon">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <h2>You're on the list!</h2>
+        <p>We'll match you with students and reach out via WhatsApp.</p>
+        <div class="success-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          Zero platform fees during early access
+        </div>
+        <a href="https://minervalearning.minerva-ai-learning.workers.dev/" class="btn btn-secondary">Back to home</a>
+      </div>
+
+      <div id="formPage">
+        <div class="reg-card-header">
+          <h1>Become a Tutor</h1>
+          <p>Join our network and start teaching — zero platform fees during early access.</p>
+        </div>
+        <div class="reg-card-body">
+          <div class="steps-indicator">
+            <div class="step-dot active" id="dot1"></div>
+            <div class="step-dot" id="dot2"></div>
+            <div class="step-dot" id="dot3"></div>
+          </div>
+
+          <form onsubmit="return false;">
+
+            <!-- STEP 1: Contact + OTP -->
+            <div class="step active" id="step1">
+              <div class="step-title">Your contact details</div>
+              <div class="step-subtitle">We'll reach out via WhatsApp to confirm your registration.</div>
+              <div class="form-row">
+                <div class="form-group"><label>First name</label><input type="text" id="firstName" placeholder="e.g. Marcus" required /></div>
+                <div class="form-group"><label>Last name</label><input type="text" id="lastName" placeholder="e.g. Lee" /></div>
+              </div>
+              <div class="form-group"><label>Email</label><input type="email" id="email" placeholder="you@example.com" required /></div>
+              <div class="form-group"><label>WhatsApp number</label><input type="tel" id="whatsapp" placeholder="+852 9123 4567" required /></div>
+              <div id="otpSection" style="display:none">
+                <div class="otp-section">
+                  <p style="color:var(--gray-600);margin-bottom:16px">We sent a 4-digit code to <strong id="otpTargetPhone"></strong></p>
+                  <div class="otp-code-display">
+                    <input type="text" class="otp-digit" maxlength="1" id="otp1" inputmode="numeric" pattern="[0-9]" oninput="otpInput(this,1)" onkeydown="otpKey(event,1)">
+                    <input type="text" class="otp-digit" maxlength="1" id="otp2" inputmode="numeric" pattern="[0-9]" oninput="otpInput(this,2)" onkeydown="otpKey(event,2)">
+                    <input type="text" class="otp-digit" maxlength="1" id="otp3" inputmode="numeric" pattern="[0-9]" oninput="otpInput(this,3)" onkeydown="otpKey(event,3)">
+                    <input type="text" class="otp-digit" maxlength="1" id="otp4" inputmode="numeric" pattern="[0-9]" oninput="otpInput(this,4)" onkeydown="otpKey(event,4)">
+                  </div>
+                  <div class="otp-resend"><span id="otpTimer" class="otp-timer"></span><a id="otpResend" onclick="sendOTP()" style="display:none">Resend code</a></div>
+                </div>
+              </div>
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary btn-full" id="step1Btn" onclick="handleStep1()">Continue →</button>
+              </div>
+            </div>
+
+            <!-- STEP 2: Background -->
+            <div class="step" id="step2">
+              <div class="step-title">About you</div>
+              <div class="step-subtitle">Tell students what makes you a great tutor.</div>
+              <div class="form-group"><label>About you <span>(shown to students)</span></label><textarea id="bio" placeholder="E.g. Patient teacher with 5 years DSE Maths experience. I break down concepts simply and use real exam questions..."></textarea></div>
+              <div class="form-row">
+                <div class="form-group"><label>Years of experience</label><select id="yearsExp"><option value="" disabled selected>Select</option><option>0-1 years</option><option>2-3 years</option><option>4-5 years</option><option>6-10 years</option><option>10+ years</option></select></div>
+                <div class="form-group"><label>Teaching qualification</label><select id="qualification"><option value="" disabled selected>Select</option><option>PGDE</option><option>B.Ed</option><option>M.Ed</option><option>Other teaching certificate</option><option>None</option></select></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Hourly rate</label><select id="hourlyRate"><option value="" disabled selected>Select range</option><option>$150–250</option><option>$250–400</option><option>$400–600</option><option>$600–800</option><option>$800+</option></select></div>
+                <div class="form-group"><label>Student age groups</label><select id="ageGroups"><option value="" disabled selected>Select</option><option>Primary (P1–P6)</option><option>Secondary (F.1–F.3)</option><option>Senior secondary (F.4–F.6)</option><option>University / Adult</option><option>All ages</option></select></div>
+              </div>
+              <div class="form-group"><label>Subject(s) you teach</label>
+                <div class="subjects-wrap" id="subjectsWrap">
+                  <div class="subjects-chips" id="subjectsChips" onclick="toggleSubjects()"><span class="subject-placeholder" id="subjectsPlaceholder">Select subjects</span></div>
+                  <div class="subjects-dropdown" id="subjectsDropdown">
+                    <div class="subject-option" onclick="toggleSubject(this,'Math')">Math</div>
+                    <div class="subject-option" onclick="toggleSubject(this,'English')">English</div>
+                    <div class="subject-option" onclick="toggleSubject(this,'Chinese')">Chinese</div>
+                    <div class="subject-option" onclick="toggleSubject(this,'Physics')">Physics</div>
+                    <div class="subject-option" onclick="toggleSubject(this,'Chemistry')">Chemistry</div>
+                    <div class="subject-option" onclick="toggleSubject(this,'Biology')">Biology</div>
+                    <div class="subject-option" onclick="toggleSubject(this,'Economics')">Economics</div>
+                    <div class="subject-option" onclick="toggleSubject(this,'Geography')">Geography</div>
+                    <div class="subject-option" onclick="toggleSubject(this,'History')">History</div>
+                    <div class="subject-option" onclick="toggleSubject(this,'Music')">Music</div>
+                    <div class="subject-option" onclick="toggleSubject(this,'Art')">Art</div>
+                    <div class="subject-option" onclick="toggleSubject(this,'Other')">Other</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group"><label>Other subjects you can teach <span>(optional)</span></label><input type="text" id="otherSubjects" placeholder="E.g. Chemistry, Biology" /></div>
+              <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+                <button type="button" class="btn btn-primary" onclick="goStep(3)" style="flex:1">Continue →</button>
+              </div>
+            </div>
+
+            <!-- STEP 3: Coverage & Availability -->
+            <div class="step" id="step3">
+              <div class="step-title">Coverage & availability</div>
+              <div class="step-subtitle">Last step — tell us where and when you can teach.</div>
+              <div class="form-row">
+                <div class="form-group"><label>Preferred area</label><select id="district"><option value="" disabled selected>Select</option><option>Hong Kong Island</option><option>Kowloon</option><option>New Territories</option><option>Online only</option><option>All areas</option></select></div>
+                <div class="form-group"><label>Max travel distance</label><select id="travelDistance"><option value="" disabled selected>Select</option><option>Within 30 mins</option><option>Within 1 hour</option><option>1 hour+</option><option>No travel — online only</option></select></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Lesson duration you offer</label><select id="lessonDuration"><option value="" disabled selected>Select</option><option>1 hour</option><option>1.5 hours</option><option>2 hours</option><option>Flexible</option></select></div>
+                <div class="form-group"><label>Exam systems taught <span>(optional)</span></label><select id="examSystems"><option value="">Select</option><option>DSE (Hong Kong Diploma)</option><option>IB (International Baccalaureate)</option><option>IGCSE / O-Level</option><option>GCSE</option><option>AP (Advanced Placement)</option><option>Other</option><option>N/A</option></select></div>
+              </div>
+              <div class="form-group"><label>Preferred lesson mode</label>
+                <div class="mode-options">
+                  <button type="button" class="mode-btn active" data-mode="in-person" onclick="setMode(this)">In-person</button>
+                  <button type="button" class="mode-btn" data-mode="online" onclick="setMode(this)">Online</button>
+                  <button type="button" class="mode-btn" data-mode="both" onclick="setMode(this)">Both</button>
+                </div>
+              </div>
+              <div class="form-group"><label>Typical availability</label><select id="availability"><option value="" disabled selected>Select</option><option>Weekday mornings</option><option>Weekday afternoons</option><option>Weekday evenings</option><option>Weekend mornings</option><option>Weekend afternoons</option><option>Weekend evenings</option><option>Flexible schedule</option></select></div>
+              <div class="form-group"><label>How did you hear about Minerva? <span>(optional)</span></label><select id="source"><option value="">Select</option><option>Google search</option><option>Facebook</option><option>Instagram</option><option>LinkedIn</option><option>Friend / referral</option><option>Education forum</option><option>Other</option></select></div>
+              <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+                <button type="button" class="btn btn-primary btn-full" id="submitBtn" onclick="submitForm()">Complete Registration →</button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer">2026 Minerva Learning Ltd. Hong Kong</footer>
+
+  <script>
+    let lessonMode = 'in-person';
+    let selectedSubjects = [];
+    let otpSent = false, otpVerified = false;
+    let otpTimerInterval;
+
+    function toggleSubjects() { document.getElementById('subjectsDropdown').classList.toggle('open'); }
+    function toggleSubject(el, subject) {
+      el.classList.toggle('selected');
+      if (el.classList.contains('selected')) { if (!selectedSubjects.includes(subject)) selectedSubjects.push(subject); }
+      else { selectedSubjects = selectedSubjects.filter(s => s !== subject); }
+      renderSubjectChips();
+    }
+    function renderSubjectChips() {
+      const chips = document.getElementById('subjectsChips');
+      const placeholder = document.getElementById('subjectsPlaceholder');
+      if (selectedSubjects.length === 0) { placeholder.style.display = ''; placeholder.textContent = 'Select subjects'; chips.querySelectorAll('.subject-chip').forEach(c => c.remove()); }
+      else {
+        placeholder.style.display = 'none';
+        chips.querySelectorAll('.subject-chip').forEach(c => c.remove());
+        selectedSubjects.forEach(s => {
+          const chip = document.createElement('span');
+          chip.className = 'subject-chip';
+          chip.innerHTML = s + '<span class="subject-chip-remove" onclick="removeSubject(event,\'' + s + '\')">×</span>';
+          chips.appendChild(chip);
+        });
+      }
+    }
+    function removeSubject(e, subject) { e.stopPropagation(); selectedSubjects = selectedSubjects.filter(s => s !== subject); document.querySelectorAll('.subject-option').forEach(el => { if (el.textContent.trim() === subject) el.classList.remove('selected'); }); renderSubjectChips(); }
+    document.addEventListener('click', function(e) { const wrap = document.getElementById('subjectsWrap'); if (wrap && !wrap.contains(e.target)) { document.getElementById('subjectsDropdown').classList.remove('open'); } });
+    function setMode(btn) { document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); lessonMode = btn.getAttribute('data-mode'); }
+    function goStep(n) { document.querySelectorAll('.step').forEach(s => s.classList.remove('active')); document.getElementById('step'+n).classList.add('active'); document.querySelectorAll('.step-dot').forEach((d,i) => { d.classList.remove('active','done'); if (i+1 < n) d.classList.add('done'); if (i+1 === n) d.classList.add('active'); }); window.scrollTo({top:0,behavior:'smooth'}); }
+    function handleStep1() {
+      const firstName = document.getElementById('firstName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const whatsapp = document.getElementById('whatsapp').value.trim();
+      if (!firstName || !email || !whatsapp) { alert('Please fill in all required fields.'); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return; }
+      if (!otpSent) {
+        document.getElementById('otpSection').style.display = 'block';
+        document.getElementById('otpTargetPhone').textContent = whatsapp;
+        document.getElementById('step1Btn').textContent = 'Verify Code →';
+        otpSent = true;
+        startOtpTimer(60);
+        document.getElementById('otp1').focus();
+      } else if (!otpVerified) {
+        const code = [1,2,3,4].map(i => document.getElementById('otp'+i).value).join('');
+        if (code.length !== 4) { alert('Please enter the 4-digit code.'); return; }
+        otpVerified = true;
+        clearInterval(otpTimerInterval);
+        goStep(2);
+      }
+    }
+    function startOtpTimer(seconds) { let remaining = seconds; const timerEl = document.getElementById('otpTimer'); const resendEl = document.getElementById('otpResend'); timerEl.textContent = 'Resend in ' + remaining + 's'; resendEl.style.display = 'none'; otpTimerInterval = setInterval(() => { remaining--; if (remaining <= 0) { clearInterval(otpTimerInterval); timerEl.textContent = ''; resendEl.style.display = 'inline'; } else { timerEl.textContent = 'Resend in ' + remaining + 's'; } }, 1000); }
+    function sendOTP() { startOtpTimer(60); }
+    function otpInput(el, n) { el.value = el.value.replace(/[^0-9]/g,''); if (el.value && n < 4) { document.getElementById('otp'+(n+1)).focus(); } document.getElementById('otp'+n).classList.toggle('filled', el.value !== ''); }
+    function otpKey(e, n) { if (e.key === 'Backspace' && !e.target.value && n > 1) { document.getElementById('otp'+(n-1)).focus(); } }
+    function submitForm() {
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true; btn.textContent = 'Submitting...';
+      const get = id => document.getElementById(id).value;
+      const fields = {
+        role: 'teacher', email: get('email'), firstName: get('firstName'), lastName: get('lastName'), whatsapp: get('whatsapp'),
+        bio: get('bio'), yearsExp: get('yearsExp'), qualification: get('qualification'), hourlyRate: get('hourlyRate'),
+        ageGroups: get('ageGroups'), subjects: selectedSubjects.join(', '), otherSubjects: get('otherSubjects'),
+        district: get('district'), travelDistance: get('travelDistance'), lessonMode: lessonMode,
+        lessonDuration: get('lessonDuration'), examSystems: get('examSystems'),
+        availability: get('availability'), source: get('source'),
+        status: 'pending', submittedAt: new Date().toISOString(), userType: 'teacher'
+      };
+      Object.keys(fields).forEach(k => { if (fields[k] === '' || fields[k] === null || fields[k] === undefined) delete fields[k]; });
+      const firestoreFields = {}; for (const [k,v] of Object.entries(fields)) { firestoreFields[k] = { stringValue: String(v) }; }
+      fetch('https://minerva-submit.minerva-ai-learning.workers.dev/api/submit', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({fields:firestoreFields,role:'teacher'}) })
+      .then(r => r.json()).then(data => { document.getElementById('formPage').style.display = 'none'; document.getElementById('successPage').style.display = 'block'; })
+      .catch(err => { console.error('Submit error:', err); btn.disabled = false; btn.textContent = 'Complete Registration →'; alert('Submission failed. Please try again.'); });
+    }
+  </script>
+</body>
+</html>

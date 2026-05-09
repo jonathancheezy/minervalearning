@@ -296,8 +296,11 @@
       border: 1.5px solid var(--border);
     }
     .btn-secondary:hover {
-      background: var(--surface-2);
-      border-color: var(--gray-300);
+      background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 6px 24px rgba(14,165,233,0.4);
+      transform: translateY(-2px);
     }
 
     .form-note {
@@ -678,11 +681,11 @@
         </div>
 
         <div style="display:flex;flex-direction:column;gap:16px;max-width:380px;margin:0 auto">
-          <a href="parent_register.html" class="btn btn-primary" style="padding:18px 24px;font-size:1rem;border-radius:14px;box-shadow:0 8px 28px rgba(124,58,237,0.5);text-decoration:none;justify-content:center">
+          <a href="parent_register.html" class="btn btn-primary" style="padding:18px 24px;font-size:1rem;border-radius:14px;box-shadow:none;text-decoration:none;justify-content:center">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             Find a Tutor — Parent / Student
           </a>
-          <a href="teacher_register.html" class="btn btn-secondary" style="padding:18px 24px;font-size:1rem;border-radius:14px;border:2px solid var(--gray-200);color:var(--gray-700);text-decoration:none;justify-content:center;background:var(--white)">
+          <a href="teacher_register.html" class="btn btn-secondary" style="padding:18px 24px;font-size:1rem;border-radius:14px;text-decoration:none;justify-content:center;background:linear-gradient(135deg,#0EA5E9,#38BDF8);color:#fff;border:none;box-shadow:0 4px 16px rgba(14,165,233,0.3)">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
             Become a Tutor — Teacher
           </a>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head><title>Debug Test</title></head>
+<body>
+<h2 id="status">Testing...</h2>
+<pre id="output" style="font-size:11px;background:#f5f5f5;padding:10px;max-width:800px;overflow:auto;height:400px"></pre>
+<script type="module">
+const output = document.getElementById('output');
+const status = document.getElementById('status');
+function log(msg) { output.textContent += msg + '\n'; }
+try {
+  const FIRESTORE_KEY = 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s';
+  const FIRESTORE_PROJECT = 'minerva-learning-a7eac';
+  const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT}/databases/(default)/documents`;
+
+  function fromFirestoreValue(v) {
+    if (!v || typeof v !== 'object') return v;
+    if (v.stringValue !== undefined) return v.stringValue;
+    if (v.integerValue !== undefined) return String(v.integerValue);
+    if (v.booleanValue !== undefined) return v.booleanValue;
+    if (v.doubleValue !== undefined) return String(v.doubleValue);
+    if (v.timestampValue !== undefined) return v.timestampValue;
+    if (v.arrayValue && v.arrayValue.values) {
+      try { return v.arrayValue.values.map(x => x.stringValue || x.integerValue || '').join(', '); } catch { return ''; }
+    }
+    return v;
+  }
+
+  function flattenDoc(doc) {
+    const flat = { _id: doc.name.split('/').pop() };
+    if (doc.fields) {
+      for (const [k, v] of Object.entries(doc.fields)) {
+        flat[k] = fromFirestoreValue(v);
+      }
+    }
+    return flat;
+  }
+
+  log('Starting load...');
+  const url = FIRESTORE_URL + '/registrations?key=' + FIRESTORE_KEY + '&pageSize=200';
+  log('URL: ' + url);
+  
+  fetch(url).then(r => {
+    log('Response status: ' + r.status);
+    return r.json();
+  }).then(d => {
+    const docs = d.documents || [];
+    log('Docs count: ' + docs.length);
+    docs.forEach(doc => {
+      const flat = flattenDoc(doc);
+      log('  - ' + flat._id + ' | ' + (flat.firstName || '?') + ' ' + (flat.lastName || '') + ' | role=' + (flat.role || '?'));
+    });
+    status.textContent = 'SUCCESS - ' + docs.length + ' docs loaded';
+    status.style.color = 'green';
+  }).catch(err => {
+    log('ERROR: ' + err.message);
+    status.textContent = 'FAILED: ' + err.message;
+    status.style.color = 'red';
+  });
+} catch(e) {
+  log('TOP LEVEL ERROR: ' + e.message);
+  status.textContent = 'ERROR: ' + e.message;
+  status.style.color = 'red';
+}
+</script>
+</body>
+</html>

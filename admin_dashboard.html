@@ -323,7 +323,13 @@ async function verifyAdmin() {
   }
 }
 
-verifyAdmin().then(valid => { if (!valid) return; loadRegistrations(); });
+alert('Starting verifyAdmin...');
+verifyAdmin().then(valid => {
+  alert('verifyAdmin returned: ' + valid);
+  if (!valid) { alert('Not valid, redirecting to login'); return; }
+  alert('Calling loadRegistrations...');
+  loadRegistrations();
+});
 
 document.getElementById('logout-btn').addEventListener('click', () => {
   sessionStorage.removeItem('minerva_admin_token');

@@ -949,17 +949,17 @@
 
   <!-- PARENT REGISTRATION POPUP -->
   <div class="reg-overlay" id="parentRegOverlay">
-    <div class="reg-modal">
+    <div class="reg-modal" style="max-width:540px">
       <div class="reg-modal-header">
         <div>
-          <h3>Student details</h3>
-          <p>Help us find the right teacher for you</p>
+          <h3>Complete your profile</h3>
+          <p>Help us find the perfect teacher match</p>
         </div>
         <button class="reg-close" onclick="closeParentReg()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
-      <div class="reg-body">
+      <div class="reg-body" style="padding:12px 20px 20px">
         <div class="reg-section">
           <div class="reg-section-title">Student information</div>
           <div class="reg-row">
@@ -995,15 +995,58 @@
             </div>
           </div>
         </div>
+
         <div class="reg-section">
-          <div class="reg-section-title">Learning preferences</div>
+          <div class="reg-section-title">Learning goals</div>
           <div class="reg-group">
-            <label>Preferred district</label>
-            <select id="reg-district">
-              <option value="" disabled selected>Select area</option>
-              <option>Hong Kong Island</option><option>Kowloon</option>
-              <option>New Territories</option><option>Online only</option>
+            <label>What does the student want to achieve?</label>
+            <select id="reg-goal">
+              <option value="" disabled selected>Select main goal</option>
+              <option>Exam preparation (DSE / IB / IGCSE)</option>
+              <option>Improve grades at school</option>
+              <option>Catch up with class</option>
+              <option>Learn a new subject</option>
+              <option>Homework guidance</option>
+              <option>Speaking / conversation practice</option>
+              <option>Other</option>
             </select>
+          </div>
+          <div class="reg-group">
+            <label>Current level</label>
+            <select id="reg-current-level">
+              <option value="" disabled selected>How is the student performing?</option>
+              <option>Struggling — needs significant support</option>
+              <option>Below average — room to improve</option>
+              <option>Average — consistent progress wanted</option>
+              <option>Above average — wants to excel</option>
+              <option>Not sure</option>
+            </select>
+          </div>
+          <div class="reg-group">
+            <label>Anything else we should know? <span style="font-weight:400;color:var(--gray-400)">(optional)</span></label>
+            <input type="text" id="reg-notes" placeholder="e.g. Gets distracted easily, prefers female teachers" style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:0.9375rem;box-sizing:border-box" />
+          </div>
+        </div>
+
+        <div class="reg-section">
+          <div class="reg-section-title">Preferences</div>
+          <div class="reg-row">
+            <div class="reg-group">
+              <label>Preferred area</label>
+              <select id="reg-district">
+                <option value="" disabled selected>Select</option>
+                <option>Hong Kong Island</option><option>Kowloon</option>
+                <option>New Territories</option><option>Online only</option>
+              </select>
+            </div>
+            <div class="reg-group">
+              <label>Lesson frequency</label>
+              <select id="reg-frequency">
+                <option value="" disabled selected>Select</option>
+                <option>Once a week</option><option>Twice a week</option>
+                <option>3+ times a week</option><option>Flexible / as needed</option>
+              </select>
+            </div>
           </div>
           <div class="reg-group">
             <label>Preferred lesson mode</label>
@@ -1021,19 +1064,23 @@
 
   <!-- TEACHER REGISTRATION POPUP -->
   <div class="reg-overlay" id="teacherRegOverlay">
-    <div class="reg-modal">
+    <div class="reg-modal" style="max-width:540px">
       <div class="reg-modal-header">
         <div>
-          <h3>Teaching profile</h3>
+          <h3>Complete your profile</h3>
           <p>Help us find the right students for you</p>
         </div>
         <button class="reg-close" onclick="closeTeacherReg()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
-      <div class="reg-body">
+      <div class="reg-body" style="padding:12px 20px 20px">
         <div class="reg-section">
-          <div class="reg-section-title">Your details</div>
+          <div class="reg-section-title">Background</div>
+          <div class="reg-group">
+            <label>About you <span style="font-weight:400;color:var(--gray-400)">(for students to read)</span></label>
+            <textarea id="reg-bio" rows="3" placeholder="Tell students about your teaching style, experience, and what makes your lessons unique..." style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:0.9375rem;box-sizing:border-box;font-family:inherit;resize:vertical;min-height:72px"></textarea>
+          </div>
           <div class="reg-row">
             <div class="reg-group">
               <label>Years of experience</label>
@@ -1048,14 +1095,18 @@
               <select id="reg-qualification">
                 <option value="" disabled selected>Select</option>
                 <option>PGDE</option><option>B.Ed</option><option>M.Ed</option>
-                <option>Other teaching cert</option><option>None</option>
+                <option>Other teaching certificate</option><option>None</option>
               </select>
             </div>
           </div>
+        </div>
+
+        <div class="reg-section">
+          <div class="reg-section-title">Coverage & preferences</div>
           <div class="reg-group">
-            <label>Preferred districts</label>
+            <label>Preferred area</label>
             <select id="reg-teacher-district">
-              <option value="" disabled selected>Select area</option>
+              <option value="" disabled selected>Select</option>
               <option>Hong Kong Island</option><option>Kowloon</option>
               <option>New Territories</option><option>Online only</option>
             </select>
@@ -1067,6 +1118,42 @@
               <button type="button" class="reg-mode-btn" data-mode="online" onclick="setMode(this, 'teacher')">Online</button>
               <button type="button" class="reg-mode-btn" data-mode="both" onclick="setMode(this, 'teacher')">Both</button>
             </div>
+          </div>
+          <div class="reg-group">
+            <label>Exam systems you've taught <span style="font-weight:400;color:var(--gray-400)">(optional)</span></label>
+            <select id="reg-exam-systems">
+              <option value="" disabled selected>Select all that apply</option>
+              <option>DSE (Hong Kong Diploma)</option>
+              <option>IB (International Baccalaureate)</option>
+              <option>IGCSE / O-Level</option>
+              <option>GCSE</option>
+              <option>AP (Advanced Placement)</option>
+              <option>Other / N/A</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="reg-section">
+          <div class="reg-section-title">Availability</div>
+          <div class="reg-group">
+            <label>Typical availability</label>
+            <select id="reg-availability">
+              <option value="" disabled selected>Select</option>
+              <option>Weekday mornings</option><option>Weekday afternoons</option>
+              <option>Weekday evenings</option><option>Weekend mornings</option>
+              <option>Weekend afternoons</option><option>Weekend evenings</option>
+              <option>Flexible schedule</option>
+            </select>
+          </div>
+          <div class="reg-group">
+            <label>How did you hear about Minerva? <span style="font-weight:400;color:var(--gray-400)">(optional)</span></label>
+            <select id="reg-source">
+              <option value="" disabled selected>Select</option>
+              <option>Google search</option><option>Facebook</option>
+              <option>Instagram</option><option>LinkedIn</option>
+              <option>Friend / referral</option><option>Education forum</option>
+              <option>Other</option>
+            </select>
           </div>
         </div>
         <button class="reg-submit-btn" onclick="submitTeacherReg()">Complete Registration</button>
@@ -1946,6 +2033,10 @@ function switchTab(tab) {
         studentLevel: document.getElementById('reg-level').value,
         schoolType: document.getElementById('reg-school-type').value,
         district: document.getElementById('reg-district').value,
+        lessonFrequency: document.getElementById('reg-frequency').value,
+        learningGoal: document.getElementById('reg-goal').value,
+        currentLevel: document.getElementById('reg-current-level').value,
+        notes: document.getElementById('reg-notes').value,
         lessonMode: document.getElementById('parentRegOverlay').querySelector('.reg-modal').getAttribute('data-mode') || 'both'
       };
       // Merge with pendingFormData
@@ -1965,6 +2056,10 @@ function switchTab(tab) {
       if (popupData.studentLevel) firestoreData.studentLevel = { stringValue: popupData.studentLevel };
       if (popupData.schoolType) firestoreData.schoolType = { stringValue: popupData.schoolType };
       if (popupData.district) firestoreData.district = { stringValue: popupData.district };
+      if (popupData.lessonFrequency) firestoreData.lessonFrequency = { stringValue: popupData.lessonFrequency };
+      if (popupData.learningGoal) firestoreData.learningGoal = { stringValue: popupData.learningGoal };
+      if (popupData.currentLevel) firestoreData.currentLevel = { stringValue: popupData.currentLevel };
+      if (popupData.notes) firestoreData.notes = { stringValue: popupData.notes };
       if (popupData.lessonMode) firestoreData.lessonMode = { stringValue: popupData.lessonMode };
 
       var firestoreUrl = 'https://firestore.googleapis.com/v1/projects/minerva-learning-a7eac/databases/(default)/documents/registrations?key=AIzaSyA50vtTGq5RNPAalle6CafSLP2Pq4dPbCE';
@@ -1980,9 +2075,13 @@ function switchTab(tab) {
     }
     function submitTeacherReg() {
       var popupData = {
+        bio: document.getElementById('reg-bio').value,
         yearsExp: document.getElementById('reg-years').value,
         qualification: document.getElementById('reg-qualification').value,
         district: document.getElementById('reg-teacher-district').value,
+        examSystems: document.getElementById('reg-exam-systems').value,
+        availability: document.getElementById('reg-availability').value,
+        source: document.getElementById('reg-source').value,
         lessonMode: document.getElementById('teacherRegOverlay').querySelector('.reg-modal').getAttribute('data-mode') || 'both'
       };
       var firestoreData = {};
@@ -1995,9 +2094,13 @@ function switchTab(tab) {
       firestoreData.status = { stringValue: 'pending' };
       firestoreData.submittedAt = { timestampValue: new Date().toISOString() };
       firestoreData.userType = { stringValue: 'teacher' };
+      if (popupData.bio) firestoreData.bio = { stringValue: popupData.bio };
       if (popupData.yearsExp) firestoreData.yearsExperience = { stringValue: popupData.yearsExp };
       if (popupData.qualification) firestoreData.qualification = { stringValue: popupData.qualification };
       if (popupData.district) firestoreData.district = { stringValue: popupData.district };
+      if (popupData.examSystems) firestoreData.examSystems = { stringValue: popupData.examSystems };
+      if (popupData.availability) firestoreData.availability = { stringValue: popupData.availability };
+      if (popupData.source) firestoreData.source = { stringValue: popupData.source };
       if (popupData.lessonMode) firestoreData.lessonMode = { stringValue: popupData.lessonMode };
 
       var firestoreUrl = 'https://firestore.googleapis.com/v1/projects/minerva-learning-a7eac/databases/(default)/documents/registrations?key=AIzaSyA50vtTGq5RNPAalle6CafSLP2Pq4dPbCE';

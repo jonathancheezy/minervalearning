@@ -331,7 +331,10 @@ async function loadRegistrations() {
   tbody.innerHTML = '<tr class="skeleton-row"><td colspan="5"><div class="skeleton" style="height:20px;width:60%;"></div></td></tr>';
   try {
     const q = query(collection(db, 'registrations'), limit(200));
+    console.log('[Admin] Querying Firestore...');
     const snapshot = await getDocs(q);
+    console.log('[Admin] Firestore snapshot size:', snapshot.size);
+    alert('Firestore returned ' + snapshot.size + ' documents');
     allRegistrations = snapshot.docs.map(d => ({ id: d.id, ...flatten(d.data()) }));
     allRegistrations.sort((a, b) => {
       const ta = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;

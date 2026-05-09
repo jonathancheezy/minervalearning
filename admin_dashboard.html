@@ -608,7 +608,7 @@ window.openModal = function(id) {
   document.getElementById('modal-body').innerHTML = html;
   const footer = document.getElementById('modal-footer');
   if (status === 'pending') {
-    footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>' + (role === 'parent' ? '<button class="btn-modal" style="background:rgba(14,165,233,0.1);color:#0284C7" onclick="closeModal();findMatches(\'' + r.id + '\')">Find Matches</button>' : '') + '<button class="btn-modal reject" onclick="updateStatus(\'' + r.id + '', \'rejected\')">Reject</button><button class="btn-modal approve" onclick="updateStatus(\'' + r.id + '', \'approved\')">Approve</button>';
+    footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>' + (role === 'parent' ? '<button class="btn-modal" style="background:rgba(14,165,233,0.1);color:#0284C7" onclick="closeModal();findMatches(\'' + r.id + '\')">Find Matches</button>' : '') + '<button class="btn-modal reject" onclick="updateStatus(\'' + r.id + '\', \'rejected\')">Reject</button><button class="btn-modal approve" onclick="updateStatus(\'' + r.id + '\', \'approved\')">Approve</button>';
   } else {
     footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>';
   }

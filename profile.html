@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — Minerva Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --primary: #7C3AED; --dark: #0F172A; --dark-2: #1E293B; --text: #334155; --text-muted: #94A3B8; --border: #E2E8F0; --surface: #F8FAFC; --surface-2: #F1F5F9; --white: #FFFFFF; --danger: #EF4444; --success: #10B981; --warning: #F59E0B; --info: #3B82F6; --orange: #F97316; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--surface); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    .top-bar { background: var(--white); border-bottom: 1px solid var(--border); padding: 0.875rem 1.5rem; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 100; }
+    .back-btn { background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 14px; font-size: 0.875rem; font-weight: 600; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 6px; text-decoration: none; transition: all 0.15s; }
+    .back-btn:hover { background: var(--surface-2); color: var(--dark); }
+    .page-title { font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700; color: var(--dark); }
+    .container { max-width: 720px; margin: 0 auto; padding: 1.5rem 1rem; }
+    .profile-card { background: var(--white); border-radius: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
+    .profile-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem; }
+    .avatar { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.25rem; color: #fff; flex-shrink: 0; }
+    .avatar.teacher { background: linear-gradient(135deg, #F97316, #FB923C); }
+    .avatar.parent { background: linear-gradient(135deg, #3B82F6, #60A5FA); }
+    .profile-info { flex: 1; min-width: 0; }
+    .profile-name { font-family: 'Outfit', sans-serif; font-size: 1.125rem; font-weight: 700; color: var(--dark); margin-bottom: 2px; }
+    .profile-meta { font-size: 0.875rem; color: var(--text-muted); }
+    .profile-badges { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .badge.teacher { background: rgba(249,115,22,0.1); color: var(--orange); }
+    .badge.parent { background: rgba(59,130,246,0.1); color: var(--info); }
+    .badge.pending { background: rgba(245,158,11,0.1); color: var(--warning); }
+    .badge.approved { background: rgba(16,185,129,0.1); color: var(--success); }
+    .badge.rejected { background: rgba(239,68,68,0.1); color: var(--danger); }
+    .badge.matched { background: rgba(124,58,237,0.1); color: var(--primary); }
+    .profile-body { padding: 1.5rem; }
+    .section { margin-bottom: 1.5rem; }
+    .section:last-child { margin-bottom: 0; }
+    .section-title { font-size: 0.6875rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.875rem; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
+    .field.full { grid-column: 1 / -1; }
+    .field-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 3px; }
+    .field-value { font-size: 0.9375rem; color: var(--dark); font-weight: 500; word-break: break-word; }
+    .field-value.empty { color: var(--text-muted); font-style: italic; }
+    .field-value a { color: var(--primary); text-decoration: none; }
+    .field-value a:hover { text-decoration: underline; }
+    .chip-list { display: flex; flex-wrap: wrap; gap: 4px; }
+    .chip { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; font-size: 0.8125rem; color: var(--text); }
+    .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+    .loading-spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-msg { text-align: center; padding: 3rem; color: var(--danger); }
+    .actions { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .btn { padding: 9px 18px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: all 0.15s; text-decoration: none; display: inline-flex; align-items: center; }
+    .btn-secondary { background: var(--surface-2); color: var(--text); border: 1.5px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); color: var(--dark); }
+    .match-info { background: rgba(124,58,237,0.05); border: 1px solid rgba(124,58,237,0.15); border-radius: 10px; padding: 0.875rem 1rem; margin-top: 1rem; }
+    .match-info-label { font-size: 0.75rem; font-weight: 600; color: var(--primary); margin-bottom: 4px; }
+    .match-info-value { font-size: 0.9375rem; color: var(--dark); font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <a href="/admin_dashboard" class="back-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back
+    </a>
+    <span class="page-title" id="page-title">Loading...</span>
+  </div>
+  <div class="container">
+    <div id="content">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <div>Loading profile...</div>
+      </div>
+    </div>
+  </div>
+<script type="module">
+const FIRESTORE_KEY = 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s';
+const FIRESTORE_PROJECT = 'minerva-learning-a7eac';
+const FIRESTORE_URL = 'https://firestore.googleapis.com/v1/projects/' + FIRESTORE_PROJECT + '/databases/(default)/documents';
+
+function fromFirestoreValue(v) {
+  if (!v || typeof v !== 'object') return v;
+  if (v.stringValue !== undefined) return v.stringValue;
+  if (v.integerValue !== undefined) return String(v.integerValue);
+  if (v.booleanValue !== undefined) return v.booleanValue;
+  if (v.doubleValue !== undefined) return String(v.doubleValue);
+  if (v.timestampValue !== undefined) return v.timestampValue;
+  if (v.arrayValue && v.arrayValue.values) {
+    try { return v.arrayValue.values.map(function(x) { return x.stringValue || x.integerValue || ''; }).join(', '); } catch(e) { return ''; }
+  }
+  return v;
+}
+
+function flattenDoc(doc) {
+  var flat = { _id: doc.name.split('/').pop() };
+  if (doc.fields) {
+    Object.keys(doc.fields).forEach(function(k) { flat[k] = fromFirestoreValue(doc.fields[k]); });
+  }
+  return flat;
+}
+
+async function loadProfile(id) {
+  var res = await fetch(FIRESTORE_URL + '/registrations/' + id + '?key=' + FIRESTORE_KEY);
+  if (!res.ok) return null;
+  var data = await res.json();
+  return flattenDoc(data);
+}
+
+function getName(r) { return r.fullName || r.parentName || r.name || r.email || '—'; }
+function getEmail(r) { return r.email || r.whatsapp || r.phone || '—'; }
+function getInitials(name) {
+  var parts = String(name).split(' ');
+  if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  return String(name).substring(0, 2).toUpperCase();
+}
+
+function formatDate(ts) {
+  if (!ts) return '—';
+  try { return new Date(ts).toLocaleDateString('en-HK', { day: '2-digit', month: 'short', year: 'numeric' }); } catch(e) { return ts; }
+}
+
+function renderChips(val) {
+  if (!val) return '<span class="field-value empty">—</span>';
+  var items = String(val).split('|').map(function(s) { return s.trim(); }).filter(Boolean);
+  if (items.length === 0) return '<span class="field-value empty">—</span>';
+  return '<div class="chip-list">' + items.map(function(i) { return '<span class="chip">' + i + '</span>'; }).join('') + '</div>';
+}
+
+function renderField(label, value, isLink) {
+  if (value === undefined || value === null || value === '') {
+    return '<div class="field"><div class="field-label">' + label + '</div><div class="field-value empty">—</div></div>';
+  }
+  if (isLink) {
+    return '<div class="field"><div class="field-label">' + label + '</div><div class="field-value"><a href="' + value + '" target="_blank">View ↗</a></div></div>';
+  }
+  return '<div class="field"><div class="field-label">' + label + '</div><div class="field-value">' + value + '</div></div>';
+}
+
+function renderProfile(r) {
+  var role = String(r.role || '').toLowerCase();
+  var status = String(r.status || 'pending');
+  var name = getName(r);
+  var initials = getInitials(name);
+  var isTeacher = role === 'teacher';
+
+  var sections = [];
+
+  sections.push({ section: 'Contact', items: [
+    { label: 'Full Name', value: name },
+    { label: 'Email', value: r.email },
+    { label: 'Phone / WhatsApp', value: r.whatsapp || r.phone },
+    { label: 'Submitted', value: formatDate(r.submittedAt) },
+  ]});
+
+  if (isTeacher) {
+    sections.push({ section: 'Teaching Profile', items: [
+      { label: 'Bio', value: r.bio },
+      { label: 'Experience', value: r.yearsExperience || r.experience },
+      { label: 'Qualification', value: r.qualification },
+      { label: 'Hourly Rate', value: r.hourlyRate ? 'HK$' + r.hourlyRate + '/hr' : null },
+      { label: 'Student Age Groups', value: r.ageGroups || r.studentAgeGroups },
+      { label: 'Exam Systems', value: r.examSystems },
+      { label: 'Availability', value: r.availability },
+    ]});
+    sections.push({ section: 'Subjects & Location', items: [
+      { label: 'Subject', value: r.subjects || r.subject, isChip: true },
+      { label: 'Other Subjects', value: r.otherSubjects },
+      { label: 'District', value: r.district },
+      { label: 'Travel Distance', value: r.travelDistance },
+      { label: 'Lesson Mode', value: r.lessonMode },
+      { label: 'Lesson Duration', value: r.lessonDuration },
+    ]});
+    sections.push({ section: 'Verification', items: [
+      { label: 'Certificate', value: r.certUrl, isLink: !!r.certUrl, raw: r.certUrl },
+      { label: 'Intro Video', value: r.introVideoUrl, isLink: !!r.introVideoUrl, raw: r.introVideoUrl },
+      { label: 'Free Matches Left', value: r.freeMatchesRemaining !== undefined ? r.freeMatchesRemaining + ' remaining' : null },
+      { label: 'Referral Source', value: r.source },
+    ]});
+  } else {
+    sections.push({ section: 'Student Info', items: [
+      { label: 'Student Name', value: r.studentFirstName && r.studentLastName ? r.studentFirstName + ' ' + r.studentLastName : (r.studentFirstName || r.firstName || '—') },
+      { label: 'Year / Form', value: r.studentLevel },
+      { label: 'School Type', value: r.schoolType },
+      { label: 'Student Gender', value: r.studentGender },
+      { label: 'Student School', value: r.studentSchool },
+    ]});
+    sections.push({ section: 'Learning Needs', items: [
+      { label: 'Subject', value: r.subjects || r.subject, isChip: true },
+      { label: 'Current Level', value: r.currentLevel },
+      { label: 'Target Exam', value: r.targetExam },
+      { label: 'Learning Goal', value: r.learningGoal },
+      { label: 'Preferred Teacher Gender', value: r.teacherGender },
+    ]});
+    sections.push({ section: 'Logistics', items: [
+      { label: 'District', value: r.district },
+      { label: 'Lesson Mode', value: r.lessonMode },
+      { label: 'Lesson Frequency', value: r.lessonFrequency },
+      { label: 'Lesson Duration', value: r.lessonDuration },
+      { label: 'Budget', value: r.budget },
+      { label: 'When to Start', value: r.startDate },
+    ]});
+    if (r.notes) {
+      sections.push({ section: 'Additional Info', items: [
+        { label: 'Notes', value: r.notes, full: true },
+      ]});
+    }
+  }
+
+  if (r.matchedTeacherName) {
+    sections.push({ section: 'Match Info', items: [
+      { label: 'Matched With', value: r.matchedTeacherName },
+      { label: 'Match Date', value: formatDate(r.matchedAt) },
+    ]});
+  }
+
+  var html = '<div class="profile-card"><div class="profile-header"><div class="avatar ' + role + '">' + initials + '</div><div class="profile-info"><div class="profile-name">' + name + '</div><div class="profile-meta">' + getEmail(r) + '</div><div class="profile-badges"><span class="badge ' + role + '">' + (isTeacher ? 'Teacher' : 'Parent / Student') + '</span><span class="badge ' + status + '">' + status + '</span></div></div></div><div class="profile-body">';
+
+  sections.forEach(function(s) {
+    var items = s.items.filter(function(f) { return f.value !== null && f.value !== undefined && f.value !== ''; });
+    if (items.length === 0) return;
+    html += '<div class="section"><div class="section-title">' + s.section + '</div><div class="field-grid">';
+    items.forEach(function(f) {
+      if (f.isChip) {
+        html += '<div class="field"><div class="field-label">' + f.label + '</div>' + renderChips(f.value) + '</div>';
+      } else if (f.isLink) {
+        html += renderField(f.label, f.raw, true);
+      } else if (f.full) {
+        html += '<div class="field full"><div class="field-label">' + f.label + '</div><div class="field-value" style="white-space:pre-wrap">' + f.value + '</div></div>';
+      } else {
+        html += renderField(f.label, f.value);
+      }
+    });
+    html += '</div></div>';
+  });
+
+  if (r.matchedTeacherName) {
+    html += '<div class="match-info"><div class="match-info-label">Matched Teacher</div><div class="match-info-value">' + r.matchedTeacherName + '</div></div>';
+  }
+
+  html += '</div><div class="actions"><a href="/admin_dashboard" class="btn btn-secondary">← Back to Dashboard</a></div></div>';
+  return html;
+}
+
+var params = new URLSearchParams(window.location.search);
+var id = params.get('id');
+if (!id) {
+  document.getElementById('content').innerHTML = '<div class="error-msg">No profile ID provided. <a href="/admin_dashboard">Go back</a></div>';
+} else {
+  document.getElementById('page-title').textContent = 'Profile';
+  loadProfile(id).then(function(r) {
+    if (!r) {
+      document.getElementById('content').innerHTML = '<div class="error-msg">Profile not found. <a href="/admin_dashboard">Go back</a></div>';
+      return;
+    }
+    document.getElementById('content').innerHTML = renderProfile(r);
+    document.title = getName(r) + ' — Minerva Admin';
+  }).catch(function() {
+    document.getElementById('content').innerHTML = '<div class="error-msg">Failed to load profile. <a href="/admin_dashboard">Go back</a></div>';
+  });
+}
+</script>
+</body>
+</html>

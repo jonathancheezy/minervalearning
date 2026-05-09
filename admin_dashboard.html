@@ -64,7 +64,7 @@
     .td-status.pending{background:var(--warning-bg);color:#B45309}.td-status.approved{background:var(--success-bg);color:#047857}.td-status.rejected{background:var(--danger-bg);color:#DC2626}.td-status.matched{background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(14,165,233,0.1));color:var(--primary)}
     .td-time{color:var(--text-muted);font-size:0.8125rem}
     .td-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-    .btn-action{padding:5px 12px;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+    .btn-action{padding:5px 12px;text-decoration:none;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.15s}
     .btn-view{background:rgba(124,58,237,0.08);color:var(--primary)}.btn-view:hover{background:rgba(124,58,237,0.15)}
     .btn-match{background:rgba(14,165,233,0.1);color:#0284C7}.btn-match:hover{background:rgba(14,165,233,0.2)}
     .btn-approve{background:var(--success-bg);color:#047857}.btn-approve:hover{background:rgba(16,185,129,0.2)}
@@ -448,13 +448,12 @@ function renderTable(regs) {
       '<td><span class="td-status ' + status + '">' + statusLabel + '</span></td>' +
       '<td><span class="td-time">' + formatDate(reg.submittedAt) + '</span></td>' +
       '<td><div class="td-actions">' +
-        '<button class="btn-action btn-view" data-id="' + reg.id + '">View</button>' +
+        '<a class="btn-action btn-view" href="/profile.html?id=' + reg.id + '">View</a>' +
         (isParent && isPending ? ' <button class="btn-action btn-match" data-id="' + reg.id + '">Match</button>' : '') +
         (isPending ? ' <button class="btn-action btn-approve" data-id="' + reg.id + '">Approve</button><button class="btn-action btn-reject" data-id="' + reg.id + '">Reject</button>' : '') +
       '</div></td>';
     tbody.appendChild(tr);
   });
-  tbody.querySelectorAll('.btn-view').forEach(b => b.addEventListener('click', () => openModal(b.dataset.id)));
   tbody.querySelectorAll('.btn-match').forEach(b => b.addEventListener('click', () => findMatches(b.dataset.id)));
   tbody.querySelectorAll('.btn-approve').forEach(b => b.addEventListener('click', () => updateStatus(b.dataset.id, 'approved')));
   tbody.querySelectorAll('.btn-reject').forEach(b => b.addEventListener('click', () => updateStatus(b.dataset.id, 'rejected')));

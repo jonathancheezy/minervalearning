@@ -282,7 +282,7 @@ async function verifyAdmin() {
   }
 }
 
-verifyAdmin().then(valid => { if (!valid) return; // loadRegistrations called after verifyAdmin() });
+verifyAdmin().then(valid => { if (!valid) return; loadRegistrations(); });
 
 document.getElementById('logout-btn').addEventListener('click', () => {
   sessionStorage.removeItem('minerva_admin_token');

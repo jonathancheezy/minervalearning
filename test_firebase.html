@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head><title>Firebase Test</title></head>
+<body>
+<h2 id="status">Loading Firebase...</h2>
+<pre id="output" style="font-size:12px;background:#f5f5f5;padding:10px;max-width:600px;overflow:auto"></pre>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, getDocs, query, limit } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const output = document.getElementById('output');
+const status = document.getElementById('status');
+
+function log(msg) { output.textContent += msg + '\n'; }
+
+try {
+  const firebaseConfig = {
+    apiKey: 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s',
+    projectId: 'minerva-learning-a7eac',
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  log('Firebase initialized OK');
+  
+  // Test query
+  const q = query(collection(db, 'registrations'), limit(3));
+  getDocs(q).then(snapshot => {
+    log('Query succeeded! Docs: ' + snapshot.docs.length);
+    snapshot.docs.forEach(d => {
+      const data = d.data();
+      log('  - ' + (data.firstName?.stringValue || data.name?.stringValue || d.id) + ' / ' + (data.role?.stringValue || '?'));
+    });
+    status.textContent = 'SUCCESS - Firebase working';
+    status.style.color = 'green';
+  }).catch(err => {
+    log('Query error: ' + err.message);
+    status.textContent = 'QUERY ERROR: ' + err.message;
+    status.style.color = 'red';
+  });
+} catch(err) {
+  log('Init error: ' + err.message);
+  status.textContent = 'ERROR: ' + err.message;
+  status.style.color = 'red';
+}
+</script>
+</body>
+</html>

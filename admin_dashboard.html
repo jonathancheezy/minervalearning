@@ -70,6 +70,8 @@
     .btn-approve{background:var(--success-bg);color:#047857}.btn-approve:hover{background:rgba(16,185,129,0.2)}
     .btn-reject{background:var(--danger-bg);color:#DC2626}.btn-reject:hover{background:rgba(239,68,68,0.15)}
     .btn-action:disabled{opacity:0.4;cursor:not-allowed}
+    .subject-chip{display:inline-block;padding:2px 8px;background:rgba(124,58,237,0.08);color:var(--primary,#7c3aed);border-radius:100px;font-size:0.6875rem;font-weight:500;margin:2px;white-space:nowrap}
+    .subject-chip-wrap{display:flex;flex-wrap:wrap;gap:2px;max-width:220px}
     .no-data{text-align:center;padding:4rem 2rem}
     .no-data-icon{width:56px;height:56px;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(14,165,233,0.08));border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
     .no-data h3{font-size:1rem;font-weight:700;margin-bottom:6px;color:var(--dark)}
@@ -261,13 +263,29 @@ const db = getFirestore(app);
 let allRegistrations = [];
 let allTeachers = [];
 let currentFilter = 'all';
+const AUTH_BASE = 'https://minerva-auth.minerva-ai-learning.workers.dev';
 
-if (sessionStorage.getItem('minerva_admin_auth') !== 'ok') {
-  window.location.href = '/admin_login';
+async function verifyAdmin() {
+  const token = sessionStorage.getItem('minerva_admin_token');
+  if (!token) { window.location.href = '/admin_login'; return false; }
+  try {
+    const res = await fetch(AUTH_BASE + '/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+    const data = await res.json();
+    if (!data.valid) { sessionStorage.removeItem('minerva_admin_token'); window.location.href = '/admin_login'; return false; }
+    return true;
+  } catch {
+    window.location.href = '/admin_login'; return false;
+  }
 }
 
+verifyAdmin().then(valid => { if (!valid) return; // loadRegistrations called after verifyAdmin() });
+
 document.getElementById('logout-btn').addEventListener('click', () => {
-  sessionStorage.removeItem('minerva_admin_auth');
+  sessionStorage.removeItem('minerva_admin_token');
   window.location.href = '/admin_login';
 });
 
@@ -438,7 +456,7 @@ window.findMatches = async function(parentId) {
     const freeTag = hasFreeMatch ? '<span class="teacher-tag free">Free match</span>' : '<span class="teacher-tag paid">Paid</span>';
     const verifiedTag = t.certUrl ? '<span class="teacher-tag verified">Cert</span>' : '';
     const assignBtn = isAssigned ? '<button class="btn-assign assigned" disabled>Matched</button>' : '<button class="btn-assign" data-pid="' + parentId + '" data-tid="' + t.id + '" data-tname="' + (getName(t)).replace(/"/g, '\"') + '">Assign</button>';
-    return '<div class="teacher-card"><div class="match-score ' + cls + '"><span class="score-num">' + pct + '</span><span class="score-label">%</span></div><div class="teacher-info"><div class="teacher-name">' + getName(t) + '</div><div class="teacher-meta">' + (t.subjects || t.subject ? '<span>' + (t.subjects || t.subject) + '</span>' : '') + (t.studentAgeGroups ? '<span>' + t.studentAgeGroups + '</span>' : '') + '</div><div class="teacher-tags">' + freeTag + verifiedTag + '</div><div class="ai-reason"><div class="ai-reason-label">AI Reason</div>' + (reasons.join(' · ') || 'General match') + '</div></div><div class="teacher-actions">' + assignBtn + '<span style="font-size:0.6875rem;color:var(--text-muted)">' + (hasFreeMatch ? 'Free' : 'Paid') + '</span></div></div>';
+    return '<div class="teacher-card"><div class="match-score ' + cls + '"><span class="score-num">' + pct + '</span><span class="score-label">%</span></div><div class="teacher-info"><div class="teacher-name">' + getName(t) + '</div><div class="teacher-meta">' + (t.subjects || t.subject ? renderSubjectChips(t.subjects || t.subject) : '<span style="color:var(--text-muted);font-size:0.75rem">—</span>') + (t.studentAgeGroups ? '<span>' + t.studentAgeGroups + '</span>' : '') + '</div><div class="teacher-tags">' + freeTag + verifiedTag + '</div><div class="ai-reason"><div class="ai-reason-label">AI Reason</div>' + (reasons.join(' · ') || 'General match') + '</div></div><div class="teacher-actions">' + assignBtn + '<span style="font-size:0.6875rem;color:var(--text-muted)">' + (hasFreeMatch ? 'Free' : 'Paid') + '</span></div></div>';
   }).join('');
   panel.querySelectorAll('.btn-assign:not(.assigned)').forEach(b => b.addEventListener('click', () => assignMatch(b.dataset.pid, b.dataset.tid, b.dataset.tname, b)));
 };
@@ -472,31 +490,31 @@ window.openModal = function(id) {
   const role = String(r.role || 'parent').toLowerCase();
   const status = String(r.status || 'pending').toLowerCase();
   const fields = [];
-  const add = (label, value) => { if (value !== undefined && value !== '' && value !== null) fields.push({ label, value: String(value) }); };
+  const add = (label, value, fallback) => { if (value !== undefined && value !== '' && value !== null) { fields.push({ label, value: String(value) }); } else if (fallback !== undefined) { fields.push({ label, value: String(fallback) }); } };
   add('Full Name', getName(r)); add('Email', r.email); add('Phone', r.phone);
   if (role === 'parent') {
     add('Student Name', r.studentFirstName && r.studentLastName ? r.studentFirstName + ' ' + r.studentLastName : (r.studentFirstName || r.firstName || ''));
     add('Year / Form', r.studentLevel || r.level);
-    add('School Type', r.schoolType);
-    add('Subject', r.subject || r.subjects);
-    add('District', r.district);
-    add('Lesson Mode', r.lessonMode);
-    add('Lesson Frequency', r.lessonFrequency);
-    add('Learning Goal', r.learningGoal);
-    add('Current Level', r.currentLevel);
-    add('Notes', r.notes);
+    add('School Type', r.schoolType, 'Not provided');
+    add('Subject', renderSubjectChips(r.subject || r.subjects));
+    add('District', r.district, 'Not provided');
+    add('Lesson Mode', r.lessonMode, 'Not provided');
+    add('Lesson Frequency', r.lessonFrequency, 'Not provided');
+    add('Learning Goal', r.learningGoal, 'Not provided');
+    add('Current Level', r.currentLevel, 'Not provided');
+    add('Notes', r.notes, 'Not provided');
     add('Phone', r.whatsapp || r.phone);
   }
   if (role === 'teacher') {
-    add('Bio', r.bio);
-    add('Experience', r.yearsExperience || r.yearsExp);
-    add('Qualification', r.qualification);
-    add('Subject', r.subject || r.subjects);
-    add('District', r.district);
-    add('Lesson Mode', r.lessonMode);
-    add('Exam Systems', r.examSystems);
-    add('Availability', r.availability);
-    add('Referral Source', r.source);
+    add('Bio', r.bio, 'Not provided');
+    add('Experience', r.yearsExperience || r.yearsExp, 'Not provided');
+    add('Qualification', r.qualification, 'Not provided');
+    add('Subject', renderSubjectChips(r.subject || r.subjects));
+    add('District', r.district, 'Not provided');
+    add('Lesson Mode', r.lessonMode, 'Not provided');
+    add('Exam Systems', r.examSystems, 'Not provided');
+    add('Availability', r.availability, 'Not provided');
+    add('Referral Source', r.source, 'Not provided');
     add('Phone', r.whatsapp || r.phone);
     if (r.certUrl) fields.push({ label: 'Certificate', value: r.certUrl, isLink: true });
     if (r.introVideoUrl) fields.push({ label: 'Intro Video', value: r.introVideoUrl, isLink: true });
@@ -543,7 +561,7 @@ window.updateStatus = updateStatus;
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeMatchModal(); } });
 
-loadRegistrations();
+// loadRegistrations called after verifyAdmin()
 </script>
 </body>
 </html>

@@ -1,0 +1,4 @@
+name = "minerva-auth"
+main = "index.ts"
+compatibility_date = "2026-05-09"
+# No route — will be accessed at minerva-auth.<workers-subdomain>.workers.dev

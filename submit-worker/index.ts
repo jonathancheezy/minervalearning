@@ -66,7 +66,12 @@ function normalizeFieldsClient(fields: Record<string, any>, role: Role): Record<
     if (value === null || value === undefined || value === '') continue;
     const newKey = map[key];
     if (newKey === null) continue; // explicitly removed field
-    result[newKey || key] = toFirestore(value);
+    // Preserve already-Firestore-formatted values from client-side forms
+    if (value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 1 && 'stringValue' in value) {
+      result[newKey || key] = value;
+    } else {
+      result[newKey || key] = toFirestore(value);
+    }
   }
 
   return result;

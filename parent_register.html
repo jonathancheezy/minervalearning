@@ -216,7 +216,7 @@
               </div>
               <div class="btn-group">
                 <button type="button" class="btn btn-secondary" onclick="goStep(1)">← Back</button>
-                <button type="button" class="btn btn-primary" onclick="goStep(3)" style="flex:1">Continue →</button>
+                <button type="button" class="btn btn-primary" onclick="continueToStep3()" style="flex:1">Continue →</button>
               </div>
             </div>
 
@@ -295,23 +295,77 @@
     function removeSubject(e, subject) { e.stopPropagation(); selectedSubjects = selectedSubjects.filter(s => s !== subject); document.querySelectorAll('.subject-option').forEach(el => { if (el.textContent.trim() === subject) el.classList.remove('selected'); }); renderSubjectChips(); }
     document.addEventListener('click', function(e) { const wrap = document.getElementById('subjectsWrap'); if (wrap && !wrap.contains(e.target)) { document.getElementById('subjectsDropdown').classList.remove('open'); } });
     function setMode(btn) { document.querySelectorAll('#lessonModeOptions .mode-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); lessonMode = btn.getAttribute('data-mode'); }
+    function validateStep(step) {
+      const errors = [];
+      if (step === 1) {
+        const firstName = document.getElementById('firstName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const whatsapp = document.getElementById('whatsapp').value.trim();
+        if (!firstName) errors.push('First name is required');
+        if (!email) errors.push('Email is required');
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Please enter a valid email');
+        if (!whatsapp) errors.push('WhatsApp number is required');
+      }
+      if (step === 2) {
+        const studentFirstName = document.getElementById('studentFirstName').value.trim();
+        const studentLevel = document.getElementById('studentLevel').value;
+        const schoolType = document.getElementById('schoolType').value;
+        const studentGender = document.getElementById('studentGender').value;
+        if (!studentFirstName) errors.push('Student first name is required');
+        if (!studentLevel) errors.push('Year / Form is required');
+        if (!schoolType) errors.push('School type is required');
+        if (!studentGender) errors.push('Student gender is required');
+        if (selectedSubjects.length === 0) errors.push('Please select at least one subject');
+      }
+      if (step === 3) {
+        const learningGoal = document.getElementById('learningGoal').value;
+        const currentLevel = document.getElementById('currentLevel').value;
+        const district = document.getElementById('district').value;
+        const budget = document.getElementById('budget').value;
+        const lessonFrequency = document.getElementById('lessonFrequency').value;
+        const lessonDuration = document.getElementById('lessonDuration').value;
+        const teacherGender = document.getElementById('teacherGender').value;
+        const startDate = document.getElementById('startDate').value;
+        if (!learningGoal) errors.push('Learning goal is required');
+        if (!currentLevel) errors.push('Current level is required');
+        if (!district) errors.push('Preferred area is required');
+        if (!budget) errors.push('Budget is required');
+        if (!lessonFrequency) errors.push('Lesson frequency is required');
+        if (!lessonDuration) errors.push('Lesson duration is required');
+        if (!teacherGender) errors.push('Teacher gender preference is required');
+        if (!startDate) errors.push('When to start is required');
+      }
+      return errors;
+    }
+
+    function showErrors(errors) {
+      const existing = document.getElementById('validation-errors');
+      if (existing) existing.remove();
+      if (errors.length === 0) return false;
+      const msg = document.createElement('div');
+      msg.id = 'validation-errors';
+      msg.style.cssText = 'background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:0.875rem;display:flex;align-items:center;gap:8px;animation:fadeUp 0.2s ease';
+      msg.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>' + errors.join('<br>');
+      const stepEl = document.querySelector('.step.active');
+      stepEl.insertBefore(msg, stepEl.firstChild);
+      return true;
+    }
+
     function goStep(n) { currentStep = n; document.querySelectorAll('.step').forEach(s => s.classList.remove('active')); document.getElementById('step' + n).classList.add('active'); document.querySelectorAll('.step-dot').forEach((d, i) => { d.classList.remove('active','done'); if (i+1 < n) d.classList.add('done'); if (i+1 === n) d.classList.add('active'); }); window.scrollTo({top:0,behavior:'smooth'}); }
     function handleStep1() {
-      const firstName = document.getElementById('firstName').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const whatsapp = document.getElementById('whatsapp').value.trim();
-      if (!firstName || !email || !whatsapp) { alert('Please fill in all required fields.'); return; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return; }
+      const errors = validateStep(1);
+      if (errors.length > 0) { showErrors(errors); return; }
+      if (otpVerified) { goStep(2); return; }
       if (!otpSent) {
         document.getElementById('otpSection').style.display = 'block';
-        document.getElementById('otpTargetPhone').textContent = whatsapp;
+        document.getElementById('otpTargetPhone').textContent = document.getElementById('whatsapp').value.trim();
         document.getElementById('step1Btn').textContent = 'Verify Code →';
         otpSent = true;
         startOtpTimer(60);
         document.getElementById('otp1').focus();
       } else if (!otpVerified) {
         const code = [1,2,3,4].map(i => document.getElementById('otp'+i).value).join('');
-        if (code.length !== 4) { alert('Please enter the 4-digit code.'); return; }
+        if (code.length !== 4) { showErrors(['Please enter the 4-digit code.']); return; }
         otpVerified = true;
         clearInterval(otpTimerInterval);
         goStep(2);
@@ -321,7 +375,15 @@
     function sendOTP() { startOtpTimer(60); }
     function otpInput(el, n) { el.value = el.value.replace(/[^0-9]/g,''); if (el.value && n < 4) { document.getElementById('otp'+(n+1)).focus(); } document.getElementById('otp'+n).classList.toggle('filled', el.value !== ''); }
     function otpKey(e, n) { if (e.key === 'Backspace' && !e.target.value && n > 1) { document.getElementById('otp'+(n-1)).focus(); } }
+    function continueToStep3() {
+      const errors = validateStep(2);
+      if (errors.length > 0) { showErrors(errors); return; }
+      goStep(3);
+    }
+
     function submitForm() {
+      const errors = validateStep(3);
+      if (errors.length > 0) { showErrors(errors); return; }
       const btn = document.getElementById('submitBtn');
       btn.disabled = true; btn.textContent = 'Submitting...';
       const get = id => document.getElementById(id).value;

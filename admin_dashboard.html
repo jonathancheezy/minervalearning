@@ -474,8 +474,34 @@ window.openModal = function(id) {
   const fields = [];
   const add = (label, value) => { if (value !== undefined && value !== '' && value !== null) fields.push({ label, value: String(value) }); };
   add('Full Name', getName(r)); add('Email', r.email); add('Phone', r.phone);
-  if (role === 'parent') { add('Student Age', r.studentAge); add('Subject', r.subject); add('Preferred Days', r.preferredDays); add('Preferred Time', r.preferredTime); add('Lesson Duration', r.lessonDuration ? r.lessonDuration + ' min' : ''); add('Lesson Location', r.location); add('School', r.schoolName); add('Learning Goals', r.learningGoals); }
-  if (role === 'teacher') { add('Teaching Location', r.teachingLocation); add('Student Age Groups', r.studentAgeGroups); add('Teaching Style', r.teachingStyle); add('Max Travel Distance', r.maxTravelDistance); if (r.certUrl) fields.push({ label: 'Certificate', value: r.certUrl, isLink: true }); if (r.introVideoUrl) fields.push({ label: 'Intro Video', value: r.introVideoUrl, isLink: true }); add('Free Matches Left', (parseInt(r.freeMatchesRemaining) || 0) + ' remaining'); }
+  if (role === 'parent') {
+    add('Student Name', r.studentFirstName && r.studentLastName ? r.studentFirstName + ' ' + r.studentLastName : (r.studentFirstName || r.firstName || ''));
+    add('Year / Form', r.studentLevel || r.level);
+    add('School Type', r.schoolType);
+    add('Subject', r.subject || r.subjects);
+    add('District', r.district);
+    add('Lesson Mode', r.lessonMode);
+    add('Lesson Frequency', r.lessonFrequency);
+    add('Learning Goal', r.learningGoal);
+    add('Current Level', r.currentLevel);
+    add('Notes', r.notes);
+    add('Phone', r.whatsapp || r.phone);
+  }
+  if (role === 'teacher') {
+    add('Bio', r.bio);
+    add('Experience', r.yearsExperience || r.yearsExp);
+    add('Qualification', r.qualification);
+    add('Subject', r.subject || r.subjects);
+    add('District', r.district);
+    add('Lesson Mode', r.lessonMode);
+    add('Exam Systems', r.examSystems);
+    add('Availability', r.availability);
+    add('Referral Source', r.source);
+    add('Phone', r.whatsapp || r.phone);
+    if (r.certUrl) fields.push({ label: 'Certificate', value: r.certUrl, isLink: true });
+    if (r.introVideoUrl) fields.push({ label: 'Intro Video', value: r.introVideoUrl, isLink: true });
+    add('Free Matches Left', (parseInt(r.freeMatchesRemaining) || 0) + ' remaining');
+  }
   if (r.matchedTeacherName) add('Matched With', r.matchedTeacherName);
   add('Submitted', formatDate(r.submittedAt));
   let html = '<div style="display:flex;gap:12px;align-items:center;margin-bottom:1.25rem"><span class="detail-role-badge ' + role + '">' + (role === 'teacher' ? 'Teacher' : 'Parent') + '</span><span class="detail-status-badge ' + status + '">' + status + '</span></div>';

@@ -65,7 +65,7 @@ function normalizeFieldsClient(fields: Record<string, any>, role: Role): Record<
   for (const [key, value] of Object.entries(fields)) {
     if (value === null || value === undefined || value === '') continue;
     const newKey = map[key];
-    if (newKey === undefined) continue; // removed field
+    if (newKey === null) continue; // explicitly removed field
     result[newKey || key] = toFirestore(value);
   }
 
@@ -182,7 +182,7 @@ export default {
           for (const [key, value] of Object.entries(flat)) {
             if (['schemaVersion', 'role', 'status', 'submittedAt', 'userType'].includes(key)) continue;
             const newKey = map[key];
-            if (newKey === undefined) continue; // skip removed fields
+            if (newKey === null) continue; // skip removed fields
             normalized[newKey || key] = toFirestore(value ?? '');
           }
 

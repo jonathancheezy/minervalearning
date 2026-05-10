@@ -23,7 +23,39 @@
     /* Nav — matching landing page */
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(0,0,0,0.05); }
     .nav-inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
-    .nav-right { display: flex; align-items: center; gap: 8px; }
+        .nav-right { display: flex; align-items: center; gap: 8px; }
+    .lang-wrap { position: relative; }
+    .lang-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 6px 10px;
+      border: 1.5px solid var(--surface-2);
+      border-radius: 10px;
+      background: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--primary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .lang-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .lang-dropdown {
+      position: absolute; top: calc(100% + 6px); right: 0;
+      background: #fff; border: 1px solid var(--surface-2);
+      border-radius: 10px; padding: 6px;
+      display: none; z-index: 200;
+      min-width: 80px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .lang-dropdown.show { display: block; }
+    .lang-option {
+      display: block; width: 100%; padding: 7px 10px;
+      border: none; background: none; border-radius: 6px;
+      font-size: 0.8125rem; font-weight: 600; color: var(--gray-500);
+      cursor: pointer; text-align: left; font-family: 'DM Sans', sans-serif;
+    }
+    .lang-option:hover { background: var(--surface-1); color: var(--primary); }
+    .lang-option.active { color: var(--primary); font-weight: 700; }
     .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 1.25rem; color: var(--dark); letter-spacing: -0.03em; }
     .nav-badge { font-size: 0.8125rem; font-weight: 700; background: rgba(124,58,237,0.1); color: var(--primary); padding: 6px 10px; border-radius: 10px; letter-spacing: 0; font-family: 'DM Sans', sans-serif; }
     .back-link { color: var(--gray-500); text-decoration: none; font-size: 0.875rem; display: flex; align-items: center; gap: 4px; transition: color 0.2s; font-family: 'DM Sans', sans-serif; }
@@ -121,11 +153,17 @@
       </a>
       <div class="nav-right">
         <span class="nav-badge" data-i18n="badge">Early Access</span>
-        <select id="langSel" onchange="if(window.setLang)window.setLang(this.value);localStorage.setItem('minerva_lang',this.value)" style="padding:6px 8px;border-radius:8px;border:1.5px solid var(--gray-300);font-size:0.8125rem;background:#fff;cursor:pointer;">
-          <option value="en">EN</option>
-          <option value="zhtw">繁</option>
-          <option value="zhcn">简</option>
-        </select>
+        <div class="lang-wrap">
+          <button class="lang-btn" id="langBtn" onclick="toggleLang()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            <span id="langLabel">EN</span>
+          </button>
+          <div class="lang-dropdown" id="langDropdown">
+            <button class="lang-option active" data-lang="en" onclick="setLang('en')">EN</button>
+            <button class="lang-option" data-lang="zhtw" onclick="setLang('zhtw')">繁</button>
+            <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')">简</button>
+          </div>
+        </div>
         <a href="https://minervalearning.minerva-ai-learning.workers.dev/" class="back-link">← Back</a>
       </div>
     </div>

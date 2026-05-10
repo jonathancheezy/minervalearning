@@ -352,6 +352,7 @@ function flattenDoc(doc) {
   return flat;
 }
 
+
 async function loadViaRest() {
   const url = FIRESTORE_URL + '/registrations?key=' + FIRESTORE_KEY + '&pageSize=200';
   const res = await fetch(url);
@@ -519,9 +520,15 @@ function renderTable(regs) {
       '</div></td>';
     tbody.appendChild(tr);
   });
-  tbody.querySelectorAll('.btn-match').forEach(b => b.addEventListener('click', function() { console.log('[DEBUG] btn-match clicked, data-id:', this.dataset.id); findMatches(this.dataset.id); }));
-  tbody.querySelectorAll('.btn-approve').forEach(b => b.addEventListener('click', function() { console.log('[DEBUG] btn-approve clicked, data-id:', this.dataset.id); updateStatus(this.dataset.id, 'approved'); }));
-  tbody.querySelectorAll('.btn-reject').forEach(b => b.addEventListener('click', function() { console.log('[DEBUG] btn-reject clicked, data-id:', this.dataset.id); openRejectModal({id: this.dataset.id, email: this.dataset.email || '', name: encodeURIComponent(this.dataset.name || '')}); }));
+  // Event delegation for action buttons — avoids scope issues with inline handlers
+  tbody.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btn-action');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    if (btn.classList.contains('btn-match')) { findMatches(id); }
+    else if (btn.classList.contains('btn-approve')) { updateStatus(id, 'approved'); }
+    else if (btn.classList.contains('btn-reject')) { openRejectModal({id: id, email: btn.dataset.email || '', name: encodeURIComponent(btn.dataset.name || '')}); }
+  });
 }
 
 window.setFilter = function(filter) {

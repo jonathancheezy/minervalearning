@@ -12,7 +12,7 @@
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'DM Sans',system-ui,sans-serif;background:var(--surface);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
     h1,h2,h3,h4{font-family:'Outfit',sans-serif;letter-spacing:-0.02em}
-    .header{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+    .header{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;position:relative}
     .header-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
     .logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:8px;display:flex;align-items:center;justify-content:center}
     .logo-mark svg{width:18px;height:18px}
@@ -143,16 +143,12 @@
     .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
     .hamburger.open span:nth-child(2){opacity:0}
     .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
-    .nav-dropdown{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:2px;position:static;background:none;border:none;box-shadow:none;padding:0;min-width:0;flex-grow:1}
-    .nav-dropdown a{font-size:0.875rem;font-weight:500;color:var(--dark);text-decoration:none;padding:7px 12px;border-radius:8px;transition:background 0.15s;white-space:nowrap}
-    .nav-dropdown a:hover{background:rgba(124,58,237,0.06);color:var(--primary)}
-    .nav-dropdown a.active{color:var(--primary);font-weight:600}
+    .nav-centered{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:4px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+    .nav-centered a{font-size:0.875rem;font-weight:500;color:var(--dark);text-decoration:none;padding:7px 14px;border-radius:8px;transition:background 0.15s;white-space:nowrap}
+    .nav-centered a:hover{background:rgba(124,58,237,0.06);color:var(--primary)}
+    .nav-centered a.active{color:var(--primary);font-weight:600}
     .lang-dropdown.show{display:block!important}
     .lang-option.active{color:var(--primary);font-weight:700}
-    .nav-dropdown .nav-divider{width:1px;height:20px;background:var(--border);margin:0 4px}
-    .nav-dropdown a{font-size:0.875rem;font-weight:500;color:var(--dark);text-decoration:none;padding:8px 12px;border-radius:8px;transition:background 0.15s;white-space:nowrap}
-    .nav-dropdown a:hover{background:rgba(124,58,237,0.06);color:var(--primary)}
-    .nav-dropdown a.active{color:var(--primary);font-weight:600}
     .lang-dropdown.show{display:block!important}
     .lang-option.active{color:var(--primary);font-weight:700}
     .header-right{position:relative}
@@ -169,13 +165,13 @@
     <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
     <span class="logo-text">Minerva</span>
   </a>
-  <div class="header-right">
-    <nav class="nav-dropdown" id="nav-dropdown">
+    <nav class="nav-centered" id="nav-centered">
       <a href="/admin_dashboard" class="active">Dashboard</a>
       <a href="/approved-teachers.html" class="nav-db-link">Teachers</a>
       <a href="/approved-students.html" class="nav-db-link">Students</a>
       <a href="/matched.html" class="nav-db-link">Matched</a>
     </nav>
+  <div class="header-right">
     <div class="lang-wrap" style="position:relative">
       <button class="lang-btn" id="langBtn" onclick="toggleLang()" style="display:flex;align-items:center;gap:5px;padding:7px 10px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:0.8125rem;font-weight:600;color:var(--primary);cursor:pointer;font-family:'DM Sans',sans-serif">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>

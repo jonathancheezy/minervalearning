@@ -2,7 +2,7 @@
 (function(){
   const T = {
     // ── Landing page (flat keys) ──
-    badge:{en:"Hong Kong Pilot — Coming Q3 2026",zhTW:"香港先導計劃 — 2026年第三季度推出",zhCN:"香港先导计划 — 2026年第三季度推出"},
+    badge:{en:"Early Access",zhTW:"香港先導計劃 — 2026年第三季度推出",zhCN:"香港先导计划 — 2026年第三季度推出"},
     hero_title:{en:'Learn from the <span class="highlight">best</span>,<br>backed by trust.',zhTW:'跟隨<span class="highlight">最好</span>的老師學習，<br>信任背書。',zhCN:'跟随<span class="highlight">最好</span>的老师学习，<br>信任背书。'},
     hero_subtitle:{en:"Minerva is the first AI-powered learning marketplace in Asia with verified teachers, escrow payments, and online scheduling — so you can focus on learning, not worrying.",zhTW:"Minerva是亞洲首個人工智能驅動的學習市場，擁有已驗證導師、託管付款和在線預約系統——讓您專注於學習，而不是擔憂。",zhCN:"Minerva是亚洲首个人工智能驱动的学习市场，拥有已验证导师、托管付款和在线预约系统——让您专注于学习，而不是担忧。"},
     btn_register_teacher:{en:"Register as Teacher →",zhTW:"註冊成為導師 →",zhCN:"注册成为导师 →"},

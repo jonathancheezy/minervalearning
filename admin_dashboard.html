@@ -135,7 +135,7 @@
     .btn-assign.assigned{background:var(--success);cursor:default}
     .toast{position:fixed;bottom:2rem;right:2rem;background:var(--dark);color:white;padding:12px 20px;border-radius:12px;font-size:0.875rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);z-index:2000;opacity:0;transform:translateY(10px);transition:all 0.2s;pointer-events:none}
     .toast.show{opacity:1;transform:translateY(0)}.toast.success{background:var(--success)}.toast.error{background:var(--danger)}.toast.info{background:var(--primary)}
-    @media(max-width:768px){.layout{padding:1rem;padding-bottom:calc(1rem + env(safe-area-inset-bottom,20px))}.header{padding:0 1rem}thead th:nth-child(n+4),tbody td:nth-child(n+4){display:none}.detail-grid{grid-template-columns:1fr}.modal{max-height:95vh}.teacher-card{flex-wrap:wrap}}
+    @media(max-width:768px){.layout{padding:1rem;padding-bottom:calc(1rem + env(safe-area-inset-bottom,20px))}.header{height:56px;padding:0 1rem}.header-logo .logo-text{font-size:0.9rem}.lang-btn{padding:5px 8px;font-size:0.75rem}.btn-logout{padding:5px 8px;font-size:0.75rem}}thead th:nth-child(n+4),tbody td:nth-child(n+4){display:none}.detail-grid{grid-template-columns:1fr}.modal{max-height:95vh}.teacher-card{flex-wrap:wrap}}
 
     .hamburger{background:none;border:none;cursor:pointer;padding:8px;display:none;flex-direction:column;gap:5px;border-radius:8px;transition:background 0.15s}
     .nav-dropdown{display:none;position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px;box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:99;min-width:160px;flex-direction:column;gap:4px}
@@ -157,7 +157,7 @@
     .lang-option{display:flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:7px;cursor:pointer;font-size:0.8125rem;font-weight:500;color:var(--primary);border:none;background:none;width:100%;text-align:center;font-family:'DM Sans',sans-serif}
     .lang-dropdown{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--border);border-radius:10px;padding:6px;flex-direction:column;align-items:center;z-index:200;min-width:80px;box-shadow:0 8px 24px rgba(0,0,0,0.08);gap:2px}
     .header-right{position:relative}
-    @media(max-width:700px){.hamburger{display:flex}.nav-centered{display:none}.nav-dropdown{display:flex}.header{padding:0 1rem}}
+    @media(max-width:700px){.hamburger{display:flex}.nav-centered{display:none}.nav-dropdown{position:static;display:none;width:100%;border-radius:0;border-left:none;border-right:none;box-shadow:none}.nav-dropdown.open{display:block}.header{padding:0 1rem}}
 
   .lang-option:hover{background:rgba(124,58,237,0.06);color:var(--dark)}
 </style>
@@ -201,7 +201,7 @@
 </header>
 
 <main class="layout">
-  <div class="page-header">
+  <div class="page-header" style="padding-top:1rem">
     <h1 class="page-title" data-i18n="admin_nav_dashboard">Dashboard</h1>
     <p class="page-subtitle" data-i18n="admin_page_subtitle">Manage registrations and track submissions</p>
   </div>
@@ -209,22 +209,22 @@
   <div class="stats-grid">
     <div class="stat-card purple">
       <div class="stat-label purple" data-i18n="admin_stat_total">Total Submissions</div>
-      <div class="stat-value purple" id="stat-total">—</div>
+      <div class="stat-value purple" id="stat-total">0</div>
       <div class="stat-sub purple" data-i18n="admin_stat_all_reg">All registrations</div>
     </div>
     <div class="stat-card teal">
       <div class="stat-label teal" data-i18n="admin_stat_parents">Parents / Students</div>
-      <div class="stat-value teal" id="stat-parents">—</div>
+      <div class="stat-value teal" id="stat-parents">0</div>
       <div class="stat-sub teal" data-i18n="admin_stat_role_parent">Role: parent</div>
     </div>
     <div class="stat-card gold">
       <div class="stat-label gold" data-i18n="admin_stat_teachers">Teachers</div>
-      <div class="stat-value gold" id="stat-teachers">—</div>
+      <div class="stat-value gold" id="stat-teachers">0</div>
       <div class="stat-sub gold" data-i18n="admin_stat_role_teacher">Role: teacher</div>
     </div>
     <div class="stat-card green">
       <div class="stat-label green" data-i18n="admin_stat_pending">Pending Review</div>
-      <div class="stat-value green" id="stat-pending">—</div>
+      <div class="stat-value green" id="stat-pending">0</div>
       <div class="stat-sub green" data-i18n="admin_stat_awaiting">Awaiting approval</div>
     </div>
 

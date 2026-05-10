@@ -99,7 +99,7 @@
     road_progress_title:{en:"AI progress tracking",zhTW:"AI 進度追蹤",zhCN:"AI 进度追踪"},
     road_progress_desc:{en:"After every lesson, an AI summary tracks skill gaps and progress toward exam goals.",zhTW:"每節課後，AI 摘要都會追蹤技能差距和考試目標的進度。",zhCN:"每节课后，AI 摘要都会追踪技能差距和考试目标的进度。"},
     otp_verify_title:{en:"Verify your email",zhTW:"驗證您的電郵",zhCN:"驗證您的電郵"},
-    otp_verify_subtitle:{en:"We've sent a verification link to",zhTW:"我們已發送驗證連結至",zhCN:"我们已发送验证链接至"},
+    otp_verify_subtitle:{en:"We've sent a 4-digit code to",zhTW:"我們已發送4位數驗證碼至",zhCN:"我们已发送4位数字验证码至"},
     otp_click_link:{en:"Click the link in the email to verify your address.",zhTW:"點擊電郵中的連結以驗證您的地址。",zhCN:"点击邮件中的链接以验证您的地址。"},
     otp_verified:{en:"Email verified ✓",zhTW:"電郵已驗證 ✓",zhCN:"电邮已验证 ✓"},
     otp_continue:{en:"Continue",zhTW:"繼續",zhCN:"繼續"},

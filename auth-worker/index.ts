@@ -76,9 +76,23 @@ export default {
         return Response.json({ valid: result.valid, email: result.email }, { headers: corsHeaders });
       }
 
+
+      if (path === '/api/notify/rejection') {
+        const body = await request.json() as { to: string; name: string; reason: string };
+        const { to, name, reason } = body;
+        if (!to || !reason) {
+          return Response.json({ error: 'Missing required fields' }, { status: 400, headers: corsHeaders });
+        }
+        // TODO: Integrate with email service (SendGrid, Mailgun, WhatsApp Business API)
+        // For now, logs the notification — implement email sending in production
+        console.log('[Notify] Rejection to', to, 'name:', name, 'reason:', reason);
+        return Response.json({ success: true }, { headers: corsHeaders });
+      }
+
       return Response.json({ error: 'Not found' }, { status: 404, headers: corsHeaders });
     } catch (err) {
       return Response.json({ error: 'Server error: ' + String(err) }, { status: 500, headers: corsHeaders });
     }
   }
 };
+

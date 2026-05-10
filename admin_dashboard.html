@@ -248,6 +248,35 @@
   </div>
 </div>
 
+<!-- Reject Note Modal -->
+<div class="modal-overlay" id="reject-overlay" onclick="if(event.target===this)closeRejectModal()">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <div>
+        <h3 class="modal-title">Reject Application</h3>
+        <p id="reject-applicant-name" style="font-size:0.8125rem;color:var(--text-muted);margin-top:2px;"></p>
+      </div>
+      <button class="modal-close" onclick="closeRejectModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.875rem;color:var(--text-muted);margin-bottom:1rem;">Add a note for the applicant (optional). This will be sent with the rejection notification.</p>
+      <textarea id="reject-note" placeholder="Reason for rejection (e.g. incomplete documents, does not meet criteria...)" style="width:100%;min-height:100px;padding:10px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.875rem;resize:vertical;" maxlength="500"></textarea>
+      <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;text-align:right;"><span id="reject-note-count">0</span>/500</p>
+      <div style="margin-top:1rem;">
+        <label style="font-size:0.8125rem;color:var(--text);display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="reject-notify" checked style="width:16px;height:16px;">
+          Send rejection email to applicant
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal close-btn" onclick="closeRejectModal()">Cancel</button>
+      <button class="btn-modal reject" id="confirm-reject-btn">Reject</button>
+    </div>
+  </div>
+</div>
+
+
 <!-- Toast -->
 <div id="debug-status" style="position:fixed;top:0;left:0;right:0;background:#7C3AED;color:#fff;text-align:center;padding:6px;font-size:13px;z-index:9999;display:none;">Loading...</div>
 <div class="toast" id="toast"></div>
@@ -516,7 +545,7 @@ window.findMatches = async function(parentId) {
     const isAssigned = t.status === 'matched';
     const freeTag = hasFreeMatch ? '<span class="teacher-tag free">Free match</span>' : '<span class="teacher-tag paid">Paid</span>';
     const verifiedTag = t.certUrl ? '<span class="teacher-tag verified">Cert</span>' : '';
-    const assignBtn = isAssigned ? '<button class="btn-assign assigned" disabled>Matched</button>' : '<button class="btn-assign" data-pid="' + parentId + '" data-tid="' + t.id + '" data-tname="' + (getName(t)).replace(/"/g, '\"') + '">Assign</button>';
+    const assignBtn = isAssigned ? '<button class="btn-assign assigned" disabled>Matched</button>' : '<button class="btn-assign" data-pid="' + parentId + '" data-tid="' + t._id + '" data-tname="' + (getName(t)).replace(/"/g, '\"') + '">Assign</button>';
     return '<div class="teacher-card"><div class="match-score ' + cls + '"><span class="score-num">' + pct + '</span><span class="score-label">%</span></div><div class="teacher-info"><div class="teacher-name">' + getName(t) + '</div><div class="teacher-meta">' + (t.subjects || t.subject ? renderSubjectChips(t.subjects || t.subject) : '<span style="color:var(--text-muted);font-size:0.75rem">—</span>') + (t.studentAgeGroups ? '<span>' + t.studentAgeGroups + '</span>' : '') + '</div><div class="teacher-tags">' + freeTag + verifiedTag + '</div><div class="ai-reason"><div class="ai-reason-label">AI Reason</div>' + (reasons.join(' · ') || 'General match') + '</div></div><div class="teacher-actions">' + assignBtn + '<span style="font-size:0.6875rem;color:var(--text-muted)">' + (hasFreeMatch ? 'Free' : 'Paid') + '</span></div></div>';
   }).join('');
   panel.querySelectorAll('.btn-assign:not(.assigned)').forEach(b => b.addEventListener('click', () => assignMatch(b.dataset.pid, b.dataset.tid, b.dataset.tname, b)));
@@ -526,7 +555,7 @@ async function assignMatch(parentId, teacherId, teacherName, btn) {
   btn.disabled = true; btn.textContent = 'Assigning...';
   try {
     await updateDoc(doc(db, 'registrations', parentId), { status: 'matched', matchedTeacherId: teacherId, matchedTeacherName: teacherName, matchedAt: new Date() });
-    const teacher = allTeachers.find(t => t.id === teacherId);
+    const teacher = allTeachers.find(t => t._id === teacherId);
     const currentFree = parseInt(teacher?.freeMatchesRemaining) || 0;
     await updateDoc(doc(db, 'registrations', teacherId), { freeMatchesRemaining: Math.max(0, currentFree - 1) });
     const pi = allRegistrations.findIndex(r => r.id === parentId);
@@ -632,7 +661,54 @@ async function updateStatus(id, newStatus) {
 }
 window.updateStatus = updateStatus;
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeMatchModal(); } });
+
+let pendingRejectId = null;
+
+window.openRejectModal = function(dataset) {
+  pendingRejectId = dataset.id;
+  const name = decodeURIComponent(dataset.name || 'this applicant');
+  document.getElementById('reject-applicant-name').textContent = name;
+  document.getElementById('reject-note').value = '';
+  document.getElementById('reject-note-count').textContent = '0';
+  document.getElementById('confirm-reject-btn').disabled = false;
+  document.getElementById('reject-overlay').classList.add('open');
+};
+
+window.closeRejectModal = function() {
+  document.getElementById('reject-overlay').classList.remove('open');
+  pendingRejectId = null;
+};
+
+document.getElementById('reject-note').addEventListener('input', function() {
+  document.getElementById('reject-note-count').textContent = this.value.length;
+});
+
+document.getElementById('confirm-reject-btn').addEventListener('click', async function() {
+  if (!pendingRejectId) return;
+  this.disabled = true;
+  this.textContent = 'Rejecting...';
+  const note = document.getElementById('reject-note').value.trim();
+  const notify = document.getElementById('reject-notify').checked;
+  try {
+    if (notify && note) {
+      const email = document.querySelector('.btn-reject[data-id="' + pendingRejectId + '"]')?.dataset?.email;
+      if (email) {
+        await fetch('https://minerva-auth.minerva-ai-learning.workers.dev/api/notify/rejection', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ to: email, name: decodeURIComponent(document.getElementById('reject-applicant-name').textContent), reason: note })
+        }).catch(() => {});
+      }
+    }
+    await updateStatus(pendingRejectId, 'rejected', note);
+  } catch(err) {
+    showToast('Failed: ' + err.message, 'error');
+    this.disabled = false;
+    this.textContent = 'Reject';
+  }
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeMatchModal(); closeRejectModal(); } });
 
 // loadRegistrations called after verifyAdmin()
 </script>

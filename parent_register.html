@@ -22,7 +22,7 @@
 
     /* Nav — matching landing page */
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(0,0,0,0.05); }
-    .nav-inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
         .nav-right { display: flex; align-items: center; gap: 8px; }
     .lang-wrap { position: relative; }
     .lang-btn {
@@ -151,8 +151,8 @@
         </svg>
         Minerva
       </a>
+      <span class="nav-badge" data-i18n="badge">Early Access</span>
       <div class="nav-right">
-        <span class="nav-badge" data-i18n="badge">Early Access</span>
         <div class="lang-wrap">
           <button class="lang-btn" id="langBtn" onclick="toggleLang()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>

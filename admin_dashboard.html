@@ -147,7 +147,7 @@
 <header class="header">
   <a href="/" class="header-logo">
     <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
-    <span class="logo-text">Minerva <span>Admin</span></span>
+    <span class="logo-text">Minerva</span>
   </a>
   <div class="header-right">
     <span class="header-badge">Live</span>
@@ -448,9 +448,9 @@ function renderTable(regs) {
       '<td><span class="td-status ' + status + '">' + statusLabel + '</span></td>' +
       '<td><span class="td-time">' + formatDate(reg.submittedAt) + '</span></td>' +
       '<td><div class="td-actions">' +
-        '<a class="btn-action btn-view" href="/profile.html?id=' + reg.id + '">View</a>' +
-        (isParent && isPending ? ' <button class="btn-action btn-match" data-id="' + reg.id + '">Match</button>' : '') +
-        (isPending ? ' <button class="btn-action btn-approve" data-id="' + reg.id + '">Approve</button><button class="btn-action btn-reject" data-id="' + reg.id + '">Reject</button>' : '') +
+        '<a class="btn-action btn-view" href="/profile.html?id=' + reg._id + '">View</a>' +
+        (isParent && isPending ? ' <button class="btn-action btn-match" data-id="' + reg._id + '">Match</button>' : '') +
+        (isPending ? ' <button class="btn-action btn-approve" data-id="' + reg._id + '">Approve</button><button class="btn-action btn-reject" data-id="' + reg._id + '">Reject</button>' : '') +
       '</div></td>';
     tbody.appendChild(tr);
   });
@@ -546,7 +546,7 @@ async function assignMatch(parentId, teacherId, teacherName, btn) {
 window.closeMatchModal = function() { document.getElementById('match-overlay').classList.remove('open'); };
 
 window.openModal = function(id) {
-  const r = allRegistrations.find(reg => reg.id === id);
+  const r = allRegistrations.find(reg => reg._id === id);
   if (!r) return;
   const role = String(r.role || 'parent').toLowerCase();
   const status = String(r.status || 'pending').toLowerCase();

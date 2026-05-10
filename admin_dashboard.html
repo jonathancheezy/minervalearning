@@ -248,35 +248,6 @@
   </div>
 </div>
 
-<!-- Reject Note Modal -->
-<div class="modal-overlay" id="reject-overlay" onclick="if(event.target===this)closeRejectModal()">
-  <div class="modal" style="max-width:480px;">
-    <div class="modal-header">
-      <div>
-        <h3 class="modal-title">Reject Application</h3>
-        <p id="reject-applicant-name" style="font-size:0.8125rem;color:var(--text-muted);margin-top:2px;"></p>
-      </div>
-      <button class="modal-close" onclick="closeRejectModal()">×</button>
-    </div>
-    <div class="modal-body">
-      <p style="font-size:0.875rem;color:var(--text-muted);margin-bottom:1rem;">Add a note for the applicant (optional). This will be sent with the rejection notification.</p>
-      <textarea id="reject-note" placeholder="Reason for rejection (e.g. incomplete documents, does not meet criteria...)" style="width:100%;min-height:100px;padding:10px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.875rem;resize:vertical;" maxlength="500"></textarea>
-      <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;text-align:right;"><span id="reject-note-count">0</span>/500</p>
-      <div style="margin-top:1rem;">
-        <label style="font-size:0.8125rem;color:var(--text);display:flex;align-items:center;gap:8px;cursor:pointer;">
-          <input type="checkbox" id="reject-notify" checked style="width:16px;height:16px;">
-          Send rejection email to applicant
-        </label>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-modal close-btn" onclick="closeRejectModal()">Cancel</button>
-      <button class="btn-modal reject" id="confirm-reject-btn">Reject</button>
-    </div>
-  </div>
-</div>
-
-
 <!-- Toast -->
 <div id="debug-status" style="position:fixed;top:0;left:0;right:0;background:#7C3AED;color:#fff;text-align:center;padding:6px;font-size:13px;z-index:9999;display:none;">Loading...</div>
 <div class="toast" id="toast"></div>
@@ -479,13 +450,13 @@ function renderTable(regs) {
       '<td><div class="td-actions">' +
         '<a class="btn-action btn-view" href="/profile.html?id=' + reg._id + '">View</a>' +
         (isParent && isPending ? ' <button class="btn-action btn-match" data-id="' + reg._id + '">Match</button>' : '') +
-        (isPending ? ' <button class="btn-action btn-approve" data-id="' + reg._id + '">Approve</button><button class="btn-action btn-reject" data-id="' + reg._id + '" data-email="' + (reg.email || '') + '" data-name="' + encodeURIComponent(getName(reg)) + '">Reject</button> : '') +
+        (isPending ? ' <button class="btn-action btn-approve" data-id="' + reg._id + '">Approve</button><button class="btn-action btn-reject" data-id="' + reg._id + '">Reject</button>' : '') +
       '</div></td>';
     tbody.appendChild(tr);
   });
   tbody.querySelectorAll('.btn-match').forEach(b => b.addEventListener('click', () => findMatches(b.dataset.id)));
   tbody.querySelectorAll('.btn-approve').forEach(b => b.addEventListener('click', () => updateStatus(b.dataset.id, 'approved')));
-  tbody.querySelectorAll('.btn-reject').forEach(b => b.addEventListener('click', () => openRejectModal(b.dataset)));
+  tbody.querySelectorAll('.btn-reject').forEach(b => b.addEventListener('click', () => updateStatus(b.dataset.id, 'rejected')));
 }
 
 window.setFilter = function(filter) {
@@ -529,7 +500,7 @@ function scoreMatch(t, p) {
 }
 
 window.findMatches = async function(parentId) {
-  const parent = allRegistrations.find(r => r._id === parentId);
+  const parent = allRegistrations.find(r => r.id === parentId);
   if (!parent) return;
   document.getElementById('match-parent-name').textContent = getName(parent) + ' — ' + (parent.subject || 'General') + (parent.studentAge ? ' | Age ' + parent.studentAge : '');
   const panel = document.getElementById('match-results-body');
@@ -545,7 +516,7 @@ window.findMatches = async function(parentId) {
     const isAssigned = t.status === 'matched';
     const freeTag = hasFreeMatch ? '<span class="teacher-tag free">Free match</span>' : '<span class="teacher-tag paid">Paid</span>';
     const verifiedTag = t.certUrl ? '<span class="teacher-tag verified">Cert</span>' : '';
-    const assignBtn = isAssigned ? '<button class="btn-assign assigned" disabled>Matched</button>' : '<button class="btn-assign" data-pid="' + parentId + '" data-tid="' + t._id + '" data-tname="' + (getName(t)).replace(/"/g, '\"') + '">Assign</button>';
+    const assignBtn = isAssigned ? '<button class="btn-assign assigned" disabled>Matched</button>' : '<button class="btn-assign" data-pid="' + parentId + '" data-tid="' + t.id + '" data-tname="' + (getName(t)).replace(/"/g, '\"') + '">Assign</button>';
     return '<div class="teacher-card"><div class="match-score ' + cls + '"><span class="score-num">' + pct + '</span><span class="score-label">%</span></div><div class="teacher-info"><div class="teacher-name">' + getName(t) + '</div><div class="teacher-meta">' + (t.subjects || t.subject ? renderSubjectChips(t.subjects || t.subject) : '<span style="color:var(--text-muted);font-size:0.75rem">—</span>') + (t.studentAgeGroups ? '<span>' + t.studentAgeGroups + '</span>' : '') + '</div><div class="teacher-tags">' + freeTag + verifiedTag + '</div><div class="ai-reason"><div class="ai-reason-label">AI Reason</div>' + (reasons.join(' · ') || 'General match') + '</div></div><div class="teacher-actions">' + assignBtn + '<span style="font-size:0.6875rem;color:var(--text-muted)">' + (hasFreeMatch ? 'Free' : 'Paid') + '</span></div></div>';
   }).join('');
   panel.querySelectorAll('.btn-assign:not(.assigned)').forEach(b => b.addEventListener('click', () => assignMatch(b.dataset.pid, b.dataset.tid, b.dataset.tname, b)));
@@ -555,10 +526,10 @@ async function assignMatch(parentId, teacherId, teacherName, btn) {
   btn.disabled = true; btn.textContent = 'Assigning...';
   try {
     await updateDoc(doc(db, 'registrations', parentId), { status: 'matched', matchedTeacherId: teacherId, matchedTeacherName: teacherName, matchedAt: new Date() });
-    const teacher = allTeachers.find(t => t._id === teacherId);
+    const teacher = allTeachers.find(t => t.id === teacherId);
     const currentFree = parseInt(teacher?.freeMatchesRemaining) || 0;
     await updateDoc(doc(db, 'registrations', teacherId), { freeMatchesRemaining: Math.max(0, currentFree - 1) });
-    const pi = allRegistrations.findIndex(r => r._id === parentId);
+    const pi = allRegistrations.findIndex(r => r.id === parentId);
     if (pi >= 0) { allRegistrations[pi].status = 'matched'; allRegistrations[pi].matchedTeacherName = teacherName; }
     updateStats();
     const filtered = currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === currentFilter);
@@ -636,7 +607,7 @@ window.openModal = function(id) {
   document.getElementById('modal-body').innerHTML = html;
   const footer = document.getElementById('modal-footer');
   if (status === 'pending') {
-  footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>' + (role === 'parent' ? '<button class="btn-modal" style="background:rgba(14,165,233,0.1);color:#0284C7" onclick="closeModal();findMatches(\'' + r._id + '\')">Find Matches</button>' : '') + '<button class="btn-modal reject" onclick="openRejectModal({id: r._id, email: r.email || '', name: encodeURIComponent(getName(r))})">Reject</button><button class="btn-modal approve" onclick="updateStatus(r._id, 'approved')">Approve</button>';
+    footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>' + (role === 'parent' ? '<button class="btn-modal" style="background:rgba(14,165,233,0.1);color:#0284C7" onclick="closeModal();findMatches(\'' + r.id + '\')">Find Matches</button>' : '') + '<button class="btn-modal reject" onclick="updateStatus(\'' + r.id + '\', \'rejected\')">Reject</button><button class="btn-modal approve" onclick="updateStatus(\'' + r.id + '\', \'approved\')">Approve</button>';
   } else {
     footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>';
   }
@@ -645,21 +616,15 @@ window.openModal = function(id) {
 
 window.closeModal = function() { document.getElementById('modal-overlay').classList.remove('open'); };
 
-async function updateStatus(id, newStatus, note) {
+async function updateStatus(id, newStatus) {
   try {
-    const adminEmail = sessionStorage.getItem('minerva_admin_email') || 'admin@minerva.ai';
-    const now = new Date().toISOString();
-    const updates = { status: newStatus, updatedAt: now, updatedBy: adminEmail };
-    if (newStatus === 'approved') { updates.approvedAt = now; updates.approvedBy = adminEmail; }
-    if (note) updates.adminNote = note;
-    await updateDoc(doc(db, 'registrations', id), updates);
-    const idx = allRegistrations.findIndex(r => r._id === id);
-    if (idx >= 0) { allRegistrations[idx].status = newStatus; Object.assign(allRegistrations[idx], updates); }
+    await updateDoc(doc(db, 'registrations', id), { status: newStatus });
+    const idx = allRegistrations.findIndex(r => r.id === id);
+    if (idx >= 0) allRegistrations[idx].status = newStatus;
     updateStats();
-    renderTable(currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '' ).toLowerCase() === currentFilter));
+    renderTable(currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === currentFilter));
     closeModal();
-    closeRejectModal();
-    showToast(newStatus === 'approved' ? 'Approved!' : 'Rejected' + (note ? ' with note' : ''));
+    showToast(newStatus === 'approved' ? 'Approved!' : 'Rejected');
   } catch (err) {
     console.error('Update error:', err);
     showToast('Failed: ' + err.message, 'error');
@@ -667,54 +632,7 @@ async function updateStatus(id, newStatus, note) {
 }
 window.updateStatus = updateStatus;
 
-
-let pendingRejectId = null;
-
-window.openRejectModal = function(dataset) {
-  pendingRejectId = dataset.id;
-  const name = decodeURIComponent(dataset.name || 'this applicant');
-  document.getElementById('reject-applicant-name').textContent = name;
-  document.getElementById('reject-note').value = '';
-  document.getElementById('reject-note-count').textContent = '0';
-  document.getElementById('confirm-reject-btn').disabled = false;
-  document.getElementById('reject-overlay').classList.add('open');
-};
-
-window.closeRejectModal = function() {
-  document.getElementById('reject-overlay').classList.remove('open');
-  pendingRejectId = null;
-};
-
-document.getElementById('reject-note').addEventListener('input', function() {
-  document.getElementById('reject-note-count').textContent = this.value.length;
-});
-
-document.getElementById('confirm-reject-btn').addEventListener('click', async function() {
-  if (!pendingRejectId) return;
-  this.disabled = true;
-  this.textContent = 'Rejecting...';
-  const note = document.getElementById('reject-note').value.trim();
-  const notify = document.getElementById('reject-notify').checked;
-  try {
-    if (notify && note) {
-      const email = document.querySelector('.btn-reject[data-id="' + pendingRejectId + '"]')?.dataset?.email;
-      if (email) {
-        await fetch('https://minerva-auth.minerva-ai-learning.workers.dev/api/notify/rejection', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ to: email, name: decodeURIComponent(document.getElementById('reject-applicant-name').textContent), reason: note })
-        }).catch(() => {});
-      }
-    }
-    await updateStatus(pendingRejectId, 'rejected', note);
-  } catch(err) {
-    showToast('Failed: ' + err.message, 'error');
-    this.disabled = false;
-    this.textContent = 'Reject';
-  }
-});
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeMatchModal(); closeRejectModal(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeMatchModal(); } });
 
 // loadRegistrations called after verifyAdmin()
 </script>

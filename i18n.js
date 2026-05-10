@@ -1016,6 +1016,10 @@
 
   window.T = T;
   window.lang = lang;
+  window.err = function(k, fallback) {
+    const t = window.T && window.T[k];
+    return t && t[lang] || fallback || k;
+  };
 
   window.setLang = function(l) {
     // Normalize: zh-TW → zhTW, zh-CN → zhCN
@@ -1155,6 +1159,32 @@
     "opt_linkedin":{en:"LinkedIn",zhTW:"LinkedIn",zhCN:"LinkedIn"},
     "opt_friend_referral":{en:"Friend / referral",zhTW:"朋友推薦",zhCN:"朋友推荐"},
     "opt_edu_forum":{en:"Education forum",zhTW:"教育論壇",zhCN:"教育论坛"},
+    "err_first_name_required":{en:"First name is required",zhTW:"名字為必填項",zhCN:"名字为必填项"},
+    "err_email_required":{en:"Email is required",zhTW:"電郵為必填項",zhCN:"电邮为必填项"},
+    "err_email_invalid":{en:"Please enter a valid email",zhTW:"請輸入有效的電郵地址",zhCN:"请输入有效的电邮地址"},
+    "err_whatsapp_required":{en:"WhatsApp number is required",zhTW:"WhatsApp 號碼為必填項",zhCN:"WhatsApp 号码为必填项"},
+    "err_student_first_required":{en:"Student first name is required",zhTW:"學生名字為必填項",zhCN:"学生名字为必填项"},
+    "err_year_form_required":{en:"Year / Form is required",zhTW:"請選擇年級",zhCN:"请选择年级"},
+    "err_school_type_required":{en:"School type is required",zhTW:"請選擇學校類型",zhCN:"请选择学校类型"},
+    "err_student_gender_required":{en:"Student gender is required",zhTW:"請選擇學生性別",zhCN:"请选择学生性别"},
+    "err_subject_required":{en:"Please select at least one subject",zhTW:"請選擇至少一個科目",zhCN:"请选择至少一个科目"},
+    "err_learning_goal_required":{en:"Learning goal is required",zhTW:"請選擇學習目標",zhCN:"请选择学习目标"},
+    "err_current_level_required":{en:"Current level is required",zhTW:"請選擇現時程度",zhCN:"请选择现时程度"},
+    "err_preferred_area_required":{en:"Preferred area is required",zhTW:"請選擇偏好地區",zhCN:"请选择偏好地区"},
+    "err_budget_required":{en:"Budget is required",zhTW:"請選擇每小時預算",zhCN:"请选择每小时预算"},
+    "err_lesson_frequency_required":{en:"Lesson frequency is required",zhTW:"請選擇每週課堂數",zhCN:"请选择每周课堂数"},
+    "err_lesson_duration_required":{en:"Lesson duration is required",zhTW:"請選擇課堂時長",zhCN:"请选择课堂时长"},
+    "err_teacher_gender_required":{en:"Teacher gender preference is required",zhTW:"請選擇偏好教師性別",zhCN:"请选择偏好教师性别"},
+    "err_start_date_required":{en:"When to start is required",zhTW:"請選擇開始時間",zhCN:"请选择开始时间"},
+    "err_bio_required":{en:"Bio / About you is required",zhTW:"自我介紹為必填項",zhCN:"自我介绍为必填项"},
+    "err_years_exp_required":{en:"Years of experience is required",zhTW:"任教年資為必填項",zhCN:"任教资历为必填项"},
+    "err_qualification_required":{en:"Teaching qualification is required",zhTW:"教學資格為必填項",zhCN:"教学资格为必填项"},
+    "err_hourly_rate_required":{en:"Hourly rate is required",zhTW:"時薪為必填項",zhCN:"时薪为必填项"},
+    "err_age_groups_required":{en:"Student age groups is required",zhTW:"學生年齡組別為必填項",zhCN:"学生年龄组别为必填项"},
+    "err_preferred_area_teacher_required":{en:"Preferred area is required",zhTW:"請選擇偏好地區",zhCN:"请选择偏好地区"},
+    "err_travel_distance_required":{en:"Max travel distance is required",zhTW:"最長通勤距離為必填項",zhCN:"最长通勤距离为必填项"},
+    "err_availability_required":{en:"Availability is required",zhTW:"可用時間為必填項",zhCN:"可用时间为必填项"},
+    "err_submit_generic":{en:"Something went wrong. Please try again.",zhTW:"出了點問題，請重試。",zhCN:"出了点问题，请重试。"},
   };
 
   window.getLang = function() { return lang; };

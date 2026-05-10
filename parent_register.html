@@ -306,21 +306,21 @@
         const firstName = document.getElementById('firstName').value.trim();
         const email = document.getElementById('email').value.trim();
         const whatsapp = document.getElementById('whatsapp').value.trim();
-        if (!firstName) errors.push('First name is required');
-        if (!email) errors.push('Email is required');
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Please enter a valid email');
-        if (!whatsapp) errors.push('WhatsApp number is required');
+        if (!firstName) errors.push(err('err_first_name_required'));
+        if (!email) errors.push(err('err_email_required'));
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push(err('err_email_invalid'));
+        if (!whatsapp) errors.push(err('err_whatsapp_required'));
       }
       if (step === 2) {
         const studentFirstName = document.getElementById('studentFirstName').value.trim();
         const studentLevel = document.getElementById('studentLevel').value;
         const schoolType = document.getElementById('schoolType').value;
         const studentGender = document.getElementById('studentGender').value;
-        if (!studentFirstName) errors.push('Student first name is required');
-        if (!studentLevel) errors.push('Year / Form is required');
-        if (!schoolType) errors.push('School type is required');
-        if (!studentGender) errors.push('Student gender is required');
-        if (selectedSubjects.length === 0) errors.push('Please select at least one subject');
+        if (!studentFirstName) errors.push(err('err_student_first_required'));
+        if (!studentLevel) errors.push(err('err_year_form_required'));
+        if (!schoolType) errors.push(err('err_school_type_required'));
+        if (!studentGender) errors.push(err('err_student_gender_required'));
+        if (selectedSubjects.length === 0) errors.push(err('err_subject_required'));
       }
       if (step === 3) {
         const learningGoal = document.getElementById('learningGoal').value;
@@ -331,14 +331,14 @@
         const lessonDuration = document.getElementById('lessonDuration').value;
         const teacherGender = document.getElementById('teacherGender').value;
         const startDate = document.getElementById('startDate').value;
-        if (!learningGoal) errors.push('Learning goal is required');
-        if (!currentLevel) errors.push('Current level is required');
-        if (!district) errors.push('Preferred area is required');
-        if (!budget) errors.push('Budget is required');
-        if (!lessonFrequency) errors.push('Lesson frequency is required');
-        if (!lessonDuration) errors.push('Lesson duration is required');
-        if (!teacherGender) errors.push('Teacher gender preference is required');
-        if (!startDate) errors.push('When to start is required');
+        if (!learningGoal) errors.push(err('err_learning_goal_required'));
+        if (!currentLevel) errors.push(err('err_current_level_required'));
+        if (!district) errors.push(err('err_preferred_area_required'));
+        if (!budget) errors.push(err('err_budget_required'));
+        if (!lessonFrequency) errors.push(err('err_lesson_frequency_required'));
+        if (!lessonDuration) errors.push(err('err_lesson_duration_required'));
+        if (!teacherGender) errors.push(err('err_teacher_gender_required'));
+        if (!startDate) errors.push(err('err_start_date_required'));
       }
       return errors;
     }
@@ -407,7 +407,7 @@
       const firestoreFields = {}; for (const [k,v] of Object.entries(fields)) { firestoreFields[k] = { stringValue: String(v) }; }
       fetch('https://minerva-submit.minerva-ai-learning.workers.dev/api/submit', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({fields:firestoreFields,role:'parent'}) })
       .then(r => r.json()).then(data => { document.getElementById('formPage').style.display = 'none'; document.getElementById('successPage').style.display = 'block'; })
-      .catch(err => { console.error('Submit error:', err); btn.disabled = false; btn.textContent = 'Complete Registration →'; document.getElementById('submitError').style.display='block';document.getElementById('submitError').textContent='Submission failed. Please check your connection and try again.'; });
+      .catch(err => { console.error('Submit error:', err); btn.disabled = false; btn.textContent = 'Complete Registration →'; document.getElementById('submitError').style.display='block';document.getElementById('submitError').textContent=err('err_submit_generic','Submission failed. Please check your connection and try again.'); });
     }
   </script>
   <script src="i18n.js"></script>

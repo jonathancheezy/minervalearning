@@ -295,10 +295,10 @@
         const firstName = document.getElementById('firstName').value.trim();
         const email = document.getElementById('email').value.trim();
         const whatsapp = document.getElementById('whatsapp').value.trim();
-        if (!firstName) errors.push('First name is required');
-        if (!email) errors.push('Email is required');
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Please enter a valid email');
-        if (!whatsapp) errors.push('WhatsApp number is required');
+        if (!firstName) errors.push(err('err_first_name_required'));
+        if (!email) errors.push(err('err_email_required'));
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push(err('err_email_invalid'));
+        if (!whatsapp) errors.push(err('err_whatsapp_required'));
       }
       if (step === 2) {
         const bio = document.getElementById('bio').value.trim();
@@ -306,22 +306,22 @@
         const qualification = document.getElementById('qualification').value;
         const hourlyRate = document.getElementById('hourlyRate').value;
         const ageGroups = document.getElementById('ageGroups').value;
-        if (!bio) errors.push('Bio / About you is required');
-        if (!yearsExp) errors.push('Years of experience is required');
-        if (!qualification) errors.push('Teaching qualification is required');
-        if (!hourlyRate) errors.push('Hourly rate is required');
-        if (!ageGroups) errors.push('Student age groups is required');
-        if (selectedSubjects.length === 0) errors.push('Please select at least one subject');
+        if (!bio) errors.push(err('err_bio_required'));
+        if (!yearsExp) errors.push(err('err_years_exp_required'));
+        if (!qualification) errors.push(err('err_qualification_required'));
+        if (!hourlyRate) errors.push(err('err_hourly_rate_required'));
+        if (!ageGroups) errors.push(err('err_age_groups_required'));
+        if (selectedSubjects.length === 0) errors.push(err('err_subject_required'));
       }
       if (step === 3) {
         const district = document.getElementById('district').value;
         const travelDistance = document.getElementById('travelDistance').value;
         const lessonDuration = document.getElementById('lessonDuration').value;
         const availability = document.getElementById('availability').value;
-        if (!district) errors.push('Preferred area is required');
-        if (!travelDistance) errors.push('Max travel distance is required');
-        if (!lessonDuration) errors.push('Lesson duration is required');
-        if (!availability) errors.push('Availability is required');
+        if (!district) errors.push(err('err_preferred_area_teacher_required'));
+        if (!travelDistance) errors.push(err('err_travel_distance_required'));
+        if (!lessonDuration) errors.push(err('err_lesson_duration_required'));
+        if (!availability) errors.push(err('err_availability_required'));
       }
       return errors;
     }
@@ -389,7 +389,7 @@
       const firestoreFields = {}; for (const [k,v] of Object.entries(fields)) { firestoreFields[k] = { stringValue: String(v) }; }
       fetch('https://minerva-submit.minerva-ai-learning.workers.dev/api/submit', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({fields:firestoreFields,role:'teacher'}) })
       .then(r => r.json()).then(data => { document.getElementById('formPage').style.display = 'none'; document.getElementById('successPage').style.display = 'block'; })
-      .catch(err => { console.error('Submit error:', err); btn.disabled = false; btn.textContent = 'Complete Registration →'; document.getElementById('submitError').style.display='block';document.getElementById('submitError').textContent='Submission failed. Please check your connection and try again.'; });
+      .catch(err => { console.error('Submit error:', err); btn.disabled = false; btn.textContent = 'Complete Registration →'; document.getElementById('submitError').style.display='block';document.getElementById('submitError').textContent=err('err_submit_generic','Submission failed. Please check your connection and try again.'); });
     }
   </script>
   <script src="i18n.js"></script>

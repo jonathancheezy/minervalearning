@@ -94,25 +94,54 @@
     .header-right{position:relative}
     @media(max-width:700px){.hamburger{display:flex}.header-nav-link:not(.hamburger){display:none}.nav-dropdown{left:0;right:auto;min-width:140px}}
 
-  </style>
+  
+    .header{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;position:relative}
+    .header-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:8px;display:flex;align-items:center;justify-content:center}
+    .logo-mark svg{width:18px;height:18px}
+    .logo-text{font-family:'Outfit',sans-serif;font-weight:700;font-size:1.125rem;color:var(--dark)}
+    .header-right{display:flex;align-items:center;gap:12px}
+    .btn-logout{background:none;border:1.5px solid var(--border);cursor:pointer;color:var(--primary);font-size:0.8125rem;font-weight:500;font-family:'DM Sans',sans-serif;padding:5px 12px;border-radius:8px;transition:all 0.15s}
+    .btn-logout:hover{border-color:var(--danger);color:var(--danger)}
+    .nav-centered{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:4px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+    .nav-centered a{font-size:0.875rem;font-weight:500;color:var(--dark);text-decoration:none;padding:7px 14px;border-radius:8px;transition:background 0.15s;white-space:nowrap}
+    .nav-centered a:hover{background:rgba(124,58,237,0.06);color:var(--primary)}
+    .nav-centered a.active{color:var(--primary);font-weight:600}
+    .lang-dropdown.show{display:block!important}
+    .lang-option.active{color:var(--primary);font-weight:700}
+    .lang-wrap{position:relative}
+    .lang-btn{display:flex;align-items:center;gap:5px;padding:7px 10px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:0.8125rem;font-weight:600;color:var(--primary);cursor:pointer;font-family:'DM Sans',sans-serif}
+    .lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--border);border-radius:10px;padding:6px;display:none;z-index:200;min-width:80px;box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+    .lang-option{display:block;width:100%;padding:7px 10px;border:none;background:none;border-radius:6px;font-size:0.8125rem;font-weight:600;color:var(--primary);cursor:pointer;text-align:left}
+    .lang-option:hover{background:rgba(124,58,237,0.06)}
+
+</style>
 </head>
 <body>
-  <header class="header">
-    <a href="/admin_dashboard" class="header-logo">
+  <header class="header"><a href="/" class="header-logo">
       <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
       <span class="logo-text">Minerva</span>
     </a>
-    <div class="header-right">
-    <button class="hamburger" id="hamburger-btn" onclick="toggleNavMenu()">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="nav-dropdown" id="nav-dropdown">
+    <nav class="nav-centered" id="nav-centered">
       <a href="/admin_dashboard">Dashboard</a>
-      <a href="/approved-teachers.html" class="nav-db-link">Teachers</a>
-      <a href="/approved-students.html" class="nav-db-link">Students</a>
-      <a href="/matched.html" class="nav-db-link">Matched</a>
+      <a href="/approved-teachers.html" class="active">Teachers</a>
+      <a href="/approved-students.html">Students</a>
+      <a href="/matched.html">Matched</a>
+    </nav>
+    <div class="header-right">
+      <div class="lang-wrap">
+        <button class="lang-btn" id="langBtn" onclick="toggleLang()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span id="langLabel">EN</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-option active" data-lang="en" onclick="setLang('en')">EN</button>
+          <button class="lang-option" data-lang="zhtw" onclick="setLang('zhtw')">繁</button>
+          <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')">简</button>
+        </div>
+      </div>
+      <button class="btn-logout" id="logout-btn">Logout</button>
     </div>
-  </div>
 </header>
 
   <main class="layout">
@@ -337,5 +366,35 @@
 
     loadRecords();
   </script>
+
+<script>
+window.toggleLang = function() { document.getElementById('langDropdown').classList.toggle('show'); };
+window.setLang = function(lang) {
+  document.documentElement.lang = lang;
+  document.getElementById('langLabel').textContent = lang === 'zhtw' ? '繁' : lang === 'zhcn' ? '简' : 'EN';
+  localStorage.setItem('minerva_lang', lang);
+  document.querySelectorAll('.lang-option').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.lang === lang);
+    b.style.fontWeight = b.dataset.lang === lang ? '700' : '600';
+  });
+  var dd = document.getElementById('langDropdown');
+  if (dd) dd.classList.remove('show');
+};
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.lang-wrap')) {
+    var d = document.getElementById('langDropdown');
+    if (d) d.classList.remove('show');
+  }
+});
+(function() {
+  var saved = localStorage.getItem('minerva_lang');
+  if (saved) { setTimeout(function() { window.setLang(saved); }, 10); }
+})();
+document.getElementById('logout-btn').addEventListener('click', function() {
+  sessionStorage.removeItem('minerva_admin_token');
+  window.location.href = '/admin_login';
+});
+</script>
+
 </body>
 </html>

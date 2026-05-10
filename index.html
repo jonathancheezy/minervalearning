@@ -325,7 +325,86 @@
     .success-msg p { font-size: 0.9375rem; color: var(--gray-500); }
 
     /* ── HOW IT WORKS ── */
-
+    .how-section {
+      padding: 80px 24px;
+      background: #fff;
+      text-align: center;
+    }
+    .how-section h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #1e3a5f;
+      letter-spacing: -0.03em;
+      margin: 0 0 8px;
+    }
+    .how-section-sub {
+      color: #64748B;
+      font-size: 1rem;
+      margin: 0 0 56px;
+      line-height: 1.6;
+    }
+    .timeline {
+      max-width: 560px;
+      margin: 0 auto;
+      text-align: left;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 24px;
+      bottom: 24px;
+      width: 2px;
+      background: linear-gradient(to bottom, #7C3AED, #0EA5E9, #10B981);
+      border-radius: 2px;
+    }
+    .timeline-item {
+      display: flex;
+      gap: 20px;
+      padding-bottom: 40px;
+      position: relative;
+    }
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+    .timeline-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      z-index: 1;
+      box-shadow: 0 0 0 4px #fff, 0 0 0 5px rgba(0,0,0,0.08);
+    }
+    .timeline-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    .timeline-item:nth-child(1) .timeline-icon { background: #7C3AED; }
+    .timeline-item:nth-child(2) .timeline-icon { background: #0EA5E9; }
+    .timeline-item:nth-child(3) .timeline-icon { background: #10B981; }
+    .timeline-content {
+      padding-top: 6px;
+    }
+    .timeline-content strong {
+      display: block;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      margin-bottom: 4px;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .timeline-content p {
+      margin: 0;
+      font-size: 0.9375rem;
+      color: #64748B;
+      line-height: 1.6;
+    }
 
     /* ── COMING SOON ── */
     .coming-section {
@@ -693,28 +772,39 @@
   </section>
 
   <!-- HOW IT WORKS -->
-  <!-- HOW IT WORKS -->
-  <div style="padding: 80px 24px; background: #fff; text-align: center;">
+  <section class="how-section">
     <h2 data-i18n="how_title">Three steps to better learning</h2>
-    <p data-i18n="how_hassle_free">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
-    <div style="max-width: 560px; margin: 0 auto; text-align: left;">
-      <div style="padding: 20px 0; border-bottom: 1px solid #F1F5F9;">
-        <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #7C3AED; color: #fff; font-size: 0.8125rem; font-weight: 700; margin-right: 12px; vertical-align: middle;">1</span>
-        <strong style="font-size: 0.9375rem; color: #0F172A;" data-i18n="step1_title">Search &amp; Book</strong>
-        <p style="margin: 4px 0 0 40px; font-size: 0.8125rem; color: #64748B; line-height: 1.5;" data-i18n="step1_desc">Browse verified teachers, read reviews, and book a lesson that fits your schedule.</p>
+    <p class="how-section-sub" data-i18n="how_hassle_free">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </div>
+        <div class="timeline-content">
+          <strong data-i18n="step1_title">Search &amp; Book</strong>
+          <p data-i18n="step1_desc">Browse verified teachers, read reviews, and book a lesson that fits your schedule.</p>
+        </div>
       </div>
-      <div style="padding: 20px 0; border-bottom: 1px solid #F1F5F9;">
-        <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #0EA5E9; color: #fff; font-size: 0.8125rem; font-weight: 700; margin-right: 12px; vertical-align: middle;">2</span>
-        <strong style="font-size: 0.9375rem; color: #0F172A;" data-i18n="step2_title">Schedule &amp; Confirm</strong>
-        <p style="margin: 4px 0 0 40px; font-size: 0.8125rem; color: #64748B; line-height: 1.5;" data-i18n="step2_desc">Coordinate a time that works for both parties. Automated reminders sent to both.</p>
+      <div class="timeline-item">
+        <div class="timeline-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </div>
+        <div class="timeline-content">
+          <strong data-i18n="step2_title">Schedule &amp; Confirm</strong>
+          <p data-i18n="step2_desc">Coordinate a time that works for both parties. Automated reminders sent to both.</p>
+        </div>
       </div>
-      <div style="padding: 20px 0;">
-        <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #10B981; color: #fff; font-size: 0.8125rem; font-weight: 700; margin-right: 12px; vertical-align: middle;">3</span>
-        <strong style="font-size: 0.9375rem; color: #0F172A;" data-i18n="step3_title">Learn &amp; Track</strong>
-        <p style="margin: 4px 0 0 40px; font-size: 0.8125rem; color: #64748B; line-height: 1.5;" data-i18n="step3_desc">Conduct lessons on Minerva. Track progress via your parent or teacher dashboard.</p>
+      <div class="timeline-item">
+        <div class="timeline-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        </div>
+        <div class="timeline-content">
+          <strong data-i18n="step3_title">Learn &amp; Track</strong>
+          <p data-i18n="step3_desc">Conduct lessons on Minerva. Track progress via your parent or teacher dashboard.</p>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- COMING SOON -->
   <div class="coming-section">

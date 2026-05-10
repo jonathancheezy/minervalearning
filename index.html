@@ -695,8 +695,8 @@
   <!-- HOW IT WORKS -->
   <!-- HOW IT WORKS -->
   <div style="padding: 80px 24px; background: #fff; text-align: center;">
-    <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 800; color: #0F172A; margin: 0 0 8px; letter-spacing: -0.02em;">Three steps to better learning</h2>
-    <p style="font-size: 1rem; color: #64748B; margin: 0 0 40px;">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
+    <h2 data-i18n="how_title">Three steps to better learning</h2>
+    <p data-i18n="how_hassle_free">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
     <div style="max-width: 560px; margin: 0 auto; text-align: left;">
       <div style="padding: 20px 0; border-bottom: 1px solid #F1F5F9;">
         <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #7C3AED; color: #fff; font-size: 0.8125rem; font-weight: 700; margin-right: 12px; vertical-align: middle;">1</span>
@@ -721,65 +721,65 @@
     <div class="coming-inner">
       <div class="coming-eyebrow">
         <i data-lucide="rocket" width="13" height="13"></i>
-        What is coming
+        <span data-i18n="coming_eyebrow">What is coming</span>
       </div>
-      <h2>More ways Minerva<br />helps you succeed</h2>
-      <p>Beyond matching, here is what is built into the platform.</p>
+      <h2 data-i18n="coming_title">More ways Minerva</h2>
+      <p data-i18n="coming_subtitle">Beyond matching, here is what is built into the platform.</p>
 
       <div class="road-grid">
 
         <div class="road-card">
-          <span class="road-badge badge-now">Now</span>
+          <span class="road-badge badge-now" data-i18n="road_now">Now</span>
           <div class="road-icon road-icon--violet">
             <i data-lucide="shield-check" width="20" height="20"></i>
           </div>
-          <h3>Verified teachers</h3>
-          <p>Every teacher goes through ID verification and background checks before accepting students.</p>
+          <h3 data-i18n="road_verified_title">Verified teachers</h3>
+          <p data-i18n="road_verified_desc">Every teacher goes through ID verification and background checks before accepting students.</p>
         </div>
 
         <div class="road-card">
-          <span class="road-badge badge-now">Now</span>
+          <span class="road-badge badge-now" data-i18n="road_now">Now</span>
           <div class="road-icon road-icon--mint">
             <i data-lucide="sparkles" width="20" height="20"></i>
           </div>
-          <h3>AI matching</h3>
-          <p>Our algorithm analyses learning goals, teaching style, and schedule to find your ideal match.</p>
+          <h3 data-i18n="road_ai_matching_title">AI matching</h3>
+          <p data-i18n="road_ai_matching_desc">Our algorithm analyses learning goals, teaching style, and schedule to find your ideal match.</p>
         </div>
 
         <div class="road-card">
-          <span class="road-badge badge-later">Coming</span>
+          <span class="road-badge badge-later" data-i18n="road_coming">Coming</span>
           <div class="road-icon road-icon--sky">
             <i data-lucide="calendar-check" width="20" height="20"></i>
           </div>
-          <h3>Live scheduling</h3>
-          <p>Teachers publish their real-time availability. Parents and students book instantly.</p>
+          <h3 data-i18n="road_scheduling_title">Live scheduling</h3>
+          <p data-i18n="road_scheduling_desc">Teachers publish their real-time availability. Parents and students book instantly.</p>
         </div>
 
         <div class="road-card">
-          <span class="road-badge badge-later">Coming</span>
+          <span class="road-badge badge-later" data-i18n="road_coming">Coming</span>
           <div class="road-icon road-icon--coral">
             <i data-lucide="message-circle" width="20" height="20"></i>
           </div>
-          <h3>In-app messaging</h3>
-          <p>Chat with your teacher, share files, and coordinate — all inside the platform, no contact exchange.</p>
+          <h3 data-i18n="road_messaging_title">In-app messaging</h3>
+          <p data-i18n="road_messaging_desc">Chat with your teacher, share files, and coordinate — all inside the platform, no contact exchange.</p>
         </div>
 
         <div class="road-card">
-          <span class="road-badge badge-later">Coming</span>
+          <span class="road-badge badge-later" data-i18n="road_coming">Coming</span>
           <div class="road-icon road-icon--sky">
             <i data-lucide="layout-dashboard" width="20" height="20"></i>
           </div>
-          <h3>Interactive dashboard</h3>
-          <p>Track lessons, progress, and payments — all in one clean, simple dashboard.</p>
+          <h3 data-i18n="road_dashboard_title">Interactive dashboard</h3>
+          <p data-i18n="road_dashboard_desc">Track lessons, progress, and payments — all in one clean, simple dashboard.</p>
         </div>
 
         <div class="road-card">
-          <span class="road-badge badge-later">Coming</span>
+          <span class="road-badge badge-later" data-i18n="road_coming">Coming</span>
           <div class="road-icon road-icon--violet">
             <i data-lucide="brain" width="20" height="20"></i>
           </div>
-          <h3>AI progress tracking</h3>
-          <p>After every lesson, an AI summary tracks skill gaps and progress toward exam goals.</p>
+          <h3 data-i18n="road_progress_title">AI progress tracking</h3>
+          <p data-i18n="road_progress_desc">After every lesson, an AI summary tracks skill gaps and progress toward exam goals.</p>
         </div>
 
       </div>
@@ -793,8 +793,8 @@
         <i data-lucide="mail" width="26" height="26"></i>
       </div>
       <div id="otpForm">
-        <h3>Verify your email</h3>
-        <p>We've sent a code to <strong id="otpEmailDisplay"></strong></p>
+        <h3 data-i18n="otp_verify_title">Verify your email</h3>
+        <p><span data-i18n="otp_verify_subtitle">We\'ve sent a code to</span> <strong id="otpEmailDisplay"></strong></p>
         <div class="otp-inputs">
           <input type="text" maxlength="1" class="otp-digit" data-index="0" autocomplete="off" />
           <input type="text" maxlength="1" class="otp-digit" data-index="1" autocomplete="off" />
@@ -802,17 +802,17 @@
           <input type="text" maxlength="1" class="otp-digit" data-index="3" autocomplete="off" />
         </div>
         <div class="otp-resend">
-          Didn't get it? <button type="button" id="otpResend">Resend code</button>
+          Didn't get it? <button type="button" id="otpResend" data-i18n="otp_resend">Resend code</button>
         </div>
-        <button class="otp-verify-btn" id="otpVerifyBtn" disabled>Verify</button>
-        <p class="otp-error" id="otpError">Incorrect code. Please try again.</p>
+        <button class="otp-verify-btn" id="otpVerifyBtn" disabled data-i18n="otp_verify">Verify</button>
+        <p class="otp-error" id="otpError" data-i18n="otp_incorrect">Incorrect code. Please try again.</p>
       </div>
       <div class="otp-success-msg" id="otpSuccess">
         <div class="otp-icon">
           <i data-lucide="check" width="26" height="26"></i>
         </div>
-        <h3>You're verified!</h3>
-        <p>Now let's complete your profile...</p>
+        <h3 data-i18n=\"otp_verified\">You're verified!</h3>
+        <p data-i18n=\"otp_profile_complete\">Now let's complete your profile...</p>
       </div>
     </div>
   </div>
@@ -820,7 +820,7 @@
   <!-- PARENT REGISTRATION POPUP -->
 
   <footer>
-    2026 Minerva Learning Ltd. Hong Kong.
+    <span data-i18n="footer_text">2026 Minerva Learning Ltd. Hong Kong.</span>
   </footer>
 
   <script>

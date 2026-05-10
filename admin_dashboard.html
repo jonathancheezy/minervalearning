@@ -135,9 +135,14 @@
     .btn-assign.assigned{background:var(--success);cursor:default}
     .toast{position:fixed;bottom:2rem;right:2rem;background:var(--dark);color:white;padding:12px 20px;border-radius:12px;font-size:0.875rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);z-index:2000;opacity:0;transform:translateY(10px);transition:all 0.2s;pointer-events:none}
     .toast.show{opacity:1;transform:translateY(0)}.toast.success{background:var(--success)}.toast.error{background:var(--danger)}.toast.info{background:var(--primary)}
-    @media(max-width:768px){.layout{padding:1rem}.header{padding:0 1rem}thead th:nth-child(n+4),tbody td:nth-child(n+4){display:none}.detail-grid{grid-template-columns:1fr}.modal{max-height:95vh}.teacher-card{flex-wrap:wrap}}
+    @media(max-width:768px){.layout{padding:1rem;padding-bottom:calc(1rem + env(safe-area-inset-bottom,20px))}.header{padding:0 1rem}thead th:nth-child(n+4),tbody td:nth-child(n+4){display:none}.detail-grid{grid-template-columns:1fr}.modal{max-height:95vh}.teacher-card{flex-wrap:wrap}}
 
     .hamburger{background:none;border:none;cursor:pointer;padding:8px;display:none;flex-direction:column;gap:5px;border-radius:8px;transition:background 0.15s}
+    .nav-dropdown{display:none;position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px;box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:99;min-width:160px;flex-direction:column;gap:4px}
+    .nav-dropdown.open{display:flex}
+    .nav-dropdown a{display:block;padding:10px 14px;font-size:0.875rem;font-weight:500;color:var(--dark);text-decoration:none;border-radius:8px;transition:background 0.15s;white-space:nowrap}
+    .nav-dropdown a:hover{background:rgba(124,58,237,0.06);color:var(--primary)}
+    .nav-dropdown a.active{color:var(--primary);font-weight:600}
     .hamburger:hover{background:var(--surface-2)}
     .hamburger span{display:block;width:20px;height:2px;background:var(--dark);border-radius:2px;transition:all 0.2s}
     .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
@@ -152,13 +157,12 @@
     .lang-option{display:flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:7px;cursor:pointer;font-size:0.8125rem;font-weight:500;color:var(--primary);border:none;background:none;width:100%;text-align:center;font-family:'DM Sans',sans-serif}
     .lang-dropdown{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--border);border-radius:10px;padding:6px;flex-direction:column;align-items:center;z-index:200;min-width:80px;box-shadow:0 8px 24px rgba(0,0,0,0.08);gap:2px}
     .header-right{position:relative}
-    @media(max-width:700px){.hamburger{display:flex}.header-nav-link:not(.hamburger){display:none}.nav-dropdown{left:0;right:auto;min-width:140px}}
+    @media(max-width:700px){.hamburger{display:flex}.nav-centered{display:none}.nav-dropdown{display:flex}.header{padding:0 1rem}}
 
   .lang-option:hover{background:rgba(124,58,237,0.06);color:var(--dark)}
 </style>
 </head>
 <body>
-</div>
 
 <header class="header">
   <a href="/" class="header-logo">
@@ -171,6 +175,15 @@
       <a href="/approved-students.html" class="nav-db-link" data-i18n="admin_nav_students">Students</a>
       <a href="/matched.html" class="nav-db-link" data-i18n="admin_nav_matched">Matched</a>
     </nav>
+  <div class="nav-dropdown" id="nav-dropdown">
+    <a href="/admin_dashboard" data-i18n="admin_nav_dashboard">Dashboard</a>
+    <a href="/approved-teachers.html" data-i18n="admin_nav_teachers">Teachers</a>
+    <a href="/approved-students.html" data-i18n="admin_nav_students">Students</a>
+    <a href="/matched.html" data-i18n="admin_nav_matched">Matched</a>
+  </div>
+  <button class="hamburger" id="hamburger-btn" onclick="toggleNavMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
   <div class="header-right">
     <div class="lang-wrap" style="position:relative">
       <button class="lang-btn" id="langBtn" onclick="toggleLang()">

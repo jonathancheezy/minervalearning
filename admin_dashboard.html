@@ -529,7 +529,7 @@ function scoreMatch(t, p) {
 }
 
 window.findMatches = async function(parentId) {
-  const parent = allRegistrations.find(r => r.id === parentId);
+  const parent = allRegistrations.find(r => r._id === parentId);
   if (!parent) return;
   document.getElementById('match-parent-name').textContent = getName(parent) + ' — ' + (parent.subject || 'General') + (parent.studentAge ? ' | Age ' + parent.studentAge : '');
   const panel = document.getElementById('match-results-body');
@@ -558,7 +558,7 @@ async function assignMatch(parentId, teacherId, teacherName, btn) {
     const teacher = allTeachers.find(t => t._id === teacherId);
     const currentFree = parseInt(teacher?.freeMatchesRemaining) || 0;
     await updateDoc(doc(db, 'registrations', teacherId), { freeMatchesRemaining: Math.max(0, currentFree - 1) });
-    const pi = allRegistrations.findIndex(r => r.id === parentId);
+    const pi = allRegistrations.findIndex(r => r._id === parentId);
     if (pi >= 0) { allRegistrations[pi].status = 'matched'; allRegistrations[pi].matchedTeacherName = teacherName; }
     updateStats();
     const filtered = currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === currentFilter);

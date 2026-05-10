@@ -91,12 +91,12 @@
     .nav-centered a{font-size:0.875rem;font-weight:500;color:var(--dark);text-decoration:none;padding:7px 14px;border-radius:8px;transition:background 0.15s;white-space:nowrap}
     .nav-centered a:hover{background:rgba(124,58,237,0.06);color:var(--primary)}
     .nav-centered a.active{color:var(--primary);font-weight:600}
-    .lang-dropdown.show{display:block!important}
+    .lang-dropdown.show{display:flex!important}
     .lang-option.active{color:var(--primary);font-weight:700}
     .lang-wrap{position:relative}
-    .lang-btn{display:flex;align-items:center;gap:5px;padding:7px 10px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:0.8125rem;font-weight:600;color:var(--primary);cursor:pointer;font-family:'DM Sans',sans-serif}
-    .lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--border);border-radius:10px;padding:6px;display:none;z-index:200;min-width:80px;box-shadow:0 8px 24px rgba(0,0,0,0.08)}
-    .lang-option{display:block;width:100%;padding:7px 10px;border:none;background:none;border-radius:6px;font-size:0.8125rem;font-weight:600;color:var(--primary);cursor:pointer;text-align:left}
+    .lang-btn{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:0.8125rem;font-weight:600;color:var(--primary);cursor:pointer;font-family:'DM Sans',sans-serif}
+    .lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--border);border-radius:10px;padding:6px;display:none;flex-direction:column;align-items:center;z-index:200;min-width:80px;box-shadow:0 8px 24px rgba(0,0,0,0.08);gap:2px}
+    .lang-option{display:flex;align-items:center;justify-content:center;width:100%;padding:7px 10px;border:none;background:none;border-radius:6px;font-size:0.8125rem;font-weight:600;color:var(--primary);cursor:pointer;text-align:center}
     .lang-option:hover{background:rgba(124,58,237,0.06)}
 
 </style>
@@ -124,7 +124,7 @@
           <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')">简</button>
         </div>
       </div>
-      <button class="btn-logout" id="logout-btn"data-i18n="admin_logout">Logout</button>
+      <button class="btn-logout" id="logout-btn" data-i18n="admin_logout">Logout</button>
     </div>
 </header>
 

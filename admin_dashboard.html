@@ -147,18 +147,16 @@
     .nav-centered a{font-size:0.875rem;font-weight:500;color:var(--dark);text-decoration:none;padding:7px 14px;border-radius:8px;transition:background 0.15s;white-space:nowrap}
     .nav-centered a:hover{background:rgba(124,58,237,0.06);color:var(--primary)}
     .nav-centered a.active{color:var(--primary);font-weight:600}
-    .lang-dropdown.show{display:block!important}
-    .lang-option.active{color:var(--primary);font-weight:700}
-    .lang-dropdown.show{display:block!important}
+    .lang-dropdown.show{display:flex!important}
     .lang-option.active{color:var(--primary);font-weight:700}
     .header-right{position:relative}
     @media(max-width:700px){.hamburger{display:flex}.header-nav-link:not(.hamburger){display:none}.nav-dropdown{left:0;right:auto;min-width:140px}}
 
-  </style>
+  .lang-option:hover{background:rgba(124,58,237,0.06);color:var(--dark)}
+</style>
 </head>
 <body>
 </div>
-
 
 <header class="header">
   <a href="/" class="header-logo">
@@ -173,17 +171,17 @@
     </nav>
   <div class="header-right">
     <div class="lang-wrap" style="position:relative">
-      <button class="lang-btn" id="langBtn" onclick="toggleLang()" style="display:flex;align-items:center;gap:5px;padding:7px 10px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:0.8125rem;font-weight:600;color:var(--primary);cursor:pointer;font-family:'DM Sans',sans-serif">
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         <span id="langLabel">EN</span>
       </button>
-      <div class="lang-dropdown" id="langDropdown" style="position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--border);border-radius:10px;padding:6px;display:none;z-index:200;min-width:80px;box-shadow:0 8px 24px rgba(0,0,0,0.08)">
-        <button class="lang-option active" data-lang="en" onclick="setLang('en')" style="display:block;width:100%;padding:7px 10px;border:none;background:none;border-radius:6px;font-size:0.8125rem;font-weight:600;color:var(--primary);cursor:pointer;text-align:left">EN</button>
-        <button class="lang-option" data-lang="zhtw" onclick="setLang('zhtw')" style="display:block;width:100%;padding:7px 10px;border:none;background:none;border-radius:6px;font-size:0.8125rem;font-weight:600;color:var(--primary);cursor:pointer;text-align:left">繁</button>
-        <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')" style="display:block;width:100%;padding:7px 10px;border:none;background:none;border-radius:6px;font-size:0.8125rem;font-weight:600;color:var(--primary);cursor:pointer;text-align:left">简</button>
+      <div class="lang-dropdown" id="langDropdown" style="position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--border);border-radius:10px;padding:6px;display:none;flex-direction:column;align-items:center;z-index:200;min-width:80px;box-shadow:0 8px 24px rgba(0,0,0,0.08);gap:2px">
+        <button class="lang-option active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-option" data-lang="zhtw" onclick="setLang('zhtw')">繁</button>
+        <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')">简</button>
       </div>
     </div>
-    <button class="btn-logout" id="logout-btn" style="margin-left:4px" data-i18n="admin_logout">Logout</button>
+  <button class="btn-logout" id="logout-btn" style="margin-left:4px" data-i18n="admin_logout">Logout</button>
   </div>
 </header>
 
@@ -214,7 +212,6 @@
       <div class="stat-value green" id="stat-pending">—</div>
       <div class="stat-sub green" data-i18n="admin_stat_awaiting">Awaiting approval</div>
     </div>
-  </div>
 
   <div class="card">
     <div class="card-header">
@@ -231,7 +228,6 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="search-input" placeholder="Search name or email..." oninput="handleSearch(this.value)">
       </div>
-    </div>
     <div style="padding:0;">
       <table>
         <thead>
@@ -249,8 +245,6 @@
         <h3 data-i18n="admin_no_results">No matching results</h3>
         <p data-i18n="admin_try_different">Try a different search term or filter.</p>
       </div>
-    </div>
-  </div>
 </main>
 
 <!-- Detail Modal -->
@@ -263,7 +257,6 @@
     <div class="modal-body" id="modal-body"></div>
     <div class="modal-footer" id="modal-footer"></div>
   </div>
-</div>
 
 <!-- Match Results Modal -->
 <div class="modal-overlay" id="match-overlay" onclick="if(event.target===this)closeMatchModal()">
@@ -279,8 +272,6 @@
     <div class="modal-footer">
       <button class="btn-modal close-btn" onclick="closeMatchModal()"data-i18n="admin_close">Close</button>
     </div>
-  </div>
-</div>
 
 <!-- Reject Note Modal -->
 <div class="modal-overlay" id="reject-overlay" onclick="if(event.target===this)closeRejectModal()">
@@ -301,8 +292,6 @@
       <button class="btn-modal close-btn" onclick="closeRejectModal()"data-i18n="admin_cancel">Cancel</button>
       <button class="btn-modal reject" id="confirm-reject-btn"data-i18n="admin_btn_reject">Reject</button>
     </div>
-  </div>
-</div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
@@ -346,7 +335,6 @@ document.addEventListener('DOMContentLoaded', function() {
       link.classList.remove('active');
     }
   });
-});
 document.addEventListener('DOMContentLoaded', window.apply);
 </script>
 <script type="module">
@@ -388,10 +376,8 @@ function flattenDoc(doc) {
     for (const [k, v] of Object.entries(doc.fields)) {
       flat[k] = fromFirestoreValue(v);
     }
-  }
   return flat;
 }
-
 
 async function loadViaRest() {
   const url = FIRESTORE_URL + '/registrations?key=' + FIRESTORE_KEY + '&pageSize=200';
@@ -420,7 +406,6 @@ async function verifyAdmin() {
   } catch {
     window.location.href = '/admin_login'; return false;
   }
-}
 
 // Init language from localStorage
 var savedLang = localStorage.getItem('minerva_lang') || 'en';
@@ -492,7 +477,6 @@ async function loadRegistrations() {
   const tbody = document.getElementById('submissions-tbody');
   tbody.innerHTML = '<tr class="skeleton-row"><td colspan="5"><div class="skeleton" style="height:20px;width:60%;"></div></td></tr>';
   try {
-    try {
       const docs = await loadViaRest();
       
       allRegistrations = docs;
@@ -514,7 +498,6 @@ async function loadRegistrations() {
     console.error('[Admin] Load error:', err);
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--danger);padding:2rem;">Failed: ' + err.message + '</td></tr>';
   }
-}
 
 function updateStats() {
   const total = allRegistrations.length;
@@ -659,7 +642,6 @@ async function assignMatch(parentId, teacherId, teacherName, btn) {
     showToast((window.T.admin_failed?.[window.lang] || 'Failed:') + ' ' + err.message, 'error');
     btn.disabled = false; btn.textContent = 'Assign';
   }
-}
 
 window.closeMatchModal = function() { document.getElementById('match-overlay').classList.remove('open'); };
 
@@ -754,7 +736,6 @@ async function updateStatus(id, newStatus, note) {
     console.error('Update error:', err);
     showToast('Failed: ' + err.message, 'error');
   }
-}
 window.updateStatus = updateStatus;
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeMatchModal(); closeRejectModal(); } });
@@ -801,7 +782,6 @@ document.getElementById('confirm-reject-btn').addEventListener('click', async fu
     this.textContent = 'Reject';
   }
 });
-
 
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.lang-wrap')) {

@@ -329,12 +329,21 @@
       padding: 80px 24px;
       background: #fff;
       text-align: center;
-      user-select: text;
-      -webkit-user-select: text;
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      position: relative;
+      z-index: 1;
     }
     .how-section * {
       user-select: text !important;
       -webkit-user-select: text !important;
+    }
+    .how-inner {
+      max-width: 560px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 2;
     }
     .how-section h2 {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -786,7 +795,7 @@
   <!-- HOW IT WORKS -->
   <section class="how-section">
     <div class="how-inner">
-      <div class="how-eyebrow"><span data-i18n="how_eyebrow">How it works</span></div>
+      <div class="how-eyebrow"><span data-i18n="how_eyebrow">📖 How it works</span></div>
       <h2 data-i18n="how_title">Three steps to better learning</h2>
       <p class="how-section-sub" data-i18n="how_hassle_free">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
     </div>

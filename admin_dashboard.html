@@ -500,9 +500,9 @@ function renderTable(regs) {
       '</div></td>';
     tbody.appendChild(tr);
   });
-  tbody.querySelectorAll('.btn-match').forEach(b => b.addEventListener('click', () => findMatches(b.dataset.id)));
-  tbody.querySelectorAll('.btn-approve').forEach(b => b.addEventListener('click', () => updateStatus(b.dataset.id, 'approved')));
-  tbody.querySelectorAll('.btn-reject').forEach(b => b.addEventListener('click', () => openRejectModal({id: b.dataset.id, email: b.dataset.email || '', name: encodeURIComponent(b.dataset.name || '')})));
+  tbody.querySelectorAll('.btn-match').forEach(b => b.addEventListener('click', function() { console.log('[DEBUG] btn-match clicked, data-id:', this.dataset.id); findMatches(this.dataset.id); }));
+  tbody.querySelectorAll('.btn-approve').forEach(b => b.addEventListener('click', function() { console.log('[DEBUG] btn-approve clicked, data-id:', this.dataset.id); updateStatus(this.dataset.id, 'approved'); }));
+  tbody.querySelectorAll('.btn-reject').forEach(b => b.addEventListener('click', function() { console.log('[DEBUG] btn-reject clicked, data-id:', this.dataset.id); openRejectModal({id: this.dataset.id, email: this.dataset.email || '', name: encodeURIComponent(this.dataset.name || '')}); }));
 }
 
 window.setFilter = function(filter) {
@@ -549,6 +549,7 @@ function scoreMatch(t, p) {
 }
 
 window.findMatches = async function(parentId) {
+  console.log('[DEBUG] findMatches called with parentId:', parentId);
   const parent = allRegistrations.find(r => r._id === parentId);
   if (!parent) return;
   document.getElementById('match-parent-name').textContent = getName(parent) + ' — ' + (parent.subject || 'General') + (parent.studentAge ? ' | Age ' + parent.studentAge : '');
@@ -666,6 +667,7 @@ window.openModal = function(id) {
 window.closeModal = function() { document.getElementById('modal-overlay').classList.remove('open'); };
 
 async function updateStatus(id, newStatus, note) {
+  console.log('[DEBUG] updateStatus called with id:', id, 'status:', newStatus);
   try {
     const adminEmail = sessionStorage.getItem('minerva_admin_email') || 'admin@minerva.ai';
     const now = new Date().toISOString();

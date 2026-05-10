@@ -125,7 +125,7 @@
     .teacher-meta{font-size:0.8125rem;color:var(--primary);display:flex;flex-wrap:wrap;gap:4px 12px}
     .teacher-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
     .teacher-tag{background:var(--surface-2);color:var(--primary);font-size:0.6875rem;font-weight:500;padding:2px 8px;border-radius:100px}
-    .teacher-tag.free{background:var(--success-bg);color:#047857}.teacher-tag.paid{background:var(--warning-bg);color:#B45309}.teacher-tag.verified{background:rgba(124,58,237,0.08);color:var(--primary)}
+    .teacher-tag.verified{background:rgba(124,58,237,0.08);color:var(--primary)}
     .ai-reason{background:rgba(124,58,237,0.05);border-left:3px solid var(--primary);padding:6px 10px;border-radius:0 8px 8px 0;font-size:0.8125rem;color:var(--dark-2);line-height:1.5;margin-top:6px}
     .ai-reason-label{font-size:0.6875rem;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px;display:flex;align-items:center;gap:4px}
     .teacher-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex-shrink:0}
@@ -609,7 +609,7 @@ function scoreMatch(t, p) {
   const pDays = (p.preferredDays || '').toLowerCase();
   if (tDays && pDays && tDays.split(',').some(d => pDays.includes(d.trim()))) { score += 15; reasons.push('Day overlap'); }
   if (t.certUrl) { score += 5; reasons.push('Certificate verified'); }
-  return { score, reasons: reasons.slice(0, 3), hasFreeMatch: (parseInt(t.freeMatchesRemaining) || 0) > 0 };
+  return { score, reasons: reasons.slice(0, 3) };
 }
 
 window.findMatches = async function(parentId) {
@@ -623,12 +623,12 @@ window.findMatches = async function(parentId) {
   await new Promise(r => setTimeout(r, 50));
   const scored = allTeachers.filter(t => String(t.status || '') !== 'rejected').map(t => ({ teacher: t, ...scoreMatch(t, parent) })).sort((a, b) => b.score - a.score).slice(0, 10);
   if (!scored.length) { panel.innerHTML = '<div class="match-empty">No pending teachers found in the system.</div>'; return; }
-  panel.innerHTML = '<p style="font-size:0.8125rem;color:var(--primary);margin-bottom:1rem">Top ' + scored.length + ' matches — subject, age, location & availability</p>' + scored.map(({ teacher: t, score, reasons, hasFreeMatch }) => {
+  panel.innerHTML = '<p style="font-size:0.8125rem;color:var(--primary);margin-bottom:1rem">Top ' + scored.length + ' matches — subject, age, location & availability</p>' + scored.map(({ teacher: t, score, reasons }) => {
     const pct = score > 0 ? Math.round((score / 80) * 100) : 0;
     const cls = pct >= 70 ? 'score-high' : pct >= 45 ? 'score-mid' : 'score-low';
     const lbl = pct >= 70 ? 'Strong' : pct >= 45 ? 'Good' : pct > 0 ? 'Fair' : 'No criteria';
     const isAssigned = t.status === 'matched';
-    const freeTag = hasFreeMatch ? '<span class="teacher-tag free">Free match</span>' : '<span class="teacher-tag paid">Paid match</span>';
+    
     const verifiedTag = t.certUrl ? '<span class="teacher-tag verified">Cert</span>' : '';
     const assignBtn = isAssigned ? '<button class="btn-assign assigned" disabled>Matched</button>' : '<button class="btn-assign" data-pid="' + parentId + '" data-tid="' + t._id + '" data-tname="' + (getName(t)).replace(/"/g, '\"') + '">Assign</button>';
     return '<div class="teacher-card"><div class="match-score ' + cls + '"><span class="score-num">' + pct + '</span><span class="score-label">%</span></div><div class="teacher-info"><div class="teacher-name">' + getName(t) + '</div><div class="teacher-meta">' + (t.subjects || t.subject ? renderSubjectChips(t.subjects || t.subject) : '<span style="color:var(--primary);font-size:0.75rem">—</span>') + (t.studentAgeGroups ? '<span>' + t.studentAgeGroups + '</span>' : '') + '</div><div class="teacher-tags">' + freeTag + verifiedTag + '</div><div class="ai-reason"><div class="ai-reason-label">AI Reason</div>' + (reasons.join(' · ') || 'General match') + '</div></div><div class="teacher-actions">' + assignBtn + '<span style="font-size:0.6875rem;color:var(--primary)">' + (hasFreeMatch ? 'Free match' : 'Paid match') + '</span></div></div>';
@@ -641,15 +641,14 @@ async function assignMatch(parentId, teacherId, teacherName, btn) {
   try {
     await updateDoc(doc(db, 'registrations', parentId), { status: 'matched', matchedTeacherId: teacherId, matchedTeacherName: teacherName, matchedAt: new Date() });
     const teacher = allTeachers.find(t => t._id === teacherId);
-    const currentFree = parseInt(teacher?.freeMatchesRemaining) || 0;
-    await updateDoc(doc(db, 'registrations', teacherId), { freeMatchesRemaining: Math.max(0, currentFree - 1) });
+
     const pi = allRegistrations.findIndex(r => r._id === parentId);
     if (pi >= 0) { allRegistrations[pi].status = 'matched'; allRegistrations[pi].matchedTeacherName = teacherName; }
     updateStats();
     const filtered = currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === currentFilter);
     renderTable(filtered);
     closeMatchModal(); closeModal();
-    showToast('Matched with ' + teacherName + '!' + (currentFree > 0 ? ' Free match used.' : ' Paid match.'));
+    showToast('Matched with ' + teacherName + '!'.);
   } catch (err) {
     console.error('Assign error:', err);
     showToast('Failed: ' + err.message, 'error');
@@ -705,7 +704,7 @@ window.openModal = function(id) {
     add('Phone', r.whatsapp || r.phone);
     if (r.certUrl) fields.push({ label: 'Certificate', value: r.certUrl, isLink: true });
     if (r.introVideoUrl) fields.push({ label: 'Intro Video', value: r.introVideoUrl, isLink: true });
-    add('Free Matches Left', (parseInt(r.freeMatchesRemaining) || 0) + ' remaining');
+  
   }
   if (r.matchedTeacherName) add('Matched With', r.matchedTeacherName);
   add('Submitted', formatDate(r.submittedAt));

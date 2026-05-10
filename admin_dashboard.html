@@ -631,7 +631,7 @@ window.findMatches = async function(parentId) {
     
     const verifiedTag = t.certUrl ? '<span class="teacher-tag verified">Cert</span>' : '';
     const assignBtn = isAssigned ? '<button class="btn-assign assigned" disabled>Matched</button>' : '<button class="btn-assign" data-pid="' + parentId + '" data-tid="' + t._id + '" data-tname="' + (getName(t)).replace(/"/g, '\"') + '">Assign</button>';
-    return '<div class="teacher-card"><div class="match-score ' + cls + '"><span class="score-num">' + pct + '</span><span class="score-label">%</span></div><div class="teacher-info"><div class="teacher-name">' + getName(t) + '</div><div class="teacher-meta">' + (t.subjects || t.subject ? renderSubjectChips(t.subjects || t.subject) : '<span style="color:var(--primary);font-size:0.75rem">—</span>') + (t.studentAgeGroups ? '<span>' + t.studentAgeGroups + '</span>' : '') + '</div><div class="teacher-tags">' + freeTag + verifiedTag + '</div><div class="ai-reason"><div class="ai-reason-label">AI Reason</div>' + (reasons.join(' · ') || 'General match') + '</div></div><div class="teacher-actions">' + assignBtn + '<span style="font-size:0.6875rem;color:var(--primary)">' + (hasFreeMatch ? 'Free match' : 'Paid match') + '</span></div></div>';
+    return '<div class="teacher-card"><div class="match-score ' + cls + '"><span class="score-num">' + pct + '</span><span class="score-label">%</span></div><div class="teacher-info"><div class="teacher-name">' + getName(t) + '</div><div class="teacher-meta">' + (t.subjects || t.subject ? renderSubjectChips(t.subjects || t.subject) : '<span style="color:var(--primary);font-size:0.75rem">—</span>') + (t.studentAgeGroups ? '<span>' + t.studentAgeGroups + '</span>' : '') + '</div><div class="teacher-tags">' + verifiedTag + '<span class="teacher-tag" style="background:var(--warning-bg);color:#B45309">' + (parseInt(t.freeMatchesRemaining) || 0) + ' free left</span></div><div class="ai-reason"><div class="ai-reason-label">AI Reason</div>' + (reasons.join(' · ') || 'General match') + '</div></div><div class="teacher-actions">' + assignBtn + '</div></div>';
   }).join('');
   panel.querySelectorAll('.btn-assign:not(.assigned)').forEach(b => b.addEventListener('click', () => assignMatch(b.dataset.pid, b.dataset.tid, b.dataset.tname, b)));
 };
@@ -641,6 +641,8 @@ async function assignMatch(parentId, teacherId, teacherName, btn) {
   try {
     await updateDoc(doc(db, 'registrations', parentId), { status: 'matched', matchedTeacherId: teacherId, matchedTeacherName: teacherName, matchedAt: new Date() });
     const teacher = allTeachers.find(t => t._id === teacherId);
+    const totalMatches = (parseInt(teacher.totalMatches) || 0) + 1;
+    await updateDoc(doc(db, 'registrations', teacherId), { totalMatches });
 
     const pi = allRegistrations.findIndex(r => r._id === parentId);
     if (pi >= 0) { allRegistrations[pi].status = 'matched'; allRegistrations[pi].matchedTeacherName = teacherName; }
@@ -648,7 +650,7 @@ async function assignMatch(parentId, teacherId, teacherName, btn) {
     const filtered = currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === currentFilter);
     renderTable(filtered);
     closeMatchModal(); closeModal();
-    showToast('Matched with ' + teacherName + '!'.);
+    showToast('Matched with ' + teacherName + '!');
   } catch (err) {
     console.error('Assign error:', err);
     showToast('Failed: ' + err.message, 'error');
@@ -704,7 +706,8 @@ window.openModal = function(id) {
     add('Phone', r.whatsapp || r.phone);
     if (r.certUrl) fields.push({ label: 'Certificate', value: r.certUrl, isLink: true });
     if (r.introVideoUrl) fields.push({ label: 'Intro Video', value: r.introVideoUrl, isLink: true });
-  
+    add('Total Matches', parseInt(r.totalMatches) || 0);
+    add('Free Matches Left', parseInt(r.freeMatchesRemaining) || 0);
   }
   if (r.matchedTeacherName) add('Matched With', r.matchedTeacherName);
   add('Submitted', formatDate(r.submittedAt));

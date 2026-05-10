@@ -395,7 +395,7 @@ document.getElementById('logout-btn').addEventListener('click', function() {
 });
 
 // Highlight active nav link based on current URL
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
   var path = window.location.pathname;
   var navLinks = document.querySelectorAll('.nav-centered a');
   navLinks.forEach(function(link) {
@@ -406,7 +406,7 @@ document.getElementById('logout-btn').addEventListener('click', function() {
       link.classList.remove('active');
     }
   });
-})();
+});
 </script>
 
 </body>

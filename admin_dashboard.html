@@ -330,7 +330,7 @@ window.setLang = function(lang) {
 })();
 
 // Highlight active nav link
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
   var path = window.location.pathname;
   var navLinks = document.querySelectorAll('.nav-centered a');
   navLinks.forEach(function(link) {
@@ -341,7 +341,7 @@ window.setLang = function(lang) {
       link.classList.remove('active');
     }
   });
-})();
+});
 </script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';

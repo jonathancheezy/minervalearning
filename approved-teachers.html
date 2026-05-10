@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Approved Teachers — Minerva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--primary:#7C3AED;--primary-dark:#6D28D9;--primary-light:#8B5CF6;--teal:#0EA5E9;--sky:#38BDF8;--dark:#0F172A;--dark-2:#1E293B;--surface:#F8FAFC;--surface-2:#F1F5F9;--white:#FFFFFF;--border:#E2E8F0;--text-muted:#64748B;--success:#10B981;--success-bg:rgba(16,185,129,0.1);--warning:#F59E0B;--warning-bg:rgba(245,158,11,0.1);--danger:#EF4444;--danger-bg:rgba(239,68,68,0.1);--radius:16px;--shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.04);}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'DM Sans',system-ui,sans-serif;background:var(--surface);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
+    h1,h2,h3,h4{font-family:'Outfit',sans-serif;letter-spacing:-0.02em}
+    .header{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;position:sticky;top:0;z-index:100;justify-content:space-between}
+    .header-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:8px;display:flex;align-items:center;justify-content:center}
+    .logo-mark svg{width:18px;height:18px}
+    .logo-text{font-family:'Outfit',sans-serif;font-weight:700;font-size:1.125rem;color:var(--dark)}
+    .logo-text span{color:var(--primary)}
+    .header-right{display:flex;align-items:center;gap:8px}
+    .header-nav-link{font-size:0.8125rem;font-weight:500;color:var(--text-muted);text-decoration:none;padding:6px 12px;border-radius:8px;transition:all 0.15s;white-space:nowrap}
+    .header-nav-link:hover{color:var(--primary);background:rgba(124,58,237,0.06)}
+    .header-nav-link.active{color:var(--primary);background:rgba(124,58,237,0.1);font-weight:600}
+    .layout{max-width:1280px;margin:0 auto;padding:2rem}
+    .page-header{margin-bottom:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .page-title{font-size:1.75rem;font-weight:800;color:var(--dark)}
+    .page-subtitle{color:var(--text-muted);font-size:0.9375rem}
+    .count-badge{background:var(--success-bg);color:#047857;font-size:0.8125rem;font-weight:600;padding:4px 12px;border-radius:100px}
+    .btn-back{background:var(--surface-2);border:1.5px solid var(--border);cursor:pointer;color:var(--dark-2);font-size:0.8125rem;font-weight:500;font-family:'DM Sans',sans-serif;padding:5px 12px;border-radius:8px;transition:all 0.15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+    .btn-back:hover{background:var(--border)}
+    .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden}
+    .card-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem}
+    .card-title{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--dark)}
+    .search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border:1.5px solid var(--border);border-radius:100px;padding:6px 14px}
+    .search-box input{border:none;background:transparent;outline:none;font-size:0.8125rem;font-family:'DM Sans',sans-serif;color:var(--dark);width:180px}
+    .search-box input::placeholder{color:var(--text-muted)}
+    table{width:100%;border-collapse:collapse}
+    thead th{padding:10px 1.25rem;text-align:left;font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;background:var(--surface);border-bottom:1px solid var(--border)}
+    tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:rgba(124,58,237,0.02)}
+    td{padding:14px 1.25rem;font-size:0.875rem;vertical-align:middle}
+    .td-name{font-weight:600;color:var(--dark)}.td-email{color:var(--text-muted);font-size:0.8125rem}
+    .td-status.approved{background:var(--success-bg);color:#047857}
+    .td-time{color:var(--text-muted);font-size:0.8125rem}
+    .btn-view{padding:5px 12px;background:rgba(124,58,237,0.08);color:var(--primary);border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;border:none;text-decoration:none;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:inline-block}
+    .btn-view:hover{background:rgba(124,58,237,0.15)}
+    .no-data{text-align:center;padding:4rem 2rem}
+    .no-data-icon{width:56px;height:56px;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(14,165,233,0.08));border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+    .no-data h3{font-size:1rem;font-weight:700;margin-bottom:6px;color:var(--dark)}
+    .no-data p{font-size:0.875rem;color:var(--text-muted)}
+    .skeleton{background:linear-gradient(90deg,var(--surface-2) 25%,var(--surface) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .skeleton-row td{padding:16px 1.25rem}
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--dark);color:white;padding:10px 18px;border-radius:10px;font-size:0.875rem;font-weight:500;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:9999}
+    .toast.show{opacity:1}
+    .modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.5);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 0.2s}
+    .modal-overlay.open{opacity:1;pointer-events:all}
+    .modal{background:var(--white);border-radius:20px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,0.15);transform:scale(0.95) translateY(10px);transition:transform 0.2s}
+    .modal-overlay.open .modal{transform:scale(1) translateY(0)}
+    .modal-header{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .modal-title{font-family:'Outfit',sans-serif;font-size:1.125rem;font-weight:700;color:var(--dark)}
+    .modal-close{background:var(--surface);border:none;width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.125rem;transition:background 0.15s}
+    .modal-close:hover{background:var(--surface-2);color:var(--dark)}
+    .modal-body{padding:1.5rem}
+    .modal-footer{padding:1.25rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:0.75rem;justify-content:flex-end;flex-wrap:wrap}
+    .btn-modal{padding:9px 20px;border-radius:10px;font-size:0.875rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+    .btn-modal.close-btn{background:var(--surface-2);color:var(--dark-2)}
+    .btn-modal.close-btn:hover{background:var(--border)}
+    .detail-section{margin-bottom:1.25rem}.detail-section:last-child{margin-bottom:0}
+    .detail-label{font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+    .detail-value{font-size:0.9375rem;color:var(--dark);font-weight:500}
+    .detail-value.multiline{white-space:pre-wrap;line-height:1.5}
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .detail-role-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:100px;font-size:0.8125rem;font-weight:600}
+    .detail-role-badge.parent{background:rgba(14,165,233,0.1);color:#0284C7}.detail-role-badge.teacher{background:rgba(124,58,237,0.1);color:var(--primary)}
+    .detail-status-badge.approved{background:var(--success-bg);color:#047857}
+    .detail-divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
+    .subject-chip{display:inline-block;padding:2px 8px;background:rgba(124,58,237,0.08);color:var(--primary,#7c3aed);border-radius:100px;font-size:0.6875rem;font-weight:500;margin:2px;white-space:nowrap}
+    .subject-chip-wrap{display:flex;flex-wrap:wrap;gap:2px;max-width:220px}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="/admin_dashboard" class="header-logo">
+      <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <span class="logo-text">Minerva</span>
+    </a>
+    <div class="header-right">
+      <a href="/admin_dashboard" class="header-nav-link">Dashboard</a>
+      <a href="/approved-teachers.html" class="header-nav-link active">Approved Teachers</a>
+      <a href="/approved-students.html" class="header-nav-link ">Approved Students</a>
+    </div>
+  </header>
+
+  <main class="layout">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Approved Teachers</h1>
+        <p class="page-subtitle">Your approved teachers database</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="count-badge" id="count-badge">Loading...</span>
+        <a href="/admin_dashboard" class="btn-back">&#8592; Dashboard</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">All Approved Teachers</span>
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="search-input" placeholder="Search by name or email..." oninput="handleSearch(this.value)">
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Approved Date</th>
+            <th>Approved By</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <tr class="skeleton-row"><td colspan="5"><div class="skeleton" style="height:20px;width:60%;"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Details</h3>
+        <button class="modal-close" onclick="closeModal()">&#215;</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer" id="modal-footer"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getFirestore, collection, getDocs, query, limit, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s',
+      authDomain: 'minerva-learning-a7eac.firebaseapp.com',
+      projectId: 'minerva-learning-a7eac',
+      storageBucket: 'minerva-learning-a7eac.appspot.com',
+      messagingSenderId: '140471258134',
+      appId: '1:140471258134:web:minerva-admin'
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const FIRESTORE_PROJECT = 'minerva-learning-a7eac';
+    const FIRESTORE_KEY = 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s';
+    const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT}/databases/(default)/documents`;
+
+    function fromFirestoreValue(v) {
+      if (!v || typeof v !== 'object') return v;
+      if (v.stringValue !== undefined) return v.stringValue;
+      if (v.integerValue !== undefined) return String(v.integerValue);
+      if (v.booleanValue !== undefined) return v.booleanValue;
+      if (v.doubleValue !== undefined) return String(v.doubleValue);
+      if (v.timestampValue !== undefined) return v.timestampValue;
+      if (v.arrayValue && v.arrayValue.values) {
+        try { return v.arrayValue.values.map(x => x.stringValue || x.integerValue || '').join(', '); } catch { return ''; }
+      }
+      return v;
+    }
+
+    function flattenDoc(doc) {
+      const flat = { _id: doc.name.split('/').pop() };
+      if (doc.fields) {
+        for (const [k, v] of Object.entries(doc.fields)) {
+          flat[k] = fromFirestoreValue(v);
+        }
+      }
+      return flat;
+    }
+
+    async function loadViaRest() {
+      const url = FIRESTORE_URL + '/registrations?key=' + FIRESTORE_KEY + '&pageSize=200';
+      const res = await fetch(url);
+      const data = await res.json();
+      return (data.documents || []).map(flattenDoc);
+    }
+
+    function getName(reg) {
+      if (reg.fullName && typeof reg.fullName === 'string') return reg.fullName;
+      if (reg.parentName && typeof reg.parentName === 'string') return reg.parentName;
+      if (reg.name && typeof reg.name === 'string') return reg.name;
+      if (reg.firstName || reg.lastName) {
+        const f = reg.firstName || '', l = reg.lastName || '';
+        return [f, l].filter(Boolean).join(' ') || reg.email || '—';
+      }
+      return reg.email || '—';
+    }
+
+    function getEmail(reg) { return reg.email || '—'; }
+
+    function formatDate(ts) {
+      if (!ts) return '—';
+      try { return new Date(ts).toLocaleDateString('en-HK', {day:'2-digit',month:'short',year:'numeric'}); } catch { return ts; }
+    }
+
+    function renderSubjectChips(val) {
+      if (!val) return '<span style="color:var(--text-muted);font-size:0.75rem">—</span>';
+      const arr = String(val).split(',').map(s => s.trim()).filter(Boolean);
+      if (!arr.length) return '<span style="color:var(--text-muted);font-size:0.75rem">—</span>';
+      return arr.map(s => `<span class="subject-chip">${s}</span>`).join('');
+    }
+
+    let allRecords = [];
+    let searchQuery = '';
+
+    async function loadRecords() {
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = '<tr class="skeleton-row"><td colspan="5"><div class="skeleton" style="height:20px;width:60%;"></div></td></tr>';
+      try {
+        let docs = await loadViaRest();
+        allRecords = docs.filter(r =>
+          String(r.status || '').toLowerCase() === 'approved' &&
+          String(r.role || '').toLowerCase() === 'teacher'
+        );
+        allRecords.sort((a, b) => {
+          const ta = a.approvedAt ? new Date(a.approvedAt).getTime() : 0;
+          const tb = b.approvedAt ? new Date(b.approvedAt).getTime() : 0;
+          return tb - ta;
+        });
+        document.getElementById('count-badge').textContent = allRecords.length + ' record' + (allRecords.length !== 1 ? 's' : '');
+        renderTable(allRecords);
+      } catch (err) {
+        console.error(err);
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--danger);padding:2rem;">Failed to load: ' + err.message + '</td></tr>';
+      }
+    }
+
+    function renderTable(records) {
+      const tbody = document.getElementById('table-body');
+      if (!records.length) {
+        tbody.innerHTML = '<tr><td colspan="5"><div class="no-data"><div class="no-data-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>No approved Teachers yet</h3><p>Approved records will appear here</p></div></td></tr>';
+        return;
+      }
+      tbody.innerHTML = records.map(r => `
+        <tr>
+          <td><div class="td-name">${getName(r)}</div><div class="td-email">${getEmail(r)}</div></td>
+          <td><span class="td-status approved">Approved</span></td>
+          <td class="td-time">${formatDate(r.approvedAt || r.updatedAt)}</td>
+          <td class="td-time">${r.approvedBy || '—'}</td>
+          <td><button class="btn-view" onclick="showModal('${r._id}')">View</button></td>
+        </tr>
+      `).join('');
+    }
+
+    window.handleSearch = function(q) {
+      searchQuery = q.toLowerCase();
+      const filtered = searchQuery
+        ? allRecords.filter(r => getName(r).toLowerCase().includes(searchQuery) || getEmail(r).toLowerCase().includes(searchQuery))
+        : allRecords;
+      renderTable(filtered);
+    };
+
+    window.showModal = function(id) {
+      const r = allRecords.find(x => x._id === id);
+      if (!r) return;
+      const role = String(r.role || 'parent').toLowerCase();
+      const status = String(r.status || 'approved').toLowerCase();
+      const fields = [];
+      const add = (label, value, fallback) => { if (value !== undefined && value !== '' && value !== null) { fields.push({ label, value: String(value) }); } else if (fallback !== undefined) { fields.push({ label, value: String(fallback) }); } };
+      add('Full Name', getName(r)); add('Email', r.email); add('Phone', r.phone);
+      if (role === 'parent') {
+        add('Student Name', r.studentFirstName && r.studentLastName ? r.studentFirstName + ' ' + r.studentLastName : (r.studentFirstName || r.firstName || ''));
+        add('Year / Form', r.studentLevel, 'Not provided');
+        add('School Type', r.schoolType, 'Not provided');
+        add('Subject', renderSubjectChips(r.subject || r.subjects));
+        add('District', r.district, 'Not provided');
+        add('Budget', r.budget, 'Not provided');
+        add('Lesson Mode', r.lessonMode, 'Not provided');
+        add('Learning Goal', r.learningGoal, 'Not provided');
+      } else {
+        add('Bio', r.bio, 'Not provided');
+        add('Experience', r.yearsExperience, 'Not provided');
+        add('Qualification', r.qualification, 'Not provided');
+        add('Hourly Rate', r.hourlyRate, 'Not provided');
+        add('Subject', renderSubjectChips(r.subject || r.subjects));
+        add('District', r.district, 'Not provided');
+        add('Lesson Mode', r.lessonMode, 'Not provided');
+        if (r.certUrl) fields.push({ label: 'Certificate', value: r.certUrl, isLink: true });
+      }
+      add('Approved Date', formatDate(r.approvedAt || r.updatedAt));
+      add('Approved By', r.approvedBy, '—');
+      let html = '<div style="display:flex;gap:12px;align-items:center;margin-bottom:1.25rem"><span class="detail-role-badge ' + role + '">' + (role === 'teacher' ? 'Teacher' : 'Student/Parent') + '</span><span class="detail-status-badge approved">Approved</span></div>';
+      for (let i = 0; i < fields.length; i += 2) {
+        const a = fields[i], b = fields[i + 1];
+        html += '<div class="detail-grid"><div class="detail-section"><div class="detail-label">' + a.label + '</div><div class="detail-value">' + (a.isLink ? '<a href="' + a.value + '" target="_blank" style="color:var(--primary);word-break:break-all">View &#8599;</a>' : a.value) + '</div></div>';
+        if (b) html += '<div class="detail-section"><div class="detail-label">' + b.label + '</div><div class="detail-value">' + (b.isLink ? '<a href="' + b.value + '" target="_blank" style="color:var(--primary);word-break:break-all">View &#8599;</a>' : b.value) + '</div></div>';
+        else html += '<div class="detail-section"></div>';
+        html += '</div>'; if (i < fields.length - 2) html += '<hr class="detail-divider">';
+      }
+      document.getElementById('modal-title').textContent = role === 'teacher' ? 'Teacher Details' : 'Student/Parent Details';
+      document.getElementById('modal-body').innerHTML = html;
+      document.getElementById('modal-footer').innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>';
+      document.getElementById('modal-overlay').classList.add('open');
+    };
+
+    window.closeModal = function() { document.getElementById('modal-overlay').classList.remove('open'); };
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    loadRecords();
+  </script>
+</body>
+</html>

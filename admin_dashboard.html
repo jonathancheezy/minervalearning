@@ -19,6 +19,8 @@
     .logo-text{font-family:'Outfit',sans-serif;font-weight:700;font-size:1.125rem;color:var(--dark)}
     .logo-text span{color:var(--primary)}
     .header-right{display:flex;align-items:center;gap:12px}
+    .header-nav-link{font-size:0.8125rem;font-weight:500;color:var(--text-muted);text-decoration:none;padding:4px 10px;border-radius:8px;transition:all 0.15s;}
+    .header-nav-link:hover{color:var(--primary);background:rgba(124,58,237,0.06)}
     .header-badge{background:rgba(16,185,129,0.1);color:var(--success);font-size:0.6875rem;font-weight:600;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:0.05em}
     .btn-logout{background:none;border:1.5px solid var(--border);cursor:pointer;color:var(--text-muted);font-size:0.8125rem;font-weight:500;font-family:'DM Sans',sans-serif;padding:5px 12px;border-radius:8px;transition:all 0.15s}
     .btn-logout:hover{border-color:var(--danger);color:var(--danger)}
@@ -150,6 +152,8 @@
     <span class="logo-text">Minerva</span>
   </a>
   <div class="header-right">
+    <a href="/approved-teachers.html" class="header-nav-link" id="nav-approved-teachers">Approved Teachers</a>
+    <a href="/approved-students.html" class="header-nav-link" id="nav-approved-students">Approved Students</a>
     <span class="header-badge">Live</span>
     <button class="btn-logout" id="logout-btn">Logout</button>
   </div>
@@ -193,6 +197,7 @@
       <button class="filter-tab active" id="filter-all" onclick="setFilter('all')">All</button>
       <button class="filter-tab" id="filter-parent" onclick="setFilter('parent')">Parents</button>
       <button class="filter-tab" id="filter-teacher" onclick="setFilter('teacher')">Teachers</button>
+      <button class="filter-tab" id="filter-approved" onclick="setFilter('approved')">Approved</button>
       <div class="search-box">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="search-input" placeholder="Search name or email..." oninput="handleSearch(this.value)">
@@ -492,17 +497,20 @@ function renderTable(regs) {
 
 window.setFilter = function(filter) {
   currentFilter = filter;
-  ['all','parent','teacher'].forEach(f => {
+  ['all','parent','teacher','approved'].forEach(f => {
     document.getElementById('filter-' + f).classList.toggle('active', f === filter);
   });
-  const filtered = filter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === filter);
+  let filtered;
+  if (filter === 'all') filtered = allRegistrations;
+  else if (filter === 'approved') filtered = allRegistrations.filter(r => String(r.status || '').toLowerCase() === 'approved');
+  else filtered = allRegistrations.filter(r => String(r.role || '').toLowerCase() === filter);
   renderTable(filtered);
 };
 
 window.handleSearch = function(q) {
   q = q.toLowerCase();
   const searched = allRegistrations.filter(r => getName(r).toLowerCase().includes(q) || getEmail(r).toLowerCase().includes(q));
-  const roleFiltered = currentFilter === 'all' ? searched : searched.filter(r => String(r.role || '').toLowerCase() === currentFilter);
+  const roleFiltered = currentFilter === 'all' ? searched : currentFilter === 'approved' ? searched.filter(r => String(r.status || '').toLowerCase() === 'approved') : searched.filter(r => String(r.role || '').toLowerCase() === currentFilter);
   renderTable(roleFiltered);
 };
 

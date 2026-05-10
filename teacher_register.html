@@ -23,6 +23,7 @@
     /* Nav — matching landing page */
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 18px 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(0,0,0,0.05); }
     .nav-inner { max-width: 1080px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
     .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 1.25rem; color: var(--dark); letter-spacing: -0.03em; }
     .nav-badge { font-size: 0.8125rem; font-weight: 700; background: rgba(124,58,237,0.1); color: var(--primary); padding: 6px 10px; border-radius: 10px; letter-spacing: 0; font-family: 'DM Sans', sans-serif; }
     .back-link { color: var(--gray-500); text-decoration: none; font-size: 0.875rem; display: flex; align-items: center; gap: 4px; transition: color 0.2s; font-family: 'DM Sans', sans-serif; }
@@ -118,12 +119,15 @@
         </svg>
         Minerva
       </a>
-      <span class="nav-badge" data-i18n="badge">Early Access</span><select id="langSel" onchange="if(window.setLang)window.setLang(this.value);localStorage.setItem('minerva_lang',this.value)" style="margin-left:8px;padding:6px 8px;border-radius:8px;border:1.5px solid var(--gray-300);font-size:0.8125rem;background:#fff;cursor:pointer;">
-        <option value="en">EN</option>
-        <option value="zhtw">繁</option>
-        <option value="zhcn">简</option>
-      </select>
-      <a href="https://minervalearning.minerva-ai-learning.workers.dev/" class="back-link">← Back</a>
+      <div class="nav-right">
+        <span class="nav-badge" data-i18n="badge">Early Access</span>
+        <select id="langSel" onchange="if(window.setLang)window.setLang(this.value);localStorage.setItem('minerva_lang',this.value)" style="padding:6px 8px;border-radius:8px;border:1.5px solid var(--gray-300);font-size:0.8125rem;background:#fff;cursor:pointer;">
+          <option value="en">EN</option>
+          <option value="zhtw">繁</option>
+          <option value="zhcn">简</option>
+        </select>
+        <a href="https://minervalearning.minerva-ai-learning.workers.dev/" class="back-link">← Back</a>
+      </div>
     </div>
   </nav>
 

@@ -641,7 +641,7 @@
         </svg>
         Minerva
       </a>
-      <span class="nav-badge" id="navBadge">Early Access</span>
+      <span class="nav-badge" id="navBadge" data-i18n="badge"></span>
       <div class="lang-wrap">
         <button class="lang-btn" id="langBtn" onclick="toggleLang()">
           <i data-lucide="globe" width="15" height="15"></i>
@@ -673,8 +673,8 @@
       <div class="form-section" id="signup" style="text-align:center;padding:48px 40px">
 
         <div style="margin-bottom:32px">
-          <h3 style="font-family:'DM Sans',sans-serif;font-size:1.5rem;font-weight:700;color:var(--dark);margin:0 0 8px">Ready to get started?</h3>
-          <p style="color:var(--gray-500);font-size:0.9375rem;margin:0">Choose how you want to join Minerva</p>
+          <h3 style="font-family:'DM Sans',sans-serif;font-size:1.5rem;font-weight:700;color:var(--dark);margin:0 0 8px"><span data-i18n="waitlist_title">Ready to get started?</span></h3>
+          <p style="color:var(--gray-500);font-size:0.9375rem;margin:0"><span data-i18n="waitlist_subtitle">Choose how you want to join Minerva</span></p>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:16px;max-width:380px;margin:0 auto">
@@ -847,18 +847,24 @@
     });
 
     function setLang(lang) {
-      currentLang = lang;
-      localStorage.setItem("minerva_lang", lang);
-      applyLang();
+      if (typeof window.setLang === 'function') {
+        window.setLang(lang);
+      } else {
+        localStorage.setItem("minerva_lang", lang);
+        if (typeof window.apply === 'function') window.apply();
+      }
       document.getElementById("langDropdown").classList.remove("show");
       lucide.createIcons();
-    // Kill pointer events on ALL Lucide SVG icons site-wide (backup CSS)
-    var style = document.createElement('style');
-    document.querySelectorAll('svg[data-lucide]').forEach(function(s){ s.style.pointerEvents='none'; });
+      document.querySelectorAll('svg[data-lucide]').forEach(function(s){ s.style.pointerEvents='none'; });
     }
 
     function applyLang() {
+      if (typeof window.apply === 'function') window.apply();
     }
 
-    </script><!-- redeploy trigger Sat May  9 04:04:32 HKT 2026 -->
+
+    </script>
+    <script src="i18n.js"></script>
+  </body>
+</html><!-- redeploy trigger Sat May  9 04:04:32 HKT 2026 -->
 <!-- redeploy 04:48:06 -->

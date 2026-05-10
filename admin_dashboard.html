@@ -349,7 +349,16 @@ function formatDate(ts) {
   } catch { return String(ts); }
 }
 
-function getName(reg) { return reg.fullName || reg.parentName || reg.name || reg.email || '—'; }
+function getName(reg) {
+  if (reg.fullName && typeof reg.fullName === 'string') return reg.fullName;
+  if (reg.parentName && typeof reg.parentName === 'string') return reg.parentName;
+  if (reg.name && typeof reg.name === 'string') return reg.name;
+  if (reg.firstName || reg.lastName) {
+    const f = reg.firstName || '', l = reg.lastName || '';
+    return [f, l].filter(Boolean).join(' ') || reg.email || '—';
+  }
+  return reg.email || '—';
+}
 function getEmail(reg) { return reg.email || '—'; }
 
 function flatten(data) {
@@ -507,12 +516,12 @@ window.findMatches = async function(parentId) {
   panel.innerHTML = '<div class="match-loading"><div class="match-loading-spinner"></div>Scoring teachers...</div>';
   document.getElementById('match-overlay').classList.add('open');
   await new Promise(r => setTimeout(r, 50));
-  const scored = allTeachers.filter(t => String(t.status || '') !== 'rejected').map(t => ({ teacher: t, ...scoreMatch(t, parent) })).filter(x => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 10);
-  if (!scored.length) { panel.innerHTML = '<div class="match-empty">No teachers match this profile yet.</div>'; return; }
+  const scored = allTeachers.filter(t => String(t.status || '') !== 'rejected').map(t => ({ teacher: t, ...scoreMatch(t, parent) })).sort((a, b) => b.score - a.score).slice(0, 10);
+  if (!scored.length) { panel.innerHTML = '<div class="match-empty">No pending teachers found in the system.</div>'; return; }
   panel.innerHTML = '<p style="font-size:0.8125rem;color:var(--text-muted);margin-bottom:1rem">Top ' + scored.length + ' matches — subject, age, location & availability</p>' + scored.map(({ teacher: t, score, reasons, hasFreeMatch }) => {
-    const pct = Math.round((score / 80) * 100);
+    const pct = score > 0 ? Math.round((score / 80) * 100) : 0;
     const cls = pct >= 70 ? 'score-high' : pct >= 45 ? 'score-mid' : 'score-low';
-    const lbl = pct >= 70 ? 'Strong' : pct >= 45 ? 'Good' : 'Fair';
+    const lbl = pct >= 70 ? 'Strong' : pct >= 45 ? 'Good' : pct > 0 ? 'Fair' : 'No criteria';
     const isAssigned = t.status === 'matched';
     const freeTag = hasFreeMatch ? '<span class="teacher-tag free">Free match</span>' : '<span class="teacher-tag paid">Paid</span>';
     const verifiedTag = t.certUrl ? '<span class="teacher-tag verified">Cert</span>' : '';

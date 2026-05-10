@@ -338,9 +338,9 @@
     }
     .how-section h2 {
       font-family: 'Outfit', sans-serif;
-      font-size: 2rem;
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
       font-weight: 800;
-      color: #1e3a5f;
+      color: var(--dark-2);
       letter-spacing: -0.03em;
       margin: 0 0 12px;
     }
@@ -372,6 +372,7 @@
       width: 2px;
       background: linear-gradient(to bottom, #7C3AED, #0EA5E9, #10B981);
       border-radius: 2px;
+      pointer-events: none;
     }
     .timeline-item {
       display: flex;

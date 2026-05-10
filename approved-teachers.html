@@ -97,10 +97,10 @@
       <span class="logo-text">Minerva</span>
     </a>
     <nav class="nav-centered" id="nav-centered">
-      <a href="/admin_dashboard">Dashboard</a>
-      <a href="/approved-teachers.html">Teachers</a>
-      <a href="/approved-students.html">Students</a>
-      <a href="/matched.html">Matched</a>
+      <a href="/admin_dashboard" data-i18n="admin_nav_dashboard">Dashboard</a>
+      <a href="/approved-teachers.html" data-i18n="admin_nav_teachers">Teachers</a>
+      <a href="/approved-students.html" data-i18n="admin_nav_students">Students</a>
+      <a href="/matched.html" data-i18n="admin_nav_matched">Matched</a>
     </nav>
     <div class="header-right">
       <div class="lang-wrap">
@@ -114,24 +114,24 @@
           <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')">简</button>
         </div>
       </div>
-      <button class="btn-logout" id="logout-btn">Logout</button>
+      <button class="btn-logout" id="logout-btn"data-i18n="admin_logout">Logout</button>
     </div>
 </header>
 
   <main class="layout">
     <div class="page-header">
       <div>
-        <h1 class="page-title">Teachers</h1>
-        <p class="page-subtitle">Your approved teachers database</p>
+        <h1 class="page-title" data-i18n="admin_teachers_all">Teachers</h1>
+        <p class="page-subtitle" data-i18n="admin_teachers_db">Your approved teachers database</p>
       </div>
       <div style="display:flex;align-items:center;gap:12px;">
-        <span class="count-badge" id="count-badge">Loading...</span>
+        <span class="count-badge" id="count-badge"data-i18n="admin_loading">Loading...</span>
       </div>
     </div>
 
     <div class="card">
       <div class="card-header">
-        <span class="card-title">All Teachers</span>
+        <span class="card-title" data-i18n="admin_teachers_all">All Teachers</span>
         <div class="search-box">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input type="text" id="search-input" placeholder="Search by name or email..." oninput="handleSearch(this.value)">
@@ -140,12 +140,12 @@
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Status</th>
-            <th>Total Matches</th>
-            <th>Free Left</th>
-            <th>Approved Date</th>
-            <th>Approved By</th>
+            <th data-i18n="admin_col_name">Name</th>
+            <th data-i18n="admin_col_status">Status</th>
+            <thdata-i18n="admin_total_matches_label">Total Matches</th>
+            <thdata-i18n="admin_free_left_label">Free Left</th>
+            <th data-i18n="admin_col_approved_date">Approved Date</th>
+            <th data-i18n="admin_col_approved_by">Approved By</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -159,7 +159,7 @@
   <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
     <div class="modal">
       <div class="modal-header">
-        <h3 class="modal-title" id="modal-title">Details</h3>
+        <h3 class="modal-title" id="modal-title"data-i18n="admin_details">Details</h3>
         <button class="modal-close" onclick="closeModal()">&#215;</button>
       </div>
       <div class="modal-body" id="modal-body"></div>
@@ -169,7 +169,8 @@
 
   <div class="toast" id="toast"></div>
 
-  <script type="module">
+  <script src="/i18n.js" defer></script>
+<script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getFirestore, collection, getDocs, query, limit, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
@@ -271,18 +272,18 @@
     function renderTable(records) {
       const tbody = document.getElementById('table-body');
       if (!records.length) {
-        tbody.innerHTML = '<tr><td colspan="7"><div class="no-data"><div class="no-data-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>No approved Teachers yet</h3><p>Approved records will appear here</p></div></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7"><div class="no-data"><div class="no-data-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3 data-i18n="admin_no_teachersYet">No approved Teachers yet</h3><p data-i18n="admin_teachers_appear">Approved records will appear here</p></div></td></tr>';
         return;
       }
       tbody.innerHTML = records.map(r => `
         <tr>
           <td><div class="td-name">${getName(r)}</div><div class="td-email">${getEmail(r)}</div></td>
-          <td><span class="td-status approved">Approved</span></td>
+          <td><span class="td-status approved"data-i18n="admin_status_approved">Approved</span></td>
           <td class="td-matches">${r.totalMatches || 0}</td>
           <td class="td-free">${r.freeMatchesRemaining !== undefined ? r.freeMatchesRemaining : '—'}</td>
           <td class="td-time">${formatDate(r.approvedAt || r.updatedAt)}</td>
           <td class="td-time">${r.approvedBy || '—'}</td>
-          <td><button class="btn-view" onclick="showModal('${r._id}')">View</button></td>
+          <td><button class="btn-view" onclick="showModal('${r._id}')"data-i18n="admin_view_external">View</button></td>
         </tr>
       `).join('');
     }
@@ -324,15 +325,15 @@
       }
       add('Approved Date', formatDate(r.approvedAt || r.updatedAt));
       add('Approved By', r.approvedBy, '—');
-      let html = '<div style="display:flex;gap:12px;align-items:center;margin-bottom:1.25rem"><span class="detail-role-badge ' + role + '">' + (role === 'teacher' ? 'Teacher' : 'Student/Parent') + '</span><span class="detail-status-badge approved">Approved</span></div>';
+      let html = '<div style="display:flex;gap:12px;align-items:center;margin-bottom:1.25rem"><span class="detail-role-badge ' + role + '">' + (role === 'teacher' ? (window.T.admin_teacher_badge?.[window.lang] || 'Teacher') : (window.T.admin_student_parent_badge?.[window.lang] || 'Student / Parent')) + '</span><span class="detail-status-badge approved">Approved</span></div>';
       for (let i = 0; i < fields.length; i += 2) {
         const a = fields[i], b = fields[i + 1];
-        html += '<div class="detail-grid"><div class="detail-section"><div class="detail-label">' + a.label + '</div><div class="detail-value">' + (a.isLink ? '<a href="' + a.value + '" target="_blank" style="color:var(--primary);word-break:break-all">View &#8599;</a>' : a.value) + '</div></div>';
+        html += '<div class="detail-grid"><div class="detail-section"><div class="detail-label">' + a.label + '</div><div class="detail-value">' + (a.isLink ? '<a href="' + a.value + '" target="_blank" style="color:var(--primary);word-break:break-all"data-i18n="admin_view_external">View ↗</a>/a>' : a.value) + '</div></div>';
         if (b) html += '<div class="detail-section"><div class="detail-label">' + b.label + '</div><div class="detail-value">' + (b.isLink ? '<a href="' + b.value + '" target="_blank" style="color:var(--primary);word-break:break-all">View &#8599;</a>' : b.value) + '</div></div>';
         else html += '<div class="detail-section"></div>';
         html += '</div>'; if (i < fields.length - 2) html += '<hr class="detail-divider">';
       }
-      document.getElementById('modal-title').textContent = role === 'teacher' ? 'Teacher Details' : 'Student/Parent Details';
+      document.getElementById('modal-title').textContent = role === 'teacher' ? ((window.T.admin_teacher_badge?.[window.lang] || 'Teacher') + ' Details') : ((window.T.admin_student_parent_badge?.[window.lang] || 'Student/Parent') + ' Details');
       document.getElementById('modal-body').innerHTML = html;
       document.getElementById('modal-footer').innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>';
       document.getElementById('modal-overlay').classList.add('open');
@@ -357,6 +358,7 @@ window.setLang = function(lang) {
   var dd = document.getElementById('langDropdown');
   if (dd) dd.classList.remove('show');
 };
+window.apply();
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.lang-wrap')) {
     var d = document.getElementById('langDropdown');

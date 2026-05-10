@@ -87,10 +87,10 @@
       <span class="logo-text">Minerva</span>
     </a>
     <nav class="nav-centered" id="nav-centered">
-      <a href="/admin_dashboard">Dashboard</a>
-      <a href="/approved-teachers.html">Teachers</a>
-      <a href="/approved-students.html">Students</a>
-      <a href="/matched.html">Matched</a>
+      <a href="/admin_dashboard" data-i18n="admin_nav_dashboard">Dashboard</a>
+      <a href="/approved-teachers.html" data-i18n="admin_nav_teachers">Teachers</a>
+      <a href="/approved-students.html" data-i18n="admin_nav_students">Students</a>
+      <a href="/matched.html" data-i18n="admin_nav_matched">Matched</a>
     </nav>
     <div class="header-right">
       <div class="lang-wrap">
@@ -104,7 +104,7 @@
           <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')">简</button>
         </div>
       </div>
-      <button class="btn-logout" id="logout-btn">Logout</button>
+      <button class="btn-logout" id="logout-btn"data-i18n="admin_logout"data-i18n="admin_logout">Logout</button>
     </div>
   </header>
 
@@ -112,11 +112,12 @@
     <div id="content">
       <div class="loading">
         <div class="loading-spinner"></div>
-        <div>Loading profile...</div>
+        <divdata-i18n="admin_profile_load">Loading profile...</div>
       </div>
     </div>
   </main>
 
+<script src="/i18n.js" defer></script>
 <script>
 window.toggleLang = function() { document.getElementById('langDropdown').classList.toggle('show'); };
 window.setLang = function(lang) {
@@ -155,6 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+window.apply();
 </script>
 <script type="module">
 const FIRESTORE_KEY = 'BDQafXcXdaUex9P6P_zIWeKItBf7ZOIeKGSju3jE0L9nyA54-N7hg2cZkS97gErRNiqDqqLK8bNOck0tAN3Nq5s';
@@ -228,76 +230,76 @@ function renderProfile(r) {
 
   var sections = [];
 
-  sections.push({ section: 'Contact', items: [
-    { label: 'Full Name', value: name },
-    { label: 'Email', value: r.email },
-    { label: 'Phone / WhatsApp', value: r.whatsapp || r.phone },
-    { label: 'Submitted', value: formatDate(r.submittedAt) },
+  sections.push({ section: (window.T.admin_contact?.[window.lang] || 'Contact'), items: [
+    { label: (window.T.admin_full_name?.[window.lang] || 'Full Name'), value: name },
+    { label: (window.T.admin_email?.[window.lang] || 'Email'), value: r.email },
+    { label: (window.T.admin_phone?.[window.lang] || 'Phone / WhatsApp'), value: r.whatsapp || r.phone },
+    { label: (window.T.admin_submitted?.[window.lang] || 'Submitted'), value: formatDate(r.submittedAt) },
   ]});
 
   if (isTeacher) {
-    sections.push({ section: 'Teaching Profile', items: [
-      { label: 'Bio', value: r.bio },
-      { label: 'Experience', value: r.yearsExperience || r.experience },
-      { label: 'Qualification', value: r.qualification },
-      { label: 'Hourly Rate', value: r.hourlyRate ? 'HK$' + r.hourlyRate + '/hr' : null },
-      { label: 'Student Age Groups', value: r.ageGroups || r.studentAgeGroups },
-      { label: 'Exam Systems', value: r.examSystems },
-      { label: 'Availability', value: r.availability },
+    sections.push({ section: (window.T.admin_teaching_profile?.[window.lang] || 'Teaching Profile'), items: [
+      { label: (window.T.admin_bio?.[window.lang] || 'Bio'), value: r.bio },
+      { label: (window.T.admin_experience?.[window.lang] || 'Experience'), value: r.yearsExperience || r.experience },
+      { label: (window.T.admin_qualification?.[window.lang] || 'Qualification'), value: r.qualification },
+      { label: (window.T.admin_hourly_rate?.[window.lang] || 'Hourly Rate'), value: r.hourlyRate ? 'HK$' + r.hourlyRate + '/hr' : null },
+      { label: (window.T.admin_age_groups?.[window.lang] || 'Student Age Groups'), value: r.ageGroups || r.studentAgeGroups },
+      { label: (window.T.admin_exam_systems?.[window.lang] || 'Exam Systems'), value: r.examSystems },
+      { label: (window.T.admin_availability?.[window.lang] || 'Availability'), value: r.availability },
     ]});
-    sections.push({ section: 'Subjects & Location', items: [
-      { label: 'Subject', value: r.subjects || r.subject, isChip: true },
-      { label: 'Other Subjects', value: r.otherSubjects },
-      { label: 'District', value: r.district },
-      { label: 'Travel Distance', value: r.travelDistance },
-      { label: 'Lesson Mode', value: r.lessonMode },
-      { label: 'Lesson Duration', value: r.lessonDuration },
+    sections.push({ section: (window.T.admin_subjects_location?.[window.lang] || 'Subjects & Location'), items: [
+      { label: (window.T.admin_subjects?.[window.lang] || 'Subject'), value: r.subjects || r.subject, isChip: true },
+      { label: (window.T.admin_other_subjects?.[window.lang] || 'Other Subjects'), value: r.otherSubjects },
+      { label: (window.T.admin_district?.[window.lang] || 'District'), value: r.district },
+      { label: (window.T.admin_travel?.[window.lang] || 'Travel Distance'), value: r.travelDistance },
+      { label: (window.T.admin_lesson_mode?.[window.lang] || 'Lesson Mode'), value: r.lessonMode },
+      { label: (window.T.admin_lesson_duration?.[window.lang] || 'Lesson Duration'), value: r.lessonDuration },
     ]});
-    sections.push({ section: 'Verification', items: [
-      { label: 'Certificate', value: r.certUrl, isLink: !!r.certUrl, raw: r.certUrl },
-      { label: 'Intro Video', value: r.introVideoUrl, isLink: !!r.introVideoUrl, raw: r.introVideoUrl },
-      { label: 'Total Matches', value: r.totalMatches || 0 },
-      { label: 'Free Matches Left', value: r.freeMatchesRemaining !== undefined ? r.freeMatchesRemaining + ' remaining' : null },
-      { label: 'Referral Source', value: r.source },
+    sections.push({ section: (window.T.admin_verification?.[window.lang] || 'Verification'), items: [
+      { label: (window.T.admin_certificate?.[window.lang] || 'Certificate'), value: r.certUrl, isLink: !!r.certUrl, raw: r.certUrl },
+      { label: (window.T.admin_video?.[window.lang] || 'Intro Video'), value: r.introVideoUrl, isLink: !!r.introVideoUrl, raw: r.introVideoUrl },
+      { label: (window.T.admin_total_matches?.[window.lang] || 'Total Matches'), value: r.totalMatches || 0 },
+      { label: (window.T.admin_free_matches_left?.[window.lang] || 'Free Matches Left'), value: r.freeMatchesRemaining !== undefined ? r.freeMatchesRemaining + (window.T.admin_free_remaining?.[window.lang] || ' remaining') : null },
+      { label: (window.T.admin_referral?.[window.lang] || 'Referral Source'), value: r.source },
     ]});
   } else {
-    sections.push({ section: 'Student Info', items: [
-      { label: 'Student Name', value: r.studentFirstName && r.studentLastName ? r.studentFirstName + ' ' + r.studentLastName : (r.studentFirstName || r.firstName || '—') },
-      { label: 'Year / Form', value: r.studentLevel },
-      { label: 'School Type', value: r.schoolType },
-      { label: 'Student Gender', value: r.studentGender },
-      { label: 'Student School', value: r.studentSchool },
+    sections.push({ section: (window.T.admin_student_info?.[window.lang] || 'Student Info'), items: [
+      { label: (window.T.admin_student_name?.[window.lang] || 'Student Name'), value: r.studentFirstName && r.studentLastName ? r.studentFirstName + ' ' + r.studentLastName : (r.studentFirstName || r.firstName || '—') },
+      { label: (window.T.admin_year_form?.[window.lang] || 'Year / Form'), value: r.studentLevel },
+      { label: (window.T.admin_school_type?.[window.lang] || 'School Type'), value: r.schoolType },
+      { label: (window.T.admin_student_gender?.[window.lang] || 'Student Gender'), value: r.studentGender },
+      { label: (window.T.admin_student_school?.[window.lang] || 'Student School'), value: r.studentSchool },
     ]});
-    sections.push({ section: 'Learning Needs', items: [
+    sections.push({ section: (window.T.admin_learning_needs?.[window.lang] || 'Learning Needs'), items: [
       { label: 'Subject', value: r.subjects || r.subject, isChip: true },
-      { label: 'Current Level', value: r.currentLevel },
-      { label: 'Target Exam', value: r.targetExam },
-      { label: 'Learning Goal', value: r.learningGoal },
-      { label: 'Preferred Teacher Gender', value: r.teacherGender },
+      { label: (window.T.admin_current_level?.[window.lang] || 'Current Level'), value: r.currentLevel },
+      { label: (window.T.admin_target_exam?.[window.lang] || 'Target Exam'), value: r.targetExam },
+      { label: (window.T.admin_learning_goal?.[window.lang] || 'Learning Goal'), value: r.learningGoal },
+      { label: (window.T.admin_teacher_gender?.[window.lang] || 'Preferred Teacher Gender'), value: r.teacherGender },
     ]});
-    sections.push({ section: 'Logistics', items: [
+    sections.push({ section: (window.T.admin_logistics?.[window.lang] || 'Logistics'), items: [
       { label: 'District', value: r.district },
       { label: 'Lesson Mode', value: r.lessonMode },
       { label: 'Lesson Frequency', value: r.lessonFrequency },
       { label: 'Lesson Duration', value: r.lessonDuration },
-      { label: 'Budget', value: r.budget },
-      { label: 'When to Start', value: r.startDate },
+      { label: (window.T.admin_budget?.[window.lang] || 'Budget'), value: r.budget },
+      { label: (window.T.admin_start?.[window.lang] || 'When to Start'), value: r.startDate },
     ]});
     if (r.notes) {
       sections.push({ section: 'Additional Info', items: [
-        { label: 'Notes', value: r.notes, full: true },
+        { label: (window.T.admin_notes?.[window.lang] || 'Notes'), value: r.notes, full: true },
       ]});
     }
   }
 
   if (r.matchedTeacherName) {
-    sections.push({ section: 'Match Info', items: [
-      { label: 'Matched With', value: r.matchedTeacherName },
-      { label: 'Match Date', value: formatDate(r.matchedAt) },
+    sections.push({ section: (window.T.admin_match_info?.[window.lang] || 'Match Info'), items: [
+      { label: (window.T.admin_matched_with_label?.[window.lang] || 'Matched With'), value: r.matchedTeacherName },
+      { label: (window.T.admin_match_date_label?.[window.lang] || 'Match Date'), value: formatDate(r.matchedAt) },
     ]});
   }
 
-  var html = '<div class="profile-card"><div class="profile-header"><div class="avatar ' + role + '">' + initials + '</div><div class="profile-info"><div class="profile-name">' + name + '</div><div class="profile-meta">' + getEmail(r) + '</div><div class="profile-badges"><span class="badge ' + role + '">' + (isTeacher ? 'Teacher' : 'Parent / Student') + '</span><span class="badge ' + status + '">' + status + '</span></div></div></div><div class="profile-body">';
+  var html = '<div class="profile-card"><div class="profile-header"><div class="avatar ' + role + '">' + initials + '</div><div class="profile-info"><div class="profile-name">' + name + '</div><div class="profile-meta">' + getEmail(r) + '</div><div class="profile-badges"><span class="badge ' + role + '">' + (isTeacher ? (window.T.admin_teacher_role?.[window.lang] || 'Teacher') : (window.T.admin_parent_student?.[window.lang] || 'Parent / Student')) + '</span><span class="badge ' + status + '">' + (window.T['admin_status_' + status]?.[window.lang] || status) + '</span></div></div></div><div class="profile-body">';
 
   sections.forEach(function(s) {
     var items = s.items.filter(function(f) { return f.value !== null && f.value !== undefined && f.value !== ''; });
@@ -318,27 +320,27 @@ function renderProfile(r) {
   });
 
   if (r.matchedTeacherName) {
-    html += '<div class="match-info"><div class="match-info-label">Matched Teacher</div><div class="match-info-value">' + r.matchedTeacherName + '</div></div>';
+    html += '<div class="match-info"><div class="match-info-label">' + (window.T.admin_matched_teacher_label?.[window.lang] || 'Matched Teacher') + '</div><div class="match-info-value">' + r.matchedTeacherName + '</div></div>';
   }
 
-  html += '</div><div class="actions"><a href="/admin_dashboard" class="btn btn-secondary">← Back to Dashboard</a></div></div>';
+  html += '</div><div class="actions"><a href="/admin_dashboard" class="btn btn-secondary"data-i18n="admin_back_dashboard">← Back to Dashboard</a></div></div>';
   return html;
 }
 
 var params = new URLSearchParams(window.location.search);
 var id = params.get('id');
 if (!id) {
-  document.getElementById('content').innerHTML = '<div class="error-msg">No profile ID provided. <a href="/admin_dashboard">Go back</a></div>';
+  document.getElementById('content').innerHTML = '<div class="error-msg">' + (window.T.admin_profile_noId?.[window.lang] || 'No profile ID provided.') + ' <a href="/admin_dashboard">' + (window.T.admin_back_dashboard?.[window.lang] || 'Go back') + '</a></div>';
 } else {
   loadProfile(id).then(function(r) {
     if (!r) {
-      document.getElementById('content').innerHTML = '<div class="error-msg">Profile not found. <a href="/admin_dashboard">Go back</a></div>';
+      document.getElementById('content').innerHTML = '<div class="error-msg">' + (window.T.admin_profile_notFound?.[window.lang] || 'Profile not found.') + ' <a href="/admin_dashboard">' + (window.T.admin_back_dashboard?.[window.lang] || 'Go back') + '</a></div>';
       return;
     }
     document.getElementById('content').innerHTML = renderProfile(r);
     document.title = getName(r) + ' — Minerva Admin';
   }).catch(function() {
-    document.getElementById('content').innerHTML = '<div class="error-msg">Failed to load profile. <a href="/admin_dashboard">Go back</a></div>';
+    document.getElementById('content').innerHTML = '<div class="error-msg">' + (window.T.admin_profile_failed?.[window.lang] || 'Failed to load profile.') + ' <a href="/admin_dashboard">' + (window.T.admin_back_dashboard?.[window.lang] || 'Go back') + '</a></div>';
   });
 }
 </script>

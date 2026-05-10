@@ -107,10 +107,10 @@
       <span class="logo-text">Minerva</span>
     </a>
     <nav class="nav-centered" id="nav-centered">
-      <a href="/admin_dashboard">Dashboard</a>
-      <a href="/approved-teachers.html">Teachers</a>
-      <a href="/approved-students.html">Students</a>
-      <a href="/matched.html">Matched</a>
+      <a href="/admin_dashboard" data-i18n="admin_nav_dashboard">Dashboard</a>
+      <a href="/approved-teachers.html" data-i18n="admin_nav_teachers">Teachers</a>
+      <a href="/approved-students.html" data-i18n="admin_nav_students">Students</a>
+      <a href="/matched.html" data-i18n="admin_nav_matched">Matched</a>
     </nav>
     <div class="header-right">
       <div class="lang-wrap">
@@ -124,24 +124,24 @@
           <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')">简</button>
         </div>
       </div>
-      <button class="btn-logout" id="logout-btn">Logout</button>
+      <button class="btn-logout" id="logout-btn"data-i18n="admin_logout">Logout</button>
     </div>
 </header>
 
   <main class="layout">
     <div class="page-header">
       <div>
-        <h1 class="page-title">Matched Assignments</h1>
-        <p class="page-subtitle">Parent-student to teacher matches</p>
+        <h1 class="page-title" data-i18n="admin_matched_all">Matched Assignments</h1>
+        <p class="page-subtitle" data-i18n="admin_matched_subtitle">Parent-student to teacher matches</p>
       </div>
       <div style="display:flex;align-items:center;gap:12px;">
-        <span class="count-badge" id="count-badge">Loading...</span>
+        <span class="count-badge" id="count-badge"data-i18n="admin_loading">Loading...</span>
       </div>
     </div>
 
     <div class="card">
       <div class="card-header">
-        <span class="card-title">All Matches</span>
+        <span class="card-title" data-i18n="admin_matched_all">All Matches</span>
         <div class="search-box">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input type="text" id="search-input" placeholder="Search by parent or teacher name..." oninput="handleSearch(this.value)">
@@ -150,10 +150,10 @@
       <table>
         <thead>
           <tr>
-            <th>Parent / Student</th>
-            <th>Match</th>
-            <th>Matched Date</th>
-            <th>Actions</th>
+            <th data-i18n="admin_parent_label">Parent / Student</th>
+            <th data-i18n="admin_col_match">Match</th>
+            <th data-i18n="admin_col_matched_date">Matched Date</th>
+            <th data-i18n="admin_col_actions">Actions</th>
           </tr>
         </thead>
         <tbody id="table-body">
@@ -166,7 +166,7 @@
   <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
     <div class="modal">
       <div class="modal-header">
-        <h3 class="modal-title" id="modal-title">Match Details</h3>
+        <h3 class="modal-title" id="modal-title"data-i18n="admin_match_details">Match Details</h3>
         <button class="modal-close" onclick="closeModal()">&#215;</button>
       </div>
       <div class="modal-body" id="modal-body"></div>
@@ -176,7 +176,8 @@
 
   <div class="toast" id="toast"></div>
 
-  <script type="module">
+  <script src="/i18n.js" defer></script>
+<script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getFirestore, collection, getDocs, query, limit, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
@@ -279,7 +280,7 @@
     function renderTable(records) {
       const tbody = document.getElementById('table-body');
       if (!records.length) {
-        tbody.innerHTML = '<tr><td colspan="4"><div class="no-data"><div class="no-data-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>No matches yet</h3><p>Parent-teacher matches will appear here</p></div></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4"><div class="no-data"><div class="no-data-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3 data-i18n="admin_no_matchesYet">No matches yet</h3><p data-i18n="admin_matches_appear">Parent-teacher matches will appear here</p></div></td></tr>';
         return;
       }
       tbody.innerHTML = records.map(r => `
@@ -290,13 +291,13 @@
           </td>
           <td>
             <div class="td-match">
-              <span class="td-role parent">Parent</span>
+              <span class="td-role parent"data-i18n="admin_parent">Parent</span>
               <span class="match-arrow">&#8594;</span>
               <span class="td-role teacher">${r.matchedTeacherName || 'Teacher'}</span>
             </div>
           </td>
           <td class="td-time">${formatDate(r.matchedAt)}</td>
-          <td><button class="btn-view" onclick="showModal('${r._id}')">View</button></td>
+          <td><button class="btn-view" onclick="showModal('${r._id}')"data-i18n="admin_view_external">View</button></td>
         </tr>
       `).join('');
     }
@@ -317,17 +318,17 @@
       const teacherId = r.matchedTeacherId || '';
 
       let html = `
-        <div class="match-section-label">Parent / Student</div>
+        <div class="match-section-label"data-i18n="admin_parent_label">Parent / Student</div>
         <div class="match-detail-card">
           <div class="match-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
           <div class="match-detail-info">
             <div class="match-detail-name">${parentName}</div>
             <div class="match-detail-meta">${getEmail(r)} · ${r.subject || r.subjects || 'General'}</div>
-            <div class="match-detail-meta">Matched: ${formatDate(r.matchedAt)}</div>
+            <div class="match-detail-meta">(window.T.admin_matched_date_prefix?.[window.lang] || 'Matched:') + ' ' + formatDate(r.matchedAt)</div>
           </div>
         </div>
 
-        <div class="match-section-label">Matched Teacher</div>
+        <div class="match-section-label"data-i18n="admin_matched_teacher_col">Matched Teacher</div>
         <div class="match-detail-card">
           <div class="match-detail-icon" style="background:var(--primary);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
           <div class="match-detail-info">
@@ -339,13 +340,13 @@
         <div style="margin-top:1rem;">
 n          <div class="detail-section"><div class="detail-label">Student Name</div><div class="detail-value">${r.studentFirstName && r.studentLastName ? r.studentFirstName + ' ' + r.studentLastName : (r.studentFirstName || r.firstName || '—')}</div></div>
           <div class="detail-section"><div class="detail-label">Subject</div><div class="detail-value">${renderSubjectChips(r.subject || r.subjects)}</div></div>
-          <div class="detail-section"><div class="detail-label">District</div><div class="detail-value">${r.district || '—'}</div></div>
-          <div class="detail-section"><div class="detail-label">Lesson Mode</div><div class="detail-value">${r.lessonMode || '—'}</div></div>
-          <div class="detail-section"><div class="detail-label">Budget</div><div class="detail-value">${r.budget || '—'}</div></div>
+          <div class="detail-section"><div class="detail-label">${(window.T.admin_district?.[window.lang] || 'District')}</div><div class="detail-value">${r.district || '—'}</div></div>
+          <div class="detail-section"><div class="detail-label">${(window.T.admin_lesson_mode?.[window.lang] || 'Lesson Mode')}</div><div class="detail-value">${r.lessonMode || '—'}</div></div>
+          <div class="detail-section"><div class="detail-label">${(window.T.admin_budget?.[window.lang] || 'Budget')}</div><div class="detail-value">${r.budget || '—'}</div></div>
         </div>
       `;
 
-      document.getElementById('modal-title').textContent = 'Match Details';
+      document.getElementById('modal-title').textContent = (window.T.admin_match_details?.[window.lang] || 'Match Details');
       document.getElementById('modal-body').innerHTML = html;
       document.getElementById('modal-footer').innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>';
       document.getElementById('modal-overlay').classList.add('open');
@@ -370,6 +371,7 @@ window.setLang = function(lang) {
   var dd = document.getElementById('langDropdown');
   if (dd) dd.classList.remove('show');
 };
+window.apply();
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.lang-wrap')) {
     var d = document.getElementById('langDropdown');

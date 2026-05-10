@@ -43,7 +43,7 @@
     td{padding:14px 1.25rem;font-size:0.875rem;vertical-align:middle}
     .td-name{font-weight:600;color:var(--dark)}.td-email{color:var(--text-muted);font-size:0.8125rem}
     .td-status.approved{background:var(--success-bg);color:#047857}
-    .td-time{color:var(--text-muted);font-size:0.8125rem}
+    .td-time{color:var(--text-muted);font-size:0.8125rem}.td-matches{font-weight:600;color:var(--primary)}.td-free{color:var(--teal)}
     .btn-view{padding:5px 12px;background:rgba(124,58,237,0.08);color:var(--primary);border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;border:none;text-decoration:none;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:inline-block}
     .btn-view:hover{background:rgba(124,58,237,0.15)}
     .no-data{text-align:center;padding:4rem 2rem}
@@ -168,13 +168,15 @@
           <tr>
             <th>Name</th>
             <th>Status</th>
+            <th>Total Matches</th>
+            <th>Free Left</th>
             <th>Approved Date</th>
             <th>Approved By</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody id="table-body">
-          <tr class="skeleton-row"><td colspan="5"><div class="skeleton" style="height:20px;width:60%;"></div></td></tr>
+          <tr class="skeleton-row"><td colspan="7"><div class="skeleton" style="height:20px;width:60%;"></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -272,7 +274,7 @@
 
     async function loadRecords() {
       const tbody = document.getElementById('table-body');
-      tbody.innerHTML = '<tr class="skeleton-row"><td colspan="5"><div class="skeleton" style="height:20px;width:60%;"></div></td></tr>';
+      tbody.innerHTML = '<tr class="skeleton-row"><td colspan="7"><div class="skeleton" style="height:20px;width:60%;"></div></td></tr>';
       try {
         let docs = await loadViaRest();
         allRecords = docs.filter(r =>
@@ -295,13 +297,15 @@
     function renderTable(records) {
       const tbody = document.getElementById('table-body');
       if (!records.length) {
-        tbody.innerHTML = '<tr><td colspan="5"><div class="no-data"><div class="no-data-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>No approved Teachers yet</h3><p>Approved records will appear here</p></div></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7"><div class="no-data"><div class="no-data-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>No approved Teachers yet</h3><p>Approved records will appear here</p></div></td></tr>';
         return;
       }
       tbody.innerHTML = records.map(r => `
         <tr>
           <td><div class="td-name">${getName(r)}</div><div class="td-email">${getEmail(r)}</div></td>
           <td><span class="td-status approved">Approved</span></td>
+          <td class="td-matches">${r.totalMatches || 0}</td>
+          <td class="td-free">${r.freeMatchesRemaining !== undefined ? r.freeMatchesRemaining : '—'}</td>
           <td class="td-time">${formatDate(r.approvedAt || r.updatedAt)}</td>
           <td class="td-time">${r.approvedBy || '—'}</td>
           <td><button class="btn-view" onclick="showModal('${r._id}')">View</button></td>

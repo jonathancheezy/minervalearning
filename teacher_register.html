@@ -133,8 +133,8 @@
         <div class="success-icon">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
-        <h2>You're on the list!</h2>
-        <p>We'll match you with students and reach out via WhatsApp.</p>
+        <h2 data-i18n="teacher_success_h2">You're on the list!</h2>
+        <p data-i18n="teacher_success_p">We'll match you with students and reach out via WhatsApp.</p>
         <div class="success-badge">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
           Zero platform fees during early access
@@ -144,8 +144,8 @@
 
       <div id="formPage">
         <div class="reg-card-header">
-          <h1>Become a Tutor</h1>
-          <p>Join our network and start teaching — zero platform fees during early access.</p>
+          <h1 data-i18n="teacher_title">Become a Tutor</h1>
+          <p data-i18n="teacher_subtitle">Join our network and start teaching — zero platform fees during early access.</p>
         </div>
         <div class="reg-card-body">
           <div class="steps-indicator">
@@ -158,8 +158,8 @@
 
             <!-- STEP 1: Contact + OTP -->
             <div class="step active" id="step1">
-              <div class="step-title">Your contact details</div>
-              <div class="step-subtitle">We'll reach out via WhatsApp to confirm your registration.</div>
+              <div class="step-title" data-i18n="teacher_step1_title">Your contact details</div>
+              <div class="step-subtitle" data-i18n="teacher_step1_subtitle">We'll reach out via WhatsApp to confirm your registration.</div>
               <div class="form-row">
                 <div class="form-group"><label>First name</label><input type="text" id="firstName" placeholder="e.g. Marcus" required /></div>
                 <div class="form-group"><label>Last name</label><input type="text" id="lastName" placeholder="e.g. Lee" /></div>
@@ -179,14 +179,14 @@
                 </div>
               </div>
               <div class="btn-group">
-                <button type="button" class="btn btn-primary btn-full" id="step1Btn" onclick="handleStep1()">Continue →</button>
+                <button type="button" class="btn btn-primary btn-full" id="step1Btn" data-i18n="btn_continue" onclick="handleStep1()">Continue →</button>
               </div>
             </div>
 
             <!-- STEP 2: Background -->
             <div class="step" id="step2">
-              <div class="step-title">About you</div>
-              <div class="step-subtitle">Tell students what makes you a great tutor.</div>
+              <div class="step-title" data-i18n="teacher_step2_about_title">About you</div>
+              <div class="step-subtitle" data-i18n="teacher_step2_about_subtitle">Tell students what makes you a great tutor.</div>
               <div class="form-group"><label>About you <span>(shown to students)</span></label><textarea id="bio" placeholder="E.g. Patient teacher with 5 years DSE Maths experience. I break down concepts simply and use real exam questions..."></textarea></div>
               <div class="form-row">
                 <div class="form-group"><label>Years of experience</label><select id="yearsExp"><option value="" disabled selected>Select</option><option>0-1 years</option><option>2-3 years</option><option>4-5 years</option><option>6-10 years</option><option>10+ years</option></select></div>
@@ -217,15 +217,15 @@
               </div>
               <div class="form-group"><label>Other subjects you can teach <span>(optional)</span></label><input type="text" id="otherSubjects" placeholder="E.g. Chemistry, Biology" /></div>
               <div class="btn-group">
-                <button type="button" class="btn btn-secondary" onclick="goStep(1)">← Back</button>
-                <button type="button" class="btn btn-primary" onclick="continueToStep3()" style="flex:1">Continue →</button>
+                <button type="button" class="btn btn-secondary" data-i18n="btn_back" onclick="goStep(1)">← Back</button>
+                <button type="button" class="btn btn-primary" data-i18n="btn_continue" onclick="continueToStep3()" style="flex:1">Continue →</button>
               </div>
             </div>
 
             <!-- STEP 3: Coverage & Availability -->
             <div class="step" id="step3">
-              <div class="step-title">Coverage & availability</div>
-              <div class="step-subtitle">Last step — tell us where and when you can teach.</div>
+              <div class="step-title" data-i18n="teacher_step3_coverage_title">Coverage & availability</div>
+              <div class="step-subtitle" data-i18n="teacher_step3_coverage_subtitle">Last step — tell us where and when you can teach.</div>
               <div class="form-row">
                 <div class="form-group"><label>Preferred area</label><select id="district"><option value="" disabled selected>Select</option><option>Hong Kong Island</option><option>Kowloon</option><option>New Territories</option><option>Online only</option><option>All areas</option></select></div>
                 <div class="form-group"><label>Max travel distance</label><select id="travelDistance"><option value="" disabled selected>Select</option><option>Within 30 mins</option><option>Within 1 hour</option><option>1 hour+</option><option>No travel — online only</option></select></div>
@@ -245,8 +245,8 @@
               <div class="form-group"><label>How did you hear about Minerva? <span>(optional)</span></label><select id="source"><option value="">Select</option><option>Google search</option><option>Facebook</option><option>Instagram</option><option>LinkedIn</option><option>Friend / referral</option><option>Education forum</option><option>Other</option></select></div>
               <div id="submitError" style="display:none;background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:0.875rem;"></div>
               <div class="btn-group">
-                <button type="button" class="btn btn-secondary" onclick="goStep(2)">← Back</button>
-                <button type="button" class="btn btn-primary btn-full" id="submitBtn" onclick="submitForm()">Complete Registration →</button>
+                <button type="button" class="btn btn-secondary" data-i18n="btn_back" onclick="goStep(2)">← Back</button>
+                <button type="button" class="btn btn-primary btn-full" id="submitBtn" data-i18n="btn_complete" onclick="submitForm()">Complete Registration →</button>
               </div>
             </div>
 

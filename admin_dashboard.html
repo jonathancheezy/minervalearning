@@ -387,6 +387,12 @@ function getName(reg) {
   return reg.email || '—';
 }
 function getEmail(reg) { return reg.email || '—'; }
+function renderSubjectChips(val) {
+  if (!val) return '<span style="color:var(--text-muted);font-size:0.75rem">—</span>';
+  const arr = String(val).split(',').map(s => s.trim()).filter(Boolean);
+  if (!arr.length) return '<span style="color:var(--text-muted);font-size:0.75rem">—</span>';
+  return arr.map(s => `<span class="subject-chip">${s}</span>`).join('');
+}
 
 function flatten(data) {
   if (!data) return {};

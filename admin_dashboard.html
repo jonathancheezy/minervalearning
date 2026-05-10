@@ -136,6 +136,21 @@
     .toast{position:fixed;bottom:2rem;right:2rem;background:var(--dark);color:white;padding:12px 20px;border-radius:12px;font-size:0.875rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);z-index:2000;opacity:0;transform:translateY(10px);transition:all 0.2s;pointer-events:none}
     .toast.show{opacity:1;transform:translateY(0)}.toast.success{background:var(--success)}.toast.error{background:var(--danger)}.toast.info{background:var(--primary)}
     @media(max-width:768px){.layout{padding:1rem}.header{padding:0 1rem}thead th:nth-child(n+4),tbody td:nth-child(n+4){display:none}.detail-grid{grid-template-columns:1fr}.modal{max-height:95vh}.teacher-card{flex-wrap:wrap}}
+
+    .hamburger{background:none;border:none;cursor:pointer;padding:8px;display:none;flex-direction:column;gap:5px;border-radius:8px;transition:background 0.15s}
+    .hamburger:hover{background:var(--surface-2)}
+    .hamburger span{display:block;width:20px;height:2px;background:var(--dark);border-radius:2px;transition:all 0.2s}
+    .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+    .hamburger.open span:nth-child(2){opacity:0}
+    .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
+    .nav-dropdown{position:absolute;top:100%;right:0;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);min-width:160px;padding:6px;z-index:200;display:none;flex-direction:column;gap:2px}
+    .nav-dropdown.open{display:flex}
+    .nav-dropdown a{font-size:0.875rem;font-weight:500;color:var(--dark);text-decoration:none;padding:8px 12px;border-radius:8px;transition:background 0.15s;white-space:nowrap}
+    .nav-dropdown a:hover{background:rgba(124,58,237,0.06);color:var(--primary)}
+    .nav-dropdown a.active{color:var(--primary);font-weight:600}
+    .header-right{position:relative}
+    @media(max-width:700px){.hamburger{display:flex}.header-nav-link:not(.hamburger){display:none}.nav-dropdown{left:0;right:auto;min-width:140px}}
+
   </style>
 </head>
 <body>
@@ -152,11 +167,15 @@
     <span class="logo-text">Minerva</span>
   </a>
   <div class="header-right">
-    <a href="/approved-teachers.html" class="header-nav-link" id="nav-approved-teachers">Teachers</a>
-    <a href="/approved-students.html" class="header-nav-link" id="nav-approved-students">Students</a>
-      <a href="/matched.html" class="header-nav-link">Matched</a>
-    <span class="header-badge">Live</span>
-    <button class="btn-logout" id="logout-btn">Logout</button>
+    <button class="hamburger" id="hamburger-btn" onclick="toggleNavMenu()">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-dropdown" id="nav-dropdown">
+      <a href="/admin_dashboard">Dashboard</a>
+      <a href="/approved-teachers.html" class="nav-db-link">Teachers</a>
+      <a href="/approved-students.html" class="nav-db-link">Students</a>
+      <a href="/matched.html" class="nav-db-link">Matched</a>
+    </div>
   </div>
 </header>
 
@@ -725,6 +744,20 @@ document.getElementById('confirm-reject-btn').addEventListener('click', async fu
     showToast('Failed: ' + err.message, 'error');
     this.disabled = false;
     this.textContent = 'Reject';
+  }
+});
+
+
+window.toggleNavMenu = function() {
+  document.getElementById('hamburger-btn').classList.toggle('open');
+  document.getElementById('nav-dropdown').classList.toggle('open');
+};
+document.addEventListener('click', function(e) {
+  const btn = document.getElementById('hamburger-btn');
+  const dropdown = document.getElementById('nav-dropdown');
+  if (btn && dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+    btn.classList.remove('open');
+    dropdown.classList.remove('open');
   }
 });
 

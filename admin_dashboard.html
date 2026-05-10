@@ -500,7 +500,7 @@ function scoreMatch(t, p) {
 }
 
 window.findMatches = async function(parentId) {
-  const parent = allRegistrations.find(r => r.id === parentId);
+  const parent = allRegistrations.find(r => r._id === parentId);
   if (!parent) return;
   document.getElementById('match-parent-name').textContent = getName(parent) + ' — ' + (parent.subject || 'General') + (parent.studentAge ? ' | Age ' + parent.studentAge : '');
   const panel = document.getElementById('match-results-body');
@@ -516,7 +516,7 @@ window.findMatches = async function(parentId) {
     const isAssigned = t.status === 'matched';
     const freeTag = hasFreeMatch ? '<span class="teacher-tag free">Free match</span>' : '<span class="teacher-tag paid">Paid</span>';
     const verifiedTag = t.certUrl ? '<span class="teacher-tag verified">Cert</span>' : '';
-    const assignBtn = isAssigned ? '<button class="btn-assign assigned" disabled>Matched</button>' : '<button class="btn-assign" data-pid="' + parentId + '" data-tid="' + t.id + '" data-tname="' + (getName(t)).replace(/"/g, '\"') + '">Assign</button>';
+    const assignBtn = isAssigned ? '<button class="btn-assign assigned" disabled>Matched</button>' : '<button class="btn-assign" data-pid="' + parentId + '" data-tid="' + t._id + '" data-tname="' + (getName(t)).replace(/"/g, '\"') + '">Assign</button>';
     return '<div class="teacher-card"><div class="match-score ' + cls + '"><span class="score-num">' + pct + '</span><span class="score-label">%</span></div><div class="teacher-info"><div class="teacher-name">' + getName(t) + '</div><div class="teacher-meta">' + (t.subjects || t.subject ? renderSubjectChips(t.subjects || t.subject) : '<span style="color:var(--text-muted);font-size:0.75rem">—</span>') + (t.studentAgeGroups ? '<span>' + t.studentAgeGroups + '</span>' : '') + '</div><div class="teacher-tags">' + freeTag + verifiedTag + '</div><div class="ai-reason"><div class="ai-reason-label">AI Reason</div>' + (reasons.join(' · ') || 'General match') + '</div></div><div class="teacher-actions">' + assignBtn + '<span style="font-size:0.6875rem;color:var(--text-muted)">' + (hasFreeMatch ? 'Free' : 'Paid') + '</span></div></div>';
   }).join('');
   panel.querySelectorAll('.btn-assign:not(.assigned)').forEach(b => b.addEventListener('click', () => assignMatch(b.dataset.pid, b.dataset.tid, b.dataset.tname, b)));
@@ -526,10 +526,10 @@ async function assignMatch(parentId, teacherId, teacherName, btn) {
   btn.disabled = true; btn.textContent = 'Assigning...';
   try {
     await updateDoc(doc(db, 'registrations', parentId), { status: 'matched', matchedTeacherId: teacherId, matchedTeacherName: teacherName, matchedAt: new Date() });
-    const teacher = allTeachers.find(t => t.id === teacherId);
+    const teacher = allTeachers.find(t => t._id === teacherId);
     const currentFree = parseInt(teacher?.freeMatchesRemaining) || 0;
     await updateDoc(doc(db, 'registrations', teacherId), { freeMatchesRemaining: Math.max(0, currentFree - 1) });
-    const pi = allRegistrations.findIndex(r => r.id === parentId);
+    const pi = allRegistrations.findIndex(r => r._id === parentId);
     if (pi >= 0) { allRegistrations[pi].status = 'matched'; allRegistrations[pi].matchedTeacherName = teacherName; }
     updateStats();
     const filtered = currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === currentFilter);
@@ -607,7 +607,7 @@ window.openModal = function(id) {
   document.getElementById('modal-body').innerHTML = html;
   const footer = document.getElementById('modal-footer');
   if (status === 'pending') {
-    footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>' + (role === 'parent' ? '<button class="btn-modal" style="background:rgba(14,165,233,0.1);color:#0284C7" onclick="closeModal();findMatches(\'' + r.id + '\')">Find Matches</button>' : '') + '<button class="btn-modal reject" onclick="updateStatus(\'' + r.id + '\', \'rejected\')">Reject</button><button class="btn-modal approve" onclick="updateStatus(\'' + r.id + '\', \'approved\')">Approve</button>';
+    footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>' + (role === 'parent' ? '<button class="btn-modal" style="background:rgba(14,165,233,0.1);color:#0284C7" onclick="closeModal();findMatches(\'' + r._id + '\')">Find Matches</button>' : '') + '<button class="btn-modal reject" onclick="updateStatus(\'' + r._id + '\', \'rejected\')">Reject</button><button class="btn-modal approve" onclick="updateStatus(\'' + r._id + '\', \'approved\')">Approve</button>';
   } else {
     footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>';
   }
@@ -619,7 +619,7 @@ window.closeModal = function() { document.getElementById('modal-overlay').classL
 async function updateStatus(id, newStatus) {
   try {
     await updateDoc(doc(db, 'registrations', id), { status: newStatus });
-    const idx = allRegistrations.findIndex(r => r.id === id);
+    const idx = allRegistrations.findIndex(r => r._id === id);
     if (idx >= 0) allRegistrations[idx].status = newStatus;
     updateStats();
     renderTable(currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === currentFilter));

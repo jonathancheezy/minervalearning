@@ -322,6 +322,7 @@ window.setLang = function(lang) {
   });
   var dd = document.getElementById('langDropdown');
   if (dd) dd.classList.remove('show');
+  if (window.T) window.apply();
 };
 // Init lang from localStorage
 (function() {
@@ -346,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
-window.apply();
+document.addEventListener('DOMContentLoaded', window.apply);
 </script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -725,7 +726,7 @@ window.openModal = function(id) {
   document.getElementById('modal-body').innerHTML = html;
   const footer = document.getElementById('modal-footer');
   if (status === 'pending') {
-    footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()" ' + (window.T.admin_close?.[window.lang] || 'Close') + '</button>' + (role === 'parent' ? '<button class="btn-modal" style="background:rgba(14,165,233,0.1);color:#0284C7" onclick="closeModal();findMatches(\'' + r._id + '\')">' + (window.T.admin_btn_find_matches?.[window.lang] || 'Find Matches') + '</button>' : '') + '<button class="btn-modal reject" onclick="updateStatus(\'' + r._id + '\', \'rejected\')">' + (window.T.admin_btn_reject?.[window.lang] || 'Reject') + '</button><button class="btn-modal approve" onclick="updateStatus(\'' + r._id + '\', \'approved\')">' + (window.T.admin_btn_approve?.[window.lang] || 'Approve') + '</button>';
+    footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">' + (window.T.admin_close?.[window.lang] || 'Close') + '</button>' + (role === 'parent' ? '<button class="btn-modal" style="background:rgba(14,165,233,0.1);color:#0284C7" onclick="closeModal();findMatches(\'' + r._id + '\')">' + (window.T.admin_btn_find_matches?.[window.lang] || 'Find Matches') + '</button>' : '') + '<button class="btn-modal reject" onclick="updateStatus(\'' + r._id + '\', \'rejected\')">' + (window.T.admin_btn_reject?.[window.lang] || 'Reject') + '</button><button class="btn-modal approve" onclick="updateStatus(\'' + r._id + '\', \'approved\')">' + (window.T.admin_btn_approve?.[window.lang] || 'Approve') + '</button>';
   } else {
     footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">' + (window.T.admin_close?.[window.lang] || 'Close') + '</button>';
   }

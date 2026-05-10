@@ -370,8 +370,9 @@ window.setLang = function(lang) {
   });
   var dd = document.getElementById('langDropdown');
   if (dd) dd.classList.remove('show');
+  if (window.T) window.apply();
 };
-window.apply();
+document.addEventListener('DOMContentLoaded', window.apply);
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.lang-wrap')) {
     var d = document.getElementById('langDropdown');

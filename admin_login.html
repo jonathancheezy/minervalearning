@@ -82,6 +82,7 @@
         }
 
         sessionStorage.setItem('minerva_admin_token', data.token);
+        sessionStorage.setItem('minerva_admin_email', data.email || 'admin@minerva.ai');
         window.location.href = '/admin_dashboard';
       } catch (e) {
         err.classList.add('show');

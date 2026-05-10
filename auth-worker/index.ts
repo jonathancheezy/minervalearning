@@ -67,7 +67,7 @@ export default {
           return Response.json({ error: 'Invalid credentials' }, { status: 401, headers: corsHeaders });
         }
         const token = await createToken(email);
-        return Response.json({ success: true, token }, { headers: corsHeaders });
+        return Response.json({ success: true, token, email }, { headers: corsHeaders });
       }
 
       if (path === '/api/auth/verify') {

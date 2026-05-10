@@ -187,6 +187,7 @@
         <button class="lang-option" data-lang="zhcn" onclick="setLang('zhcn')" style="display:block;width:100%;padding:7px 10px;border:none;background:none;border-radius:6px;font-size:0.8125rem;font-weight:600;color:var(--gray-500);cursor:pointer;text-align:left">简</button>
       </div>
     </div>
+    <button class="btn-logout" id="logout-btn" style="margin-left:4px">Logout</button>
   </div>
 </header>
 
@@ -309,6 +310,29 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<script>
+// Global lang functions — must be in a non-module script before the module
+window.toggleLang = function() { document.getElementById('langDropdown').classList.toggle('show'); };
+window.setLang = function(lang) {
+  document.documentElement.lang = lang;
+  document.getElementById('langLabel').textContent = lang === 'zhtw' ? '繁' : lang === 'zhcn' ? '简' : 'EN';
+  localStorage.setItem('minerva_lang', lang);
+  document.querySelectorAll('.lang-option').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.lang === lang);
+    b.style.color = b.dataset.lang === lang ? 'var(--primary)' : 'var(--gray-500)';
+    b.style.fontWeight = b.dataset.lang === lang ? '700' : '600';
+  });
+  var dd = document.getElementById('langDropdown');
+  if (dd) dd.classList.remove('show');
+};
+// Init lang from localStorage
+(function() {
+  var saved = localStorage.getItem('minerva_lang');
+  if (saved) {
+    setTimeout(function() { window.setLang(saved); }, 10);
+  }
+})();
+</script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getFirestore, collection, getDocs, query, limit, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -760,18 +784,6 @@ document.getElementById('confirm-reject-btn').addEventListener('click', async fu
 });
 
 
-window.toggleLang = function() { document.getElementById('langDropdown').classList.toggle('show'); };
-window.setLang = function(lang) {
-  document.documentElement.lang = lang;
-  document.getElementById('langLabel').textContent = lang === 'zhtw' ? '繁' : lang === 'zhcn' ? '简' : 'EN';
-  localStorage.setItem('minerva_lang', lang);
-  document.querySelectorAll('.lang-option').forEach(function(b) {
-    b.classList.toggle('active', b.dataset.lang === lang);
-    b.style.color = b.dataset.lang === lang ? 'var(--primary)' : 'var(--gray-500)';
-    b.style.fontWeight = b.dataset.lang === lang ? '700' : '600';
-  });
-  document.getElementById('langDropdown').classList.remove('show');
-};
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.lang-wrap')) {
     var d = document.getElementById('langDropdown');

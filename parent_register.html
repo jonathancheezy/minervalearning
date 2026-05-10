@@ -161,11 +161,11 @@
               <div class="step-title" data-i18n="parent_step1_contact_title">Your contact details</div>
               <div class="step-subtitle" data-i18n="parent_step1_contact_subtitle">We'll reach out via WhatsApp to confirm your registration.</div>
               <div class="form-row">
-                <div class="form-group"><label>First name</label><input type="text" id="firstName" placeholder="e.g. Sarah" required /></div>
-                <div class="form-group"><label>Last name</label><input type="text" id="lastName" placeholder="e.g. Chan" /></div>
+                <div class="form-group"><label data-i18n="label_first_name">First name</label><input type="text" id="firstName" placeholder data-i18n-placeholder="placeholder_first_name_parent" required /></div>
+                <div class="form-group"><label data-i18n="label_last_name">Last name</label><input type="text" id="lastName" placeholder data-i18n-placeholder="placeholder_last_name_parent" /></div>
               </div>
-              <div class="form-group"><label>Email</label><input type="email" id="email" placeholder="you@example.com" required /></div>
-              <div class="form-group"><label>WhatsApp number</label><input type="tel" id="whatsapp" placeholder="+852 9123 4567" required /></div>
+              <div class="form-group"><label data-i18n="label_email">Email</label><input type="email" id="email" placeholder data-i18n-placeholder="placeholder_email" required /></div>
+              <div class="form-group"><label data-i18n="label_whatsapp">WhatsApp number</label><input type="tel" id="whatsapp" placeholder data-i18n-placeholder="placeholder_whatsapp" required /></div>
               <div id="otpSection" style="display:none">
                 <div class="otp-section">
                   <p style="color:var(--gray-600);margin-bottom:16px">We sent a 4-digit code to <strong id="otpTargetPhone"></strong></p>
@@ -188,20 +188,20 @@
               <div class="step-title" data-i18n="parent_step2_student_title">Student information</div>
               <div class="step-subtitle" data-i18n="parent_step2_student_subtitle">Help us understand who we're matching.</div>
               <div class="form-row">
-                <div class="form-group"><label>Student first name</label><input type="text" id="studentFirstName" placeholder="e.g. Marcus" /></div>
-                <div class="form-group"><label>Student last name</label><input type="text" id="studentLastName" placeholder="e.g. Cheung" /></div>
+                <div class="form-group"><label data-i18n="label_student_first_name">Student first name</label><input type="text" id="studentFirstName" placeholder data-i18n-placeholder="placeholder_student_first" /></div>
+                <div class="form-group"><label data-i18n="label_student_last_name">Student last name</label><input type="text" id="studentLastName" placeholder data-i18n-placeholder="placeholder_student_last" /></div>
               </div>
               <div class="form-row">
-                <div class="form-group"><label>Year / Form</label><select id="studentLevel"><option value="" disabled selected>Select</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option><option>P6</option><option>F.1</option><option>F.2</option><option>F.3</option><option>F.4</option><option>F.5</option><option>F.6</option><option>University / Adult</option></select></div>
-                <div class="form-group"><label>School type</label><select id="schoolType"><option value="" disabled selected>Select</option><option>Local (DSE)</option><option>International (IB / IGCSE)</option><option>ESF / Direct Subsidy</option><option>Not sure yet</option></select></div>
+                <div class="form-group"><label data-i18n="label_year_form">Year / Form</label><select id="studentLevel"><option value="" disabled selected>Select</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option><option>P6</option><option>F.1</option><option>F.2</option><option>F.3</option><option>F.4</option><option>F.5</option><option>F.6</option><option>University / Adult</option></select></div>
+                <div class="form-group"><label data-i18n="label_school_type">School type</label><select id="schoolType"><option value="" disabled selected>Select</option><option>Local (DSE)</option><option>International (IB / IGCSE)</option><option>ESF / Direct Subsidy</option><option>Not sure yet</option></select></div>
               </div>
               <div class="form-row">
-                <div class="form-group"><label>Student gender</label><select id="studentGender"><option value="" disabled selected>Select</option><option>Male</option><option>Female</option><option>No preference</option></select></div>
-                <div class="form-group"><label>School name <span>(optional)</span></label><input type="text" id="studentSchool" placeholder="e.g. Diocesan Boys' School" /></div>
+                <div class="form-group"><label data-i18n="label_student_gender">Student gender</label><select id="studentGender"><option value="" disabled selected>Select</option><option>Male</option><option>Female</option><option>No preference</option></select></div>
+                <div class="form-group"><label data-i18n="label_school_name">School name <span>(optional)</span></label><input type="text" id="studentSchool" placeholder data-i18n-placeholder="placeholder_school_name" /></div>
               </div>
-              <div class="form-group"><label>Subject(s) needed</label>
+              <div class="form-group"><label data-i18n="label_subjects_needed">Subject(s) needed</label>
                 <div class="subjects-wrap" id="subjectsWrap">
-                  <div class="subjects-chips" id="subjectsChips" onclick="toggleSubjects()"><span class="subject-placeholder" id="subjectsPlaceholder">Select subjects</span></div>
+                  <div class="subjects-chips" id="subjectsChips" onclick="toggleSubjects()"><span class="subject-placeholder" id="subjectsPlaceholder" data-i18n="placeholder_select_subjects">Select subjects</span></div>
                   <div class="subjects-dropdown" id="subjectsDropdown">
                     <div class="subject-option" onclick="toggleSubject(this,'Math')">Math</div>
                     <div class="subject-option" onclick="toggleSubject(this,'English')">English</div>
@@ -228,31 +228,31 @@
             <div class="step" id="step3">
               <div class="step-title" data-i18n="parent_step3_prefs_title">Learning preferences</div>
               <div class="step-subtitle" data-i18n="parent_step3_prefs_subtitle">One more step and you're done.</div>
-              <div class="form-group"><label>Main goal</label><select id="learningGoal"><option value="" disabled selected>What does the student want to achieve?</option><option>DSE exam preparation</option><option>IB / IGCSE exam preparation</option><option>Improve school grades</option><option>Catch up with classwork</option><option>Homework guidance</option><option>Language learning</option><option>Interview / aptitude test prep</option><option>Other</option></select></div>
+              <div class="form-group"><label data-i18n="label_main_goal">Main goal</label><select id="learningGoal"><option value="" disabled selected>What does the student want to achieve?</option><option>DSE exam preparation</option><option>IB / IGCSE exam preparation</option><option>Improve school grades</option><option>Catch up with classwork</option><option>Homework guidance</option><option>Language learning</option><option>Interview / aptitude test prep</option><option>Other</option></select></div>
               <div class="form-row">
-                <div class="form-group"><label>Current level</label><select id="currentLevel"><option value="" disabled selected>How is the student performing?</option><option>Struggling — needs extra support</option><option>Below average — room to improve</option><option>Average — steady progress wanted</option><option>Above average — wants to excel</option><option>Not sure yet</option></select></div>
-                <div class="form-group"><label>Target exam <span>(if any)</span></label><select id="targetExam"><option value="">Select</option><option>DSE</option><option>IB Diploma</option><option>IB MYP</option><option>IGCSE / O-Level</option><option>GCSE</option><option>AP</option><option>Other</option><option>Not sure yet</option></select></div>
+                <div class="form-group"><label data-i18n="label_current_level">Current level</label><select id="currentLevel"><option value="" disabled selected>How is the student performing?</option><option>Struggling — needs extra support</option><option>Below average — room to improve</option><option>Average — steady progress wanted</option><option>Above average — wants to excel</option><option>Not sure yet</option></select></div>
+                <div class="form-group"><label data-i18n="label_target_exam">Target exam <span>(if any)</span></label><select id="targetExam"><option value="">Select</option><option>DSE</option><option>IB Diploma</option><option>IB MYP</option><option>IGCSE / O-Level</option><option>GCSE</option><option>AP</option><option>Other</option><option>Not sure yet</option></select></div>
               </div>
               <div class="form-row">
-                <div class="form-group"><label>Preferred area</label><select id="district"><option value="" disabled selected>Select</option><option>Hong Kong Island</option><option>Kowloon</option><option>New Territories</option><option>Online only</option></select></div>
-                <div class="form-group"><label>Budget per hour</label><select id="budget"><option value="" disabled selected>Select range</option><option>$150–250</option><option>$250–400</option><option>$400–600</option><option>$600–800</option><option>$800+</option><option>Flexible</option></select></div>
+                <div class="form-group"><label data-i18n="label_preferred_area">Preferred area</label><select id="district"><option value="" disabled selected>Select</option><option>Hong Kong Island</option><option>Kowloon</option><option>New Territories</option><option>Online only</option></select></div>
+                <div class="form-group"><label data-i18n="label_budget_per_hour">Budget per hour</label><select id="budget"><option value="" disabled selected>Select range</option><option>$150–250</option><option>$250–400</option><option>$400–600</option><option>$600–800</option><option>$800+</option><option>Flexible</option></select></div>
               </div>
               <div class="form-row">
-                <div class="form-group"><label>Lessons per week</label><select id="lessonFrequency"><option value="" disabled selected>Select</option><option>Once a week</option><option>Twice a week</option><option>3+ times a week</option><option>Flexible</option></select></div>
-                <div class="form-group"><label>Lesson duration</label><select id="lessonDuration"><option value="" disabled selected>Select</option><option>1 hour</option><option>1.5 hours</option><option>2 hours</option><option>Flexible</option></select></div>
+                <div class="form-group"><label data-i18n="label_lessons_per_week">Lessons per week</label><select id="lessonFrequency"><option value="" disabled selected>Select</option><option>Once a week</option><option>Twice a week</option><option>3+ times a week</option><option>Flexible</option></select></div>
+                <div class="form-group"><label data-i18n="label_lesson_duration">Lesson duration</label><select id="lessonDuration"><option value="" disabled selected>Select</option><option>1 hour</option><option>1.5 hours</option><option>2 hours</option><option>Flexible</option></select></div>
               </div>
               <div class="form-row">
-                <div class="form-group"><label>Preferred teacher gender</label><select id="teacherGender"><option value="" disabled selected>Select</option><option>No preference</option><option>Male teacher</option><option>Female teacher</option></select></div>
-                <div class="form-group"><label>When to start</label><select id="startDate"><option value="" disabled selected>Select</option><option>As soon as possible</option><option>Within 2 weeks</option><option>Within 1 month</option><option>This term</option><option>Next term</option></select></div>
+                <div class="form-group"><label data-i18n="label_preferred_teacher_gender">Preferred teacher gender</label><select id="teacherGender"><option value="" disabled selected>Select</option><option>No preference</option><option>Male teacher</option><option>Female teacher</option></select></div>
+                <div class="form-group"><label data-i18n="label_when_to_start">When to start</label><select id="startDate"><option value="" disabled selected>Select</option><option>As soon as possible</option><option>Within 2 weeks</option><option>Within 1 month</option><option>This term</option><option>Next term</option></select></div>
               </div>
-              <div class="form-group"><label>Preferred lesson mode</label>
+              <div class="form-group"><label data-i18n="label_preferred_lesson_mode">Preferred lesson mode</label>
                 <div class="mode-options" id="lessonModeOptions">
                   <button type="button" class="mode-btn active" data-mode="in-person" onclick="setMode(this)">In-person</button>
                   <button type="button" class="mode-btn" data-mode="online" onclick="setMode(this)">Online</button>
                   <button type="button" class="mode-btn" data-mode="both" onclick="setMode(this)">Both</button>
                 </div>
               </div>
-              <div class="form-group"><label>Anything else we should know? <span>(optional)</span></label><textarea id="notes" placeholder="E.g. loses focus easily, needs patient teacher, homework help..."></textarea></div>
+              <div class="form-group"><label data-i18n="label_anything_else">Anything else we should know? <span>(optional)</span></label><textarea id="notes" placeholder data-i18n-placeholder="placeholder_notes"></textarea></div>
               <div id="submitError" style="display:none;background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:0.875rem;"></div>
               <div class="btn-group">
                 <button type="button" class="btn btn-secondary" data-i18n="btn_back" onclick="goStep(2)">← Back</button>
@@ -285,7 +285,7 @@
     function renderSubjectChips() {
       const chips = document.getElementById('subjectsChips');
       const placeholder = document.getElementById('subjectsPlaceholder');
-      if (selectedSubjects.length === 0) { placeholder.style.display = ''; placeholder.textContent = 'Select subjects'; chips.querySelectorAll('.subject-chip').forEach(c => c.remove()); }
+      if (selectedSubjects.length === 0) { placeholder.style.display = ''; placeholder.textContent = (window.T && window.T.placeholder_select_subjects && window.T.placeholder_select_subjects[window.lang || 'en']) || 'Select subjects'; chips.querySelectorAll('.subject-chip').forEach(c => c.remove()); }
       else {
         placeholder.style.display = 'none';
         chips.querySelectorAll('.subject-chip').forEach(c => c.remove());

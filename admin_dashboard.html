@@ -329,13 +329,15 @@ window.setLang = function(lang) {
   }
 })();
 
-// Highlight active nav link
+// Highlight active nav link based on current page
 document.addEventListener('DOMContentLoaded', function() {
   var path = window.location.pathname;
+  // Normalize: remove trailing .html or .htm
+  var norm = path.replace(/\.html?$/, '');
   var navLinks = document.querySelectorAll('.nav-centered a');
   navLinks.forEach(function(link) {
-    var href = link.getAttribute('href');
-    if (href === path || (href && path.endsWith(href))) {
+    var href = link.getAttribute('href').replace(/\.html?$/, '');
+    if (href === norm || norm.endsWith(href) || href === path) {
       link.classList.add('active');
     } else {
       link.classList.remove('active');

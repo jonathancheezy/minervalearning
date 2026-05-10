@@ -328,6 +328,20 @@ window.setLang = function(lang) {
     setTimeout(function() { window.setLang(saved); }, 10);
   }
 })();
+
+// Highlight active nav link
+(function() {
+  var path = window.location.pathname;
+  var navLinks = document.querySelectorAll('.nav-centered a');
+  navLinks.forEach(function(link) {
+    var href = link.getAttribute('href');
+    if (href === path || (href && path.endsWith(href))) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+})();
 </script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';

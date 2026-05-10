@@ -393,6 +393,20 @@ document.getElementById('logout-btn').addEventListener('click', function() {
   sessionStorage.removeItem('minerva_admin_token');
   window.location.href = '/admin_login';
 });
+
+// Highlight active nav link based on current URL
+(function() {
+  var path = window.location.pathname;
+  var navLinks = document.querySelectorAll('.nav-centered a');
+  navLinks.forEach(function(link) {
+    var href = link.getAttribute('href');
+    if (href === path || (href && path.endsWith(href))) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+})();
 </script>
 
 </body>

@@ -479,13 +479,13 @@ function renderTable(regs) {
       '<td><div class="td-actions">' +
         '<a class="btn-action btn-view" href="/profile.html?id=' + reg._id + '">View</a>' +
         (isParent && isPending ? ' <button class="btn-action btn-match" data-id="' + reg._id + '">Match</button>' : '') +
-        (isPending ? ' <button class="btn-action btn-approve" data-id="' + reg._id + '">Approve</button><button class="btn-action btn-reject" data-id="' + reg._id + '">Reject</button>' : '') +
+        (isPending ? ' <button class="btn-action btn-approve" data-id="' + reg._id + '">Approve</button><button class="btn-action btn-reject" data-id="' + reg._id + '" data-email="' + (reg.email || '') + '" data-name="' + encodeURIComponent(getName(reg)) + '">Reject</button> : '') +
       '</div></td>';
     tbody.appendChild(tr);
   });
   tbody.querySelectorAll('.btn-match').forEach(b => b.addEventListener('click', () => findMatches(b.dataset.id)));
   tbody.querySelectorAll('.btn-approve').forEach(b => b.addEventListener('click', () => updateStatus(b.dataset.id, 'approved')));
-  tbody.querySelectorAll('.btn-reject').forEach(b => b.addEventListener('click', () => updateStatus(b.dataset.id, 'rejected')));
+  tbody.querySelectorAll('.btn-reject').forEach(b => b.addEventListener('click', () => openRejectModal(b.dataset)));
 }
 
 window.setFilter = function(filter) {
@@ -636,7 +636,7 @@ window.openModal = function(id) {
   document.getElementById('modal-body').innerHTML = html;
   const footer = document.getElementById('modal-footer');
   if (status === 'pending') {
-    footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>' + (role === 'parent' ? '<button class="btn-modal" style="background:rgba(14,165,233,0.1);color:#0284C7" onclick="closeModal();findMatches(\'' + r.id + '\')">Find Matches</button>' : '') + '<button class="btn-modal reject" onclick="updateStatus(\'' + r.id + '\', \'rejected\')">Reject</button><button class="btn-modal approve" onclick="updateStatus(\'' + r.id + '\', \'approved\')">Approve</button>';
+  footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>' + (role === 'parent' ? '<button class="btn-modal" style="background:rgba(14,165,233,0.1);color:#0284C7" onclick="closeModal();findMatches(\'' + r._id + '\')">Find Matches</button>' : '') + '<button class="btn-modal reject" onclick="openRejectModal({id: r._id, email: r.email || '', name: encodeURIComponent(getName(r))})">Reject</button><button class="btn-modal approve" onclick="updateStatus(r._id, 'approved')">Approve</button>';
   } else {
     footer.innerHTML = '<button class="btn-modal close-btn" onclick="closeModal()">Close</button>';
   }
@@ -645,15 +645,21 @@ window.openModal = function(id) {
 
 window.closeModal = function() { document.getElementById('modal-overlay').classList.remove('open'); };
 
-async function updateStatus(id, newStatus) {
+async function updateStatus(id, newStatus, note) {
   try {
-    await updateDoc(doc(db, 'registrations', id), { status: newStatus });
-    const idx = allRegistrations.findIndex(r => r.id === id);
-    if (idx >= 0) allRegistrations[idx].status = newStatus;
+    const adminEmail = sessionStorage.getItem('minerva_admin_email') || 'admin@minerva.ai';
+    const now = new Date().toISOString();
+    const updates = { status: newStatus, updatedAt: now, updatedBy: adminEmail };
+    if (newStatus === 'approved') { updates.approvedAt = now; updates.approvedBy = adminEmail; }
+    if (note) updates.adminNote = note;
+    await updateDoc(doc(db, 'registrations', id), updates);
+    const idx = allRegistrations.findIndex(r => r._id === id);
+    if (idx >= 0) { allRegistrations[idx].status = newStatus; Object.assign(allRegistrations[idx], updates); }
     updateStats();
-    renderTable(currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '').toLowerCase() === currentFilter));
+    renderTable(currentFilter === 'all' ? allRegistrations : allRegistrations.filter(r => String(r.role || '' ).toLowerCase() === currentFilter));
     closeModal();
-    showToast(newStatus === 'approved' ? 'Approved!' : 'Rejected');
+    closeRejectModal();
+    showToast(newStatus === 'approved' ? 'Approved!' : 'Rejected' + (note ? ' with note' : ''));
   } catch (err) {
     console.error('Update error:', err);
     showToast('Failed: ' + err.message, 'error');

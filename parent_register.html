@@ -130,15 +130,8 @@
     /* Footer */
     .page-footer { text-align: center; padding: 24px; color: var(--gray-400); font-size: 0.8125rem; font-family: 'DM Sans', sans-serif; }
 
-    /* OTP */
+    /* Email Verification */
     .otp-section { text-align: center; }
-    .otp-code-display { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
-    .otp-digit { width: 48px; height: 56px; text-align: center; font-size: 1.5rem; font-weight: 600; border: 1px solid var(--gray-300); border-radius: 10px; transition: border-color 0.2s; }
-    .otp-digit.filled { border-color: var(--primary); background: rgba(124,58,237,0.04); }
-    .otp-resend { font-size: 0.875rem; color: var(--gray-500); margin-top: 16px; font-family: 'DM Sans', sans-serif; }
-    .otp-resend a { color: var(--primary); text-decoration: none; }
-    .otp-resend a:hover { text-decoration: underline; }
-    .otp-timer { color: var(--gray-400); }
 </style>
 </head>
 <body>
@@ -209,15 +202,17 @@
               <div class="form-group"><label data-i18n="label_email">Email</label><input type="email" id="email" placeholder data-i18n-placeholder="placeholder_email" required /></div>
               <div class="form-group"><label data-i18n="label_whatsapp">WhatsApp number</label><input type="tel" id="whatsapp" placeholder data-i18n-placeholder="placeholder_whatsapp" required /></div>
               <div id="otpSection" style="display:none">
-                <div class="otp-section">
-                  <p style="color:var(--gray-600);margin-bottom:16px">We sent a 4-digit code to <strong id="otpTargetPhone"></strong></p>
-                  <div class="otp-code-display">
-                    <input type="text" class="otp-digit" maxlength="1" id="otp1" inputmode="numeric" pattern="[0-9]" oninput="otpInput(this,1)" onkeydown="otpKey(event,1)">
-                    <input type="text" class="otp-digit" maxlength="1" id="otp2" inputmode="numeric" pattern="[0-9]" oninput="otpInput(this,2)" onkeydown="otpKey(event,2)">
-                    <input type="text" class="otp-digit" maxlength="1" id="otp3" inputmode="numeric" pattern="[0-9]" oninput="otpInput(this,3)" onkeydown="otpKey(event,3)">
-                    <input type="text" class="otp-digit" maxlength="1" id="otp4" inputmode="numeric" pattern="[0-9]" oninput="otpInput(this,4)" onkeydown="otpKey(event,4)">
+                <div class="otp-section" style="padding: 24px 0; text-align: center;">
+                  <div style="width:56px;height:56px;background:rgba(124,58,237,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
                   </div>
-                  <div class="otp-resend"><span id="otpTimer" class="otp-timer"></span><a id="otpResend" onclick="sendOTP()" style="display:none">Resend code</a></div>
+                  <p style="color:var(--gray-600);margin-bottom:8px" data-i18n="otp_verify_title">Verify your email</p>
+                  <p style="color:var(--gray-500);font-size:0.9rem;margin-bottom:4px"><span data-i18n="otp_verify_subtitle">We've sent a verification link to</span> <strong id="otpTargetEmail"></strong></p>
+                  <p style="color:var(--gray-500);font-size:0.875rem;margin-bottom:20px" data-i18n="otp_click_link">Click the link in the email to verify your address.</p>
+                  <div id="emailVerifiedMsg" style="display:none;margin-bottom:16px">
+                    <span style="color:#10B981;font-weight:700" data-i18n="otp_verified">Email verified ✓</span>
+                  </div>
+                  <button type="button" class="btn btn-primary btn-full" id="verifyEmailBtn" data-i18n="otp_continue" onclick="confirmEmailVerification()">Continue</button>
                 </div>
               </div>
               <div class="btn-group">
@@ -325,8 +320,7 @@
     let currentStep = 1;
     let selectedSubjects = [];
     let lessonMode = 'in-person';
-    let otpSent = false, otpVerified = false;
-    let otpTimerInterval;
+    let otpSent = false, emailVerified = false;
 
     function toggleSubjects() { document.getElementById('subjectsDropdown').classList.toggle('open'); }
     function toggleSubject(el, subject) {
@@ -413,26 +407,34 @@
     function handleStep1() {
       const errors = validateStep(1);
       if (errors.length > 0) { showErrors(errors); return; }
-      if (otpVerified) { goStep(2); return; }
+      if (emailVerified) { goStep(2); return; }
       if (!otpSent) {
         document.getElementById('otpSection').style.display = 'block';
-        document.getElementById('otpTargetPhone').textContent = document.getElementById('whatsapp').value.trim();
-        document.getElementById('step1Btn').textContent = 'Verify Code →';
+        document.getElementById('otpTargetEmail').textContent = document.getElementById('email').value.trim();
+        document.getElementById('step1Btn').textContent = window.T && window.T.otp_continue ? window.T.otp_continue[window.lang||'en'] : 'Continue →';
         otpSent = true;
-        startOtpTimer(60);
-        document.getElementById('otp1').focus();
-      } else if (!otpVerified) {
-        const code = [1,2,3,4].map(i => document.getElementById('otp'+i).value).join('');
-        if (code.length !== 4) { showErrors(['Please enter the 4-digit code.']); return; }
-        otpVerified = true;
-        clearInterval(otpTimerInterval);
+        window.scrollTo({ top: document.getElementById('otpSection').offsetTop - 120, behavior: 'smooth' });
+      } else if (!emailVerified) {
+        // User clicked Continue again — they should have checked their email
+        // For now, simulate instant verification
+        emailVerified = true;
+        document.getElementById('emailVerifiedMsg').style.display = 'block';
+        document.getElementById('verifyEmailBtn').textContent = window.T && window.T.otp_continue ? window.T.otp_continue[window.lang||'en'] : 'Continue';
+        document.getElementById('verifyEmailBtn').style.background = '#10B981';
+        document.getElementById('verifyEmailBtn').style.boxShadow = '0 4px 12px rgba(16,185,129,0.3)';
+      }
+    }
+    function confirmEmailVerification() {
+      if (!emailVerified) {
+        emailVerified = true;
+        document.getElementById('emailVerifiedMsg').style.display = 'block';
+        document.getElementById('verifyEmailBtn').textContent = window.T && window.T.otp_continue ? window.T.otp_continue[window.lang||'en'] : 'Continue';
+        document.getElementById('verifyEmailBtn').style.background = '#10B981';
+        document.getElementById('verifyEmailBtn').style.boxShadow = '0 4px 12px rgba(16,185,129,0.3)';
+      } else {
         goStep(2);
       }
     }
-    function startOtpTimer(seconds) { let remaining = seconds; const timerEl = document.getElementById('otpTimer'); const resendEl = document.getElementById('otpResend'); timerEl.textContent = 'Resend in ' + remaining + 's'; resendEl.style.display = 'none'; otpTimerInterval = setInterval(() => { remaining--; if (remaining <= 0) { clearInterval(otpTimerInterval); timerEl.textContent = ''; resendEl.style.display = 'inline'; } else { timerEl.textContent = 'Resend in ' + remaining + 's'; } }, 1000); }
-    function sendOTP() { startOtpTimer(60); }
-    function otpInput(el, n) { el.value = el.value.replace(/[^0-9]/g,''); if (el.value && n < 4) { document.getElementById('otp'+(n+1)).focus(); } document.getElementById('otp'+n).classList.toggle('filled', el.value !== ''); }
-    function otpKey(e, n) { if (e.key === 'Backspace' && !e.target.value && n > 1) { document.getElementById('otp'+(n-1)).focus(); } }
     function continueToStep3() {
       const errors = validateStep(2);
       if (errors.length > 0) { showErrors(errors); return; }

@@ -1185,6 +1185,7 @@
     "err_travel_distance_required":{en:"Max travel distance is required",zhTW:"最長通勤距離為必填項",zhCN:"最长通勤距离为必填项"},
     "err_availability_required":{en:"Availability is required",zhTW:"可用時間為必填項",zhCN:"可用时间为必填项"},
     "err_submit_generic":{en:"Something went wrong. Please try again.",zhTW:"出了點問題，請重試。",zhCN:"出了点问题，请重试。"},
+    "how_eyebrow":{en:"How it works",zhTW:"如何運作",zhCN:"如何运作"},
   };
 
   window.getLang = function() { return lang; };

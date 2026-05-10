@@ -336,7 +336,14 @@
       font-weight: 800;
       color: #1e3a5f;
       letter-spacing: -0.03em;
-      margin: 0 0 8px;
+      margin: 0 0 12px;
+    }
+    .how-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8125rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: #7C3AED;
+      margin-bottom: 14px;
     }
     .how-section-sub {
       color: #64748B;
@@ -773,8 +780,11 @@
 
   <!-- HOW IT WORKS -->
   <section class="how-section">
-    <h2 data-i18n="how_title">Three steps to better learning</h2>
-    <p class="how-section-sub" data-i18n="how_hassle_free">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
+    <div class="how-inner">
+      <span class="how-eyebrow" data-i18n="how_eyebrow">How it works</span>
+      <h2 data-i18n="how_title">Three steps to better learning</h2>
+      <p class="how-section-sub" data-i18n="how_hassle_free">Hassle free registration, no admin to manage. Just sign up and we handle the rest.</p>
+    </div>
     <div class="timeline">
       <div class="timeline-item">
         <div class="timeline-icon">
@@ -803,6 +813,7 @@
           <p data-i18n="step3_desc">Conduct lessons on Minerva. Track progress via your parent or teacher dashboard.</p>
         </div>
       </div>
+    </div>
     </div>
   </section>
 

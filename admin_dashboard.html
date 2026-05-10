@@ -37,10 +37,10 @@
     .stat-card.teal::before{background:linear-gradient(90deg,var(--teal),var(--sky))}
     .stat-card.gold::before{background:linear-gradient(90deg,#F59E0B,#FBBF24)}
     .stat-card.green::before{background:linear-gradient(90deg,#10B981,#34D399)}
-    .stat-label{font-size:0.8125rem;color:var(--primary);font-weight:500;margin-bottom:0.5rem}
+    .stat-label{font-size:0.8125rem;font-weight:500;margin-bottom:0.5rem}.stat-label.purple{color:var(--primary)}.stat-label.teal{color:var(--teal)}.stat-label.gold{color:#F59E0B}.stat-label.green{color:var(--success)}
     .stat-value{font-family:'Outfit',sans-serif;font-size:2.25rem;font-weight:800;line-height:1;margin-bottom:0.25rem}
     .stat-value.purple{color:var(--primary)}.stat-value.teal{color:var(--teal)}.stat-value.gold{color:#F59E0B}.stat-value.green{color:var(--success)}
-    .stat-sub{font-size:0.75rem;color:var(--primary)}
+    .stat-sub{font-size:0.75rem}.stat-sub.purple{color:var(--primary)}.stat-sub.teal{color:var(--teal)}.stat-sub.gold{color:#F59E0B}.stat-sub.green{color:var(--success)}
     .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden}
     .card-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem}
     .card-title{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--dark)}
@@ -195,24 +195,24 @@
 
   <div class="stats-grid">
     <div class="stat-card purple">
-      <div class="stat-label">Total Submissions</div>
+      <div class="stat-label purple">Total Submissions</div>
       <div class="stat-value purple" id="stat-total">—</div>
-      <div class="stat-sub">All registrations</div>
+      <div class="stat-sub purple">All registrations</div>
     </div>
     <div class="stat-card teal">
-      <div class="stat-label">Parents / Students</div>
+      <div class="stat-label teal">Parents / Students</div>
       <div class="stat-value teal" id="stat-parents">—</div>
-      <div class="stat-sub">Role: parent</div>
+      <div class="stat-sub teal">Role: parent</div>
     </div>
     <div class="stat-card gold">
-      <div class="stat-label">Teachers</div>
+      <div class="stat-label gold">Teachers</div>
       <div class="stat-value gold" id="stat-teachers">—</div>
-      <div class="stat-sub">Role: teacher</div>
+      <div class="stat-sub gold">Role: teacher</div>
     </div>
     <div class="stat-card green">
-      <div class="stat-label">Pending Review</div>
+      <div class="stat-label green">Pending Review</div>
       <div class="stat-value green" id="stat-pending">—</div>
-      <div class="stat-sub">Awaiting approval</div>
+      <div class="stat-sub green">Awaiting approval</div>
     </div>
   </div>
 

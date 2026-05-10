@@ -226,6 +226,7 @@
       <button class="filter-tab" id="filter-parent" onclick="setFilter('parent')">Parents</button>
       <button class="filter-tab" id="filter-teacher" onclick="setFilter('teacher')">Teachers</button>
       <button class="filter-tab" id="filter-approved" onclick="setFilter('approved')">Approved</button>
+      <button class="filter-tab" id="filter-rejected" onclick="setFilter('rejected')">Rejected</button>
       <div class="search-box">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="search-input" placeholder="Search name or email..." oninput="handleSearch(this.value)">
@@ -569,12 +570,13 @@ function renderTable(regs) {
 
 window.setFilter = function(filter) {
   currentFilter = filter;
-  ['all','parent','teacher','approved'].forEach(f => {
+  ['all','parent','teacher','approved','rejected'].forEach(f => {
     document.getElementById('filter-' + f).classList.toggle('active', f === filter);
   });
   let filtered;
   if (filter === 'all') filtered = allRegistrations;
   else if (filter === 'approved') filtered = allRegistrations.filter(r => String(r.status || '').toLowerCase() === 'approved');
+  else if (filter === 'rejected') filtered = allRegistrations.filter(r => String(r.status || '').toLowerCase() === 'rejected');
   else filtered = allRegistrations.filter(r => String(r.role || '').toLowerCase() === filter);
   renderTable(filtered);
 };
@@ -582,7 +584,7 @@ window.setFilter = function(filter) {
 window.handleSearch = function(q) {
   q = q.toLowerCase();
   const searched = allRegistrations.filter(r => getName(r).toLowerCase().includes(q) || getEmail(r).toLowerCase().includes(q));
-  const roleFiltered = currentFilter === 'all' ? searched : currentFilter === 'approved' ? searched.filter(r => String(r.status || '').toLowerCase() === 'approved') : searched.filter(r => String(r.role || '').toLowerCase() === currentFilter);
+  const roleFiltered = currentFilter === 'all' ? searched : currentFilter === 'approved' ? searched.filter(r => String(r.status || '').toLowerCase() === 'approved') : currentFilter === 'rejected' ? searched.filter(r => String(r.status || '').toLowerCase() === 'rejected') : searched.filter(r => String(r.role || '').toLowerCase() === currentFilter);
   renderTable(roleFiltered);
 };
 
